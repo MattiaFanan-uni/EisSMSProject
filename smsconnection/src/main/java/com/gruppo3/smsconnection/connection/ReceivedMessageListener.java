@@ -1,4 +1,5 @@
-package com.example.smsdatalink;
+package com.gruppo3.smsconnection.connection;
+
 
 /**
  * Generic interface to implement to create a new listener for the Message Received event.

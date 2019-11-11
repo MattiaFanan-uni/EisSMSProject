@@ -1,4 +1,4 @@
-package com.example.eissmsproject;
+package com.gruppo3.eissmsproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;

@@ -1,15 +1,16 @@
-package com.example.smsdatalink;
+package com.gruppo3.smsconnection.smsdatalink;
 
-import android.annotation.TargetApi;
-import android.app.PendingIntent;
+
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import java.util.ArrayList;
+import com.gruppo3.smsconnection.connection.ReceivedMessageListener;
 
-@TargetApi(21)
+import java.util.ArrayList;
+import java.util.Optional;
+
 public class SMSHandler extends NotificationListenerService {
 
     private static final char APP_ID = (char)0x02;
@@ -23,14 +24,30 @@ public class SMSHandler extends NotificationListenerService {
      * @param message SMSMessage to send to the SMSPeer.
      * @throws IllegalArgumentException if the destination is invalid
      */
-    public static void sendMessage(SMSMessage message) {
-        SMSPeer destination = message.getPeer();
-        message.addHeader(APP_ID + "");
-        if(!destination.isValid()) {
-            Log.e(LOG_KEY,"Invalid destination \"" + destination + "\"");
-            throw new IllegalArgumentException("Invalid destination \"" + destination + "\"");
-        }
-        SMSCore.sendMessage(message);
+    public static SendMessageError sendMessage(SMSMessage message) {
+
+       // if(!message.addHeader(APP_ID + "")) //header check
+
+        if(!message.isValid())
+            return SendMessageError.NotAValidMessage;
+
+        Optional<SMSPeer> optPeer=message.getPeer();
+        if(!optPeer.isPresent())
+            return SendMessageError.NotValidPeer;
+
+        Optional<String> optText=message.getData();
+        if(!optText.isPresent())
+            return SendMessageError.NotValidText;
+
+        Optional<String> optAddress=optPeer.get().getAddress();
+        if(!optAddress.isPresent())
+            return SendMessageError.NotValidPeer;
+
+        String destination = optAddress.get();
+        String textMessage = optText.get();
+
+        SMSCore.sendMessage(destination,textMessage);
+        return SendMessageError.MessageSent;
     }
 
     /**
@@ -61,8 +78,9 @@ public class SMSHandler extends NotificationListenerService {
                 new SMSPeer(sms.getDisplayOriginatingAddress()),
                 content.substring(1));*/
         SMSMessage message = new SMSMessage(new SMSPeer(sms.getDisplayOriginatingAddress()),content);
-        if(smsReceivedListener == null) pendingMessages.add(message);
-        else smsReceivedListener.onMessageReceived(message);
+        if(message.isValid())
+            if(smsReceivedListener == null) pendingMessages.add(message);
+            else smsReceivedListener.onMessageReceived(message);
     }
 
     /**
@@ -79,9 +97,9 @@ public class SMSHandler extends NotificationListenerService {
      */
     @Override
     public void onNotificationPosted (StatusBarNotification sbn) {
-      //  if(sbn.getPackageName().equals("com.google.android.apps.messaging")
-               // && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
-      //  )cancelNotification(sbn.getKey());
+        if(sbn.getPackageName().equals("com.google.android.apps.messaging")
+                && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
+        cancelNotification(sbn.getKey());
     }
 
     @Override
@@ -92,5 +110,12 @@ public class SMSHandler extends NotificationListenerService {
     public void onCreate(){
         super.onCreate();
         //retreive pending messages
+    }
+
+    public enum SendMessageError{
+        NotAValidMessage,
+        NotValidText,
+        NotValidPeer,
+        MessageSent
     }
 }

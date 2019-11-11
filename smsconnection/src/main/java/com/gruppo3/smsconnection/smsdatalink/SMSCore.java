@@ -1,6 +1,5 @@
-package com.example.smsdatalink;
+package com.gruppo3.smsconnection.smsdatalink;
 
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,20 +8,18 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import java.util.Optional;
+
 public class SMSCore extends BroadcastReceiver {
 
-    private static SmsManager manager = SmsManager.getDefault();
     private static final String LOG_KEY = "SMS_CORE";
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
      * @param message SMSMessage to send to the destination SMSPeer.
      */
-    protected static void sendMessage(SMSMessage message) {
-        String destination = message.getPeer().getAddress();
-        String textMessage = message.getData();
-        manager.sendTextMessage(destination,null, textMessage, null, null);
-        Log.i(LOG_KEY, "SMSMessage \"" + message + "\" sent to \"" + destination + "\"");
+    protected static void sendMessage(String destination,String textMessage ) {
+        SmsManager.getDefault().sendTextMessage(destination,null, textMessage, null, null);
     }
 
     /**
@@ -49,4 +46,6 @@ public class SMSCore extends BroadcastReceiver {
                 Log.i(LOG_KEY, "SMSMessage lost");
         }
     }
+
+
 }

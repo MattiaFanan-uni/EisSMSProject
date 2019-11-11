@@ -1,4 +1,5 @@
-package com.example.smsdatalink;
+package com.gruppo3.smsconnection.connection;
+
 
 /**
  * Generic class for handling communications. Extend this to implement a new communication type

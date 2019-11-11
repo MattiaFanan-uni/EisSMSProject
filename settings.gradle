@@ -1,2 +1,2 @@
-include ':app', ':smsdatalink'
+include ':app', ':smsconnection'
 rootProject.name='EisSMSProject'
