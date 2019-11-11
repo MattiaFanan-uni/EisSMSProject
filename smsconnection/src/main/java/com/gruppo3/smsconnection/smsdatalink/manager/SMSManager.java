@@ -1,10 +1,11 @@
-package com.gruppo3.smsconnection.smsdatalink;
+package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
 import android.content.Context;
 
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
-import com.gruppo3.smsconnection.connection.ReceivedMessageListener;
+import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 
 public class SMSManager extends CommunicationHandler<SMSMessage> {
 

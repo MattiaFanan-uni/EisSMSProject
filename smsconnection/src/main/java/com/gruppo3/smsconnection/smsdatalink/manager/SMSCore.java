@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection.smsdatalink;
+package com.gruppo3.smsconnection.smsdatalink.manager;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,15 +8,13 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import java.util.Optional;
-
 public class SMSCore extends BroadcastReceiver {
 
     private static final String LOG_KEY = "SMS_CORE";
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
-     * @param message SMSMessage to send to the destination SMSPeer.
+     * @param textMessage SMSMessage to send to the destination SMSPeer.
      */
     protected static void sendMessage(String destination,String textMessage ) {
         SmsManager.getDefault().sendTextMessage(destination,null, textMessage, null, null);

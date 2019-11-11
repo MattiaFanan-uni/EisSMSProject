@@ -1,15 +1,18 @@
-package com.gruppo3.smsconnection.smsdatalink;
+package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
-import com.gruppo3.smsconnection.connection.ReceivedMessageListener;
+import com.gruppo3.smsconnection.connection.Exceptions.InvalidDataException;
+import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.SMSPayloadData;
+import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class SMSHandler extends NotificationListenerService {
 
@@ -26,27 +29,15 @@ public class SMSHandler extends NotificationListenerService {
      */
     public static SendMessageError sendMessage(SMSMessage message) {
 
-       // if(!message.addHeader(APP_ID + "")) //header check
+       // if(!message.addHeader(APP_ID + "")) //put header
 
-        if(!message.isValid())
-            return SendMessageError.NotAValidMessage;
+        if(!message.getPayloadData().isValid())
+            return SendMessageError.NotValidPayload;
 
-        Optional<SMSPeer> optPeer=message.getPeer();
-        if(!optPeer.isPresent())
+        if(!message.getPeer().isValid())
             return SendMessageError.NotValidPeer;
 
-        Optional<String> optText=message.getData();
-        if(!optText.isPresent())
-            return SendMessageError.NotValidText;
-
-        Optional<String> optAddress=optPeer.get().getAddress();
-        if(!optAddress.isPresent())
-            return SendMessageError.NotValidPeer;
-
-        String destination = optAddress.get();
-        String textMessage = optText.get();
-
-        SMSCore.sendMessage(destination,textMessage);
+        SMSCore.sendMessage(message.getPeer().getAddress(),message.getPayloadData().getData());
         return SendMessageError.MessageSent;
     }
 
@@ -77,10 +68,27 @@ public class SMSHandler extends NotificationListenerService {
         SMSMessage message = new SMSMessage(
                 new SMSPeer(sms.getDisplayOriginatingAddress()),
                 content.substring(1));*/
-        SMSMessage message = new SMSMessage(new SMSPeer(sms.getDisplayOriginatingAddress()),content);
-        if(message.isValid())
-            if(smsReceivedListener == null) pendingMessages.add(message);
-            else smsReceivedListener.onMessageReceived(message);
+        SMSPeer peer=null;
+        SMSPayloadData data=null;
+
+        try{peer=new SMSPeer(sms.getOriginatingAddress());}
+        catch(InvalidPeerException e){}
+
+        try{data=new SMSPayloadData(content);}
+        catch(InvalidDataException e){}
+
+        if(peer!=null && data!=null) {
+
+            SMSMessage message = null;
+
+            try{message=new SMSMessage(data,peer);}
+            catch (InvalidPeerException e){}
+            catch (InvalidDataException e){}
+
+            if (message!=null)
+                if (smsReceivedListener == null) pendingMessages.add(message);
+                else smsReceivedListener.onMessageReceived(message);
+        }
     }
 
     /**
@@ -113,8 +121,7 @@ public class SMSHandler extends NotificationListenerService {
     }
 
     public enum SendMessageError{
-        NotAValidMessage,
-        NotValidText,
+        NotValidPayload,
         NotValidPeer,
         MessageSent
     }

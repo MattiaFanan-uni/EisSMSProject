@@ -1,5 +1,7 @@
-package com.gruppo3.smsconnection.connection;
+package com.gruppo3.smsconnection.connection.listener;
 
+
+import com.gruppo3.smsconnection.connection.Message;
 
 /**
  * Generic interface to implement to create a new listener for the Message Received event.

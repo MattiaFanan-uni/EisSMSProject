@@ -1,6 +1,8 @@
 package com.gruppo3.smsconnection.connection;
 
 
+import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
+
 /**
  * Generic class for handling communications. Extend this to implement a new communication type
  * @param <T> For a communication to work, this must be specific for a type of message

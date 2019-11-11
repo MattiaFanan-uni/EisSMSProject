@@ -1,35 +1,50 @@
 package com.gruppo3.smsconnection.connection;
 
-import java.util.Optional;
+import com.gruppo3.smsconnection.connection.Exceptions.InvalidDataException;
+import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
 
 /**
  * Interface to implement to create a new Message type
  */
-public abstract class Message<D,P extends Peer> {
+public class Message<D extends PayloadData,P extends Peer> {
     protected D data;
     protected P peer;
+
+    public Message(D data,P peer)throws InvalidPeerException,InvalidDataException{
+        if(!peer.isValid())
+            throw new InvalidPeerException();
+        if(!data.isValid())
+            throw new InvalidDataException();
+        this.data=data;
+        this.peer=peer;
+    }
     /**
      * Returns the data contained in the message
      */
-    public Optional<D> getData(){
-        return Optional.ofNullable(data);
-    }
+    public D getPayloadData(){ return data; }
 
     /**
      * Returns the Peer of the message
      */
-    public Optional<P> getPeer(){
-        return peer.getAddress();
+    public P getPeer(){ return peer; }
+
+
+    public boolean setPayloadData(D data){
+        if(!data.isValid())
+            return false;
+        this.data=data;
+        return true;
     }
 
-    public abstract void setData(D data);
-
-    public abstract void setPeer(P peer);
-
-    protected abstract boolean hasValidData();
+    public boolean setPeer(P peer){
+        if(!peer.isValid())
+            return false;
+        this.peer=peer;
+        return true;
+    }
 
     public boolean isValid(){
-        return peer.isValid()&& hasValidData();
+        return peer.isValid()&& data.isValid();
     }
 }
 

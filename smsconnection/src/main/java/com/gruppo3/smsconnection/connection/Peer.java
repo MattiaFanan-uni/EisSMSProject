@@ -1,6 +1,7 @@
 package com.gruppo3.smsconnection.connection;
 
-import java.util.Optional;
+
+import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
 
 /**
  * abstarcton of peer class
@@ -9,19 +10,26 @@ import java.util.Optional;
 public abstract class Peer<T> {
     protected T address;
 
-    protected Peer(T address){
+    public Peer(T address)throws InvalidPeerException {
+        if(!isValidAddress(address))
+            throw new InvalidPeerException();
         this.address=address;
-    }//only if its valid
-
-    public Optional<T> getAddress(){
-        return Optional.ofNullable(address);
     }
 
-    public abstract boolean isValid();
+    public T getAddress(){
+        return address;
+    }
 
-    public enum PeerError{
-        TooLong,
-        TooShort,
-        NotOnlyDigits
+    public boolean setAddress(T address){
+        if(!isValidAddress(address))
+            return false;
+        this.address=address;
+        return true;
+    }
+
+    protected abstract boolean isValidAddress(T address);
+
+    public boolean isValid(){
+        return isValidAddress(address);
     }
 }
