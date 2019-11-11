@@ -1,7 +1,7 @@
 package com.gruppo3.smsconnection.smsdatalink;
 
 
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.Peer;
 
 public class SMSPeer extends Peer<String> {

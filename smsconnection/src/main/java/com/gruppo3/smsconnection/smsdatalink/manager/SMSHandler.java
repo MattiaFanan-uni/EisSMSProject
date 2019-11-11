@@ -5,8 +5,8 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidDataException;
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.SMSPayloadData;
@@ -81,7 +81,7 @@ public class SMSHandler extends NotificationListenerService {
 
             SMSMessage message = null;
 
-            try{message=new SMSMessage(data,peer);}
+            try{message=new SMSMessage(peer,data);}
             catch (InvalidPeerException e){}
             catch (InvalidDataException e){}
 
@@ -105,9 +105,9 @@ public class SMSHandler extends NotificationListenerService {
      */
     @Override
     public void onNotificationPosted (StatusBarNotification sbn) {
-        if(sbn.getPackageName().equals("com.google.android.apps.messaging")
-                && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
-        cancelNotification(sbn.getKey());
+      //  if(sbn.getPackageName().equals("com.google.android.apps.messaging")
+      //          && sbn.getNotification().tickerText.toString().contains(APP_ID + ""))
+      //  cancelNotification(sbn.getKey());
     }
 
     @Override

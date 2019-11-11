@@ -1,16 +1,16 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidDataException;
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
 
 /**
  * Interface to implement to create a new Message type
  */
-public class Message<D extends PayloadData,P extends Peer> {
+public class Message<P extends Peer,D extends PayloadData> {
     protected D data;
     protected P peer;
 
-    public Message(D data,P peer)throws InvalidPeerException,InvalidDataException{
+    public Message(P peer,D data)throws InvalidPeerException, InvalidDataException {
         if(!peer.isValid())
             throw new InvalidPeerException();
         if(!data.isValid())

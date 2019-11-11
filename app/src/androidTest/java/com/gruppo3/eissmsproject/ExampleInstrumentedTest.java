@@ -1,4 +1,4 @@
-package com.example.eissmsproject;
+package com.gruppo3.eissmsproject;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.example.eissmsproject", appContext.getPackageName());
+        assertEquals("com.gruppo3.eissmsproject", appContext.getPackageName());
     }
 }

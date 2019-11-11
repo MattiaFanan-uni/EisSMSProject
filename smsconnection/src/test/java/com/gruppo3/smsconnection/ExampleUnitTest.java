@@ -1,4 +1,4 @@
-package com.gruppo3.eissmsproject;
+package com.gruppo3.smsconnection;
 
 import org.junit.Test;
 

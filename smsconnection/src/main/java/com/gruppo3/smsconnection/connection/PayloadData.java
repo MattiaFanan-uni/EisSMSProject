@@ -1,6 +1,6 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
 
 public abstract class PayloadData<T> {
     protected T data;

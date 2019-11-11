@@ -1,7 +1,7 @@
 package com.gruppo3.smsconnection.connection;
 
 
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
 
 /**
  * abstarcton of peer class

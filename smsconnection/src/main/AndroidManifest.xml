@@ -8,7 +8,7 @@
     <application>
         <receiver android:name=".smsdatalink.manager.SMSCore"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />

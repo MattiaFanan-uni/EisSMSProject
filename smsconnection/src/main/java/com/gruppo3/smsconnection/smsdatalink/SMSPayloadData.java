@@ -1,6 +1,6 @@
 package com.gruppo3.smsconnection.smsdatalink;
 
-import com.gruppo3.smsconnection.connection.Exceptions.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
 import com.gruppo3.smsconnection.connection.PayloadData;
 
 public class SMSPayloadData extends PayloadData<String> {

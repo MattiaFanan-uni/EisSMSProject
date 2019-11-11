@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection.connection.Exceptions;
+package com.gruppo3.smsconnection.connection.exceptions;
 
 public class InvalidPeerException extends Exception{
     public InvalidPeerException(String s){

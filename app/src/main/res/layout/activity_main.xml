@@ -7,12 +7,29 @@
     tools:context=".MainActivity">
 
     <EditText
+        android:id="@+id/txt_message2"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:editable="false"
+        android:gravity="bottom"
+        android:hint="Inserire il messaggio"
+        android:singleLine="false"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.767" />
+
+    <EditText
         android:id="@+id/txt_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter phone number"
-        android:inputType="number|phone"
+        android:hint="Inserire numero di telefono"
         android:textSize="24sp"
+        android:inputType="phone"
         app:layout_constraintBottom_toTopOf="@+id/txt_phone_number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
@@ -28,7 +45,7 @@
         android:layout_marginTop="10dp"
         android:editable="true"
         android:gravity="bottom"
-        android:hint="Enter message"
+        android:hint="Inserire il messaggio"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,12 +55,12 @@
         app:layout_constraintVertical_bias="0.101" />
 
     <Button
-        android:id="@+id/sendButton"
+        android:id="@+id/btn_send"
         android:layout_width="379dp"
         android:layout_height="60dp"
         android:backgroundTint="#7A9FF3"
-        android:onClick="sendButton"
-        android:text="Send"
+        android:onClick="btn_send"
+        android:text="Invia"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,16 +68,13 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_message"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/received"
-        android:layout_width="372dp"
-        android:layout_height="150dp"
-        android:background="#E3EFF3"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="363dp"
+        android:layout_height="61dp"
+        android:onClick="btn_receive"
+        android:text="RECEIVE"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sendButton"
-        app:layout_constraintVertical_bias="0.613" />
+        tools:layout_editor_absoluteX="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
