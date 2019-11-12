@@ -1,5 +1,7 @@
-package com.gruppo3.smsconnection.connection.exceptions;
-
+package com.gruppo3.smsconnection.connection.exception;
+/**
+ * @author Mattia Fanan
+ */
 public class InvalidDataException extends Exception {
     public InvalidDataException(String s){
         super(s);

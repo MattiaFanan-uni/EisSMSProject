@@ -6,7 +6,10 @@ import android.content.Context;
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-
+/**
+ * @author Mattia Fanan
+ * scheme from gruppo 1
+ */
 public class SMSManager extends CommunicationHandler<SMSMessage> {
 
     private Context context;

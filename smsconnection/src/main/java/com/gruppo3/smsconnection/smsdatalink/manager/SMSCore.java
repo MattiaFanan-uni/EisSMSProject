@@ -7,7 +7,11 @@ import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
-
+/**
+ *@author Mattia Fanan
+ *
+ * basic class scheme from gruppo1
+ */
 public class SMSCore extends BroadcastReceiver {
 
     private static final String LOG_KEY = "SMS_CORE";

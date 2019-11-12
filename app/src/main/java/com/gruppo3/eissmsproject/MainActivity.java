@@ -20,8 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.SMSPayloadData;

@@ -1,15 +1,25 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 
 /**
- * Interface to implement to create a new Message type
+ * @author Mattia Fanan
+ * abstraction of Message
+ * @param P message's peer type
+ * @param D message's payload type
  */
-public class Message<P extends Peer,D extends PayloadData> {
+public abstract class Message<P extends Peer,D extends PayloadData> {
     protected D data;
     protected P peer;
 
+    /**
+     * build the message
+     * @param peer peer
+     * @param data payload
+     * @throws InvalidPeerException when invalid peer passed
+     * @throws InvalidDataException when invalid payload passed
+     */
     public Message(P peer,D data)throws InvalidPeerException, InvalidDataException {
         if(peer==null || !peer.isValid())
             throw new InvalidPeerException();
@@ -19,16 +29,20 @@ public class Message<P extends Peer,D extends PayloadData> {
         this.peer=peer;
     }
     /**
-     * Returns the data contained in the message
+     * @return D the payloadData contained in the message
      */
     public D getPayloadData(){ return data; }
 
     /**
-     * Returns the Peer of the message
+     *@return P message's peer
      */
     public P getPeer(){ return peer; }
 
-
+    /**
+     * set message's payload if a valid one is passed
+     * @param data message's payload
+     * @return true if the message's payload is valid
+     */
     public boolean setPayloadData(D data){
         if(!data.isValid())
             return false;
@@ -36,6 +50,11 @@ public class Message<P extends Peer,D extends PayloadData> {
         return true;
     }
 
+    /**
+     * set message's peer if a valid one is passed
+     * @param peer message's peer
+     * @return true if the message's peer is valid
+     */
     public boolean setPeer(P peer){
         if(!peer.isValid())
             return false;
@@ -43,6 +62,10 @@ public class Message<P extends Peer,D extends PayloadData> {
         return true;
     }
 
+    /**
+     * method for check message's validity
+     * @return true if is valid
+     */
     public boolean isValid(){
         return peer.isValid()&& data.isValid();
     }
