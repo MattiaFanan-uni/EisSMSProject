@@ -11,9 +11,9 @@ public class Message<P extends Peer,D extends PayloadData> {
     protected P peer;
 
     public Message(P peer,D data)throws InvalidPeerException, InvalidDataException {
-        if(!peer.isValid())
+        if(peer==null || !peer.isValid())
             throw new InvalidPeerException();
-        if(!data.isValid())
+        if(data==null || !data.isValid())
             throw new InvalidDataException();
         this.data=data;
         this.peer=peer;
