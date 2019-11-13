@@ -35,7 +35,7 @@ public class SMSMessage extends Message<SMSPeer,SMSPayloadData> {
      * @return String rappresenting the message
      */
     public String toString() {
-        return "SMSPeer: " + getPayloadData().getData() + ", SMSMessage: " + getPeer().getAddress();
+        return "SMSPeer: " + getPeer().getAddress() + ", SMSMessage: " + getPayloadData().getData();
     }
 
 }
