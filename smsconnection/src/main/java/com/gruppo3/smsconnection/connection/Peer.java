@@ -42,6 +42,27 @@ public abstract class Peer<T> {
         return true;
     }
 
+    @Override
+    public boolean equals(Object toCompare) {
+
+        // If the object is compared with itself then return true
+        if (toCompare == this) {
+            return true;
+        }
+
+        /* Check if o is an instance of Peer or not
+          "null instanceof [type]" also returns false */
+        if (!(toCompare instanceof Peer)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        Peer c = (Peer) toCompare;
+
+        // Compare the data members and return accordingly
+        return getAddress().equals(c.getAddress());
+    }
+
     /**
      * method that decides what is a valid address for the peer
      * @param address to validate
