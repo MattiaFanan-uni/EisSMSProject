@@ -1,73 +1,58 @@
 package com.gruppo3.smsconnection.connection;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-
 /**
  * @author Mattia Fanan
- * abstraction of Message
- * @param P message's peer type
- * @param D message's payload type
+ * abstraction of message's payload
+ * @param T typer of data in the payload
  */
-public abstract class Message<P extends Peer,D extends PayloadData> {
-    protected D data;
-    protected P peer;
+public abstract class Message<T> {
+    protected T data;
 
     /**
-     * build the message
-     * @param peer peer
-     * @param data payload
-     * @throws InvalidPeerException when invalid peer passed
-     * @throws InvalidDataException when invalid payload passed
+     * build the payload
+     * @param data payload's data
+     * @throws InvalidDataException when not valid payload is passed
      */
-    public Message(P peer,D data)throws InvalidPeerException, InvalidDataException {
-        if(peer==null || !peer.isValid())
-            throw new InvalidPeerException();
-        if(data==null || !data.isValid())
+    public Message(T data)throws InvalidDataException {
+        if(!isValidData(data))
             throw new InvalidDataException();
         this.data=data;
-        this.peer=peer;
     }
-    /**
-     * @return D the payloadData contained in the message
-     */
-    public D getPayloadData(){ return data; }
 
     /**
-     *@return P message's peer
+     *
+     * @return payload's data
      */
-    public P getPeer(){ return peer; }
+    public T getData(){
+        return data;
+    }
 
     /**
-     * set message's payload if a valid one is passed
-     * @param data message's payload
-     * @return true if the message's payload is valid
+     * set payload's data if a valid one is passed
+     * @param data payload's data
+     * @return true if payload's data setted correctly
      */
-    public boolean setPayloadData(D data){
-        if(!data.isValid())
+    public boolean setData(T data){
+        if(!isValidData(data))
             return false;
         this.data=data;
         return true;
     }
 
     /**
-     * set message's peer if a valid one is passed
-     * @param peer message's peer
-     * @return true if the message's peer is valid
+     * method that decides what is a valid data for the payload
+     * @param data to validate
+     * @return true if is valid
      */
-    public boolean setPeer(P peer){
-        if(!peer.isValid())
-            return false;
-        this.peer=peer;
-        return true;
-    }
+    protected abstract boolean isValidData(T data);
 
     /**
-     * method for check message's validity
+     * check if payload is valid
      * @return true if is valid
      */
     public boolean isValid(){
-        return peer.isValid()&& data.isValid();
+        return isValidData(data);
     }
-}
 
+}
