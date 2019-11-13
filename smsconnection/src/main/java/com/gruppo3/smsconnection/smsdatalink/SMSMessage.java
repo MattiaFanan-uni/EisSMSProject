@@ -23,7 +23,7 @@ public class SMSMessage extends Message<SMSPeer,SMSPayloadData> {
      * Helper function to write the message as a string
      */
     public String toString() {
-        return "SMSPeer: " + getPayloadData().getData() + ", SMSMessage: " + getPeer().getAddress();
+        return "SMSPeer: " + getPeer().getAddress() + ", SMSMessage: " + getPayloadData().getData();
     }
 
 }
