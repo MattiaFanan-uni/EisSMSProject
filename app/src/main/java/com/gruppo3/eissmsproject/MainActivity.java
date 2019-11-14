@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
                 catch (InvalidDataException e){}
 
                 if(sms!=null) {
-                    flHandler.sendMessage(sms);
+                    flHandler.sendDataUnit(sms);
 
                     Toast.makeText(this, "Messagio inviato", Toast.LENGTH_SHORT).show();
                 }

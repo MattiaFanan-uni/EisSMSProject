@@ -53,11 +53,11 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
     /**
      * Sends a given valid message
      */
-    public boolean sendMessage(SMSDataUnit message) {
-        if(message==null || !message.isValid())
+    public boolean sendDataUnit(SMSDataUnit dataUnit) {
+        if(dataUnit==null || !dataUnit.isValid())
             return false;
         SMSAdapter adpt;
-        try{adpt=new SMSAdapter(message);}
+        try{adpt=new SMSAdapter(dataUnit);}
         catch(InvalidDataException e){return false;}
         catch(InvalidPeerException e){return false;}
 
