@@ -1,64 +1,68 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
+import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
 
 /**
  * @author Mattia Fanan
  * abstraction of DataUnit
- * @param P message's peer type
+ * @param H message's header type
  * @param M message's payload type
  */
-public abstract class DataUnit<P extends Peer,M extends Message> {
-    protected M message;
-    protected P peer;
+public abstract class DataUnit<H extends Header,M extends Payload> {
+    protected H header;
+    protected M payload;
 
     /**
      * build the message
-     * @param peer peer
-     * @param message payload
-     * @throws InvalidPeerException when invalid peer passed
-     * @throws InvalidDataException when invalid payload passed
+     * @param header header
+     * @param payload payload
+     * @throws InvalidHeaderException when invalid peer passed
+     * @throws InvalidPayloadException when invalid payload passed
      */
-    public DataUnit(P peer, M message)throws InvalidPeerException, InvalidDataException {
-        if(peer==null || !peer.isValid())
-            throw new InvalidPeerException();
-        if(message==null || !message.isValid())
-            throw new InvalidDataException();
-        this.message=message;
-        this.peer=peer;
+    public DataUnit(H header, M payload)throws InvalidHeaderException, InvalidPayloadException {
+        if(header==null || !header.isValid())
+            throw new InvalidHeaderException();
+        if(payload==null || !payload.isValid())
+            throw new InvalidPayloadException();
+        this.payload=payload;
+        this.header=header;
     }
+
     /**
      * @return D the payloadData contained in the message
      */
-    public M getMessage(){ return message; }
+    public M getPayload(){ return payload; }
 
-    /**
-     *@return P message's peer
-     */
-    public P getPeer(){ return peer; }
+
 
     /**
      * set message's payload if a valid one is passed
-     * @param message message's payload
+     * @param payload message's payload
      * @return true if the message's payload is valid
      */
-    public boolean setMessage(M message){
-        if(!message.isValid())
+    public boolean setPayload(M payload){
+        if(!payload.isValid())
             return false;
-        this.message=message;
+        this.payload=payload;
         return true;
     }
 
     /**
-     * set message's peer if a valid one is passed
-     * @param peer message's peer
-     * @return true if the message's peer is valid
+     * get the data unit's header
+     * @return header
      */
-    public boolean setPeer(P peer){
-        if(!peer.isValid())
+    public H getHeader() {return header;}
+
+    /**
+     * set the data unit's header
+     * @param header
+     * @return
+     */
+    public boolean setHeader(H header){
+        if(header==null || !header.isValid())
             return false;
-        this.peer=peer;
+        this.header=header;
         return true;
     }
 
@@ -67,9 +71,7 @@ public abstract class DataUnit<P extends Peer,M extends Message> {
      * @return true if is valid
      */
     public boolean isValid(){
-        return peer.isValid()&& message.isValid();
+        return header.isValid()&& payload.isValid();
     }
-
-
 }
 

@@ -1,22 +1,23 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
+
 /**
  * @author Mattia Fanan
  * abstraction of message's payload
  * @param T typer of data in the payload
  */
-public abstract class Message<T> {
+public abstract class Payload<T> {
     protected T data;
 
     /**
      * build the payload
      * @param data payload's data
-     * @throws InvalidDataException when not valid payload is passed
+     * @throws InvalidPayloadException when not valid payload is passed
      */
-    public Message(T data)throws InvalidDataException {
+    public Payload(T data)throws InvalidPayloadException {
         if(!isValidData(data))
-            throw new InvalidDataException();
+            throw new InvalidPayloadException();
         this.data=data;
     }
 

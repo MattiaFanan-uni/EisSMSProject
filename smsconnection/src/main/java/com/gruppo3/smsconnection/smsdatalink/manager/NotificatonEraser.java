@@ -3,16 +3,7 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
 
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
-
-import java.util.ArrayList;
 /**
 *@author Mattia Fanan
  * future
