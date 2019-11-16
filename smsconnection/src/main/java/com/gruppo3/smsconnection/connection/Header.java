@@ -52,30 +52,28 @@ public abstract class Header<P extends Peer, D> {
     }
 
     /**
-     * set header's destination peer if a valid one is passed
-     * @param peer  peer
-     * @return true if the header's destination peer is successfully updated
+     * Set destination peer in the Header
+     * @param destinationPeer to set in the Header
+     * @return true if destinationPeer is valid, false if destinationPeer is not valid
      */
-    public boolean setDestinationPeer(P peer){
+    public boolean setDestinationPeer(P destinationPeer){
+        // Can set null peer only if Header.canHaveNullPeer = true
+        if (destinationPeer == null && !canHaveNullPeer)
+            return false;
 
-        //if peer is null i can set it only if header can have null peers
-        if(peer==null){
-            if(canHaveNullPeer)
-                this.destinationPeer=peer;
-            return canHaveNullPeer;
+        if (destinationPeer != null) {
+            if (destinationPeer.isValid()) {
+                this.destinationPeer = destinationPeer;
+                return true;
+            }
         }
 
-        if(peer==null)
-            return canHaveNullPeer;
-        if(!peer.isValid())
-            return false;
-        this.destinationPeer=peer;
-        return true;
+        return false;
     }
 
     /**
-     * methods that decides what is a valid header
-     * @return true if is valid
+     * Check if Header is valid
+     * @return true if Header is valid, false if Header is not valid
      */
     public abstract boolean isValid();
 }
