@@ -46,7 +46,7 @@ public class SMSHeader extends Header<SMSPeer,String> {
      * @return String header to add to the payload
      */
     @Override
-    public String getToAddHeder() {
+    public String getHeader() {
         return stamp;
     }
 

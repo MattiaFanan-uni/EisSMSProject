@@ -1,51 +1,56 @@
 package com.gruppo3.smsconnection.connection;
 
 /**
+ * Header abstract class
  * @author Mattia Fanan
- * abstraction of DataUnit's header
- * @param <P> type of peer
- * @param <D> type of payload's data
+ *
+ * @param <P> Peer data-type
+ * @param <D> Payload data data-type
  */
-public abstract class Header<P extends Peer,D> {
-    protected P destinationPeer;
+public abstract class Header<P extends Peer, D> {
     protected P sourcePeer;
+    protected P destinationPeer;
     protected boolean canHaveNullPeer;
 
     /**
-     * get header's data to add to the payload
-     * @return header to add to the payload
+     * @return Header's data
      */
-    public abstract D getToAddHeder();
+    public abstract D getHeader();
 
     /**
-     *@return P header's source peer
+     * @return source peer in the Header
      */
-    public P getSourcePeer(){ return sourcePeer; }
+    public P getSourcePeer() {
+        return sourcePeer;
+    }
 
     /**
-     *@return P header's destination peer
+     * @return destination peer in the Header
      */
-    public P getDestinationPeer(){ return destinationPeer; }
+    public P getDestinationPeer() {
+        return destinationPeer;
+    }
 
     /**
-     * set header's source peer if a valid one is passed
-     * @param peer peer
-     * @return true if the header's source peer is successfully updated
+     * Set source peer in the Header
+     * @param sourcePeer to set in the Header
+     * @return true if sourcePeer is valid, false if sourcePeer is not valid
      */
-    public boolean setSourcePeer(P peer){
-        //if peer is null i can set it only if header can have null peers
-        if(peer==null){
-            if(canHaveNullPeer)
-                this.sourcePeer=peer;
-            return canHaveNullPeer;
-        }
-
-        if(!peer.isValid())
+    public boolean setSourcePeer(P sourcePeer) {
+        // Can set null peer only if Header.canHaveNullPeer = true
+        if (sourcePeer == null && !canHaveNullPeer)
             return false;
 
-        this.sourcePeer=peer;
-        return true;
+        if (sourcePeer != null) {
+            if (sourcePeer.isValid()) {
+                this.sourcePeer = sourcePeer;
+                return true;
+            }
+        }
+
+        return false;
     }
+
     /**
      * set header's destination peer if a valid one is passed
      * @param peer  peer
