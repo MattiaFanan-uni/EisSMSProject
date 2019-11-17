@@ -1,21 +1,16 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
-
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
 /**
-*@author Mattia Fanan
- * future
- * basic class scheme from gruppo1
- *
+ * NotificationEraser class
+ * @author Mattia Fanan
  */
 public class NotificatonEraser extends NotificationListenerService {
 
     private static final char APP_ID = (char)0x02;
     private static final String LOG_KEY = "SMS_HANDLER";
-
-
 
     /**
      * Overridden method that catches the notifications. If a messaging notification is
@@ -30,13 +25,12 @@ public class NotificatonEraser extends NotificationListenerService {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
 
     }
+
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
     }
-
-
 }

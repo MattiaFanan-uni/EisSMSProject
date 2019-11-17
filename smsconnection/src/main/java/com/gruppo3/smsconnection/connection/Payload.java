@@ -3,57 +3,59 @@ package com.gruppo3.smsconnection.connection;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 
 /**
+ * Payload abstract class
  * @author Mattia Fanan
- * abstraction of message's payload
- * @param T typer of data in the payload
+ *
+ * @param T Payload data data-type
  */
 public abstract class Payload<T> {
     protected T data;
 
     /**
-     * build the payload
-     * @param data payload's data
-     * @throws InvalidPayloadException when not valid payload is passed
+     * Create a payload
+     * @param data Data of the Payload
+     * @throws InvalidPayloadException when an invalid data is passed
      */
     public Payload(T data)throws InvalidPayloadException {
         if(!isValidData(data))
             throw new InvalidPayloadException();
-        this.data=data;
+
+        this.data = data;
     }
 
     /**
-     *
-     * @return payload's data
+     * Get data of the Payload
+     * @return data of the payload
      */
-    public T getData(){
+    public T getData() {
         return data;
     }
 
     /**
-     * set payload's data if a valid one is passed
-     * @param data payload's data
-     * @return true if payload's data setted correctly
+     * Set data of the Payload
+     * @param data Data to assign to the payload
+     * @return true if data is valid, false if data is not valid
      */
-    public boolean setData(T data){
+    public boolean setData(T data) {
         if(!isValidData(data))
             return false;
-        this.data=data;
+
+        this.data = data;
         return true;
     }
 
     /**
-     * method that decides what is a valid data for the payload
-     * @param data to validate
-     * @return true if is valid
-     */
-    protected abstract boolean isValidData(T data);
-
-    /**
-     * check if payload is valid
-     * @return true if is valid
+     * Check if Payload is valid
+     * @return true if Payload is valid, false if Payload is not valid
      */
     public boolean isValid(){
         return isValidData(data);
     }
 
+    /**
+     * Check if Payload's data is valid
+     * @param data Payload's data to validate
+     * @return true if data is valid, false if data is not valid
+     */
+    protected abstract boolean isValidData(T data);
 }
