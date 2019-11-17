@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gruppo3.smsconnection" >
+
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.write_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
@@ -9,16 +9,18 @@
         <receiver android:name=".smsdatalink.manager.SMSCore"
             android:enabled="true"
             android:exported="true"
-            android:directBootAware="true">
+            android:directBootAware="true"> <!-- TODO: API 24+ -->
+
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <service
             android:name=".smsdatalink.manager.NotificatonEraser"
-            android:exported="false"
             android:label="@string/app_name"
+            android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
