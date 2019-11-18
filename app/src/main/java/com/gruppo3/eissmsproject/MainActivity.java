@@ -1,5 +1,6 @@
 package com.gruppo3.eissmsproject;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -109,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
     }
 
 
-
     private void MyMessage() {
         String phoneNumber = txt_phone_number.getText().toString().trim();
         String message = txt_message.getText().toString().trim();
@@ -183,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
     }
 
     /**
+     * Revisione di Luca Crema e Enrico Cestaro
+     *
      * If the message received contains the keyword "alto" the silent mode is disabled, if it contains "basso" the silent mode is enabled
      * If it contains the keyword "ring" the silent mode is disabled and the phone rings for 5 seconds
      * @param message The message received

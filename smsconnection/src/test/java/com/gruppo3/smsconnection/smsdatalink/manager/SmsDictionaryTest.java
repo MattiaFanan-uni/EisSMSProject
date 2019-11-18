@@ -1,5 +1,12 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
+/**
+ * @author Riccardo Crociani
+ * Revisione di Luca Crema e Enrico Cestaro
+ *
+ * Dictionary tests
+ */
+
 import com.gruppo3.smsconnection.connection.exception.InvalidItemException;
 
 import org.junit.Assert;

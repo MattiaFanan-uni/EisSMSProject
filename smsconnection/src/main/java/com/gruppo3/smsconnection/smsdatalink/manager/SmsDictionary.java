@@ -2,6 +2,8 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
 
 /**
  * @author Riccardo Crociani
+ *
+ * Revisione di Luca Crema e Enrico Cestaro
  */
 
 
