@@ -2,6 +2,7 @@ package com.gruppo3.smsconnection.connection;
 
 /**
  * @author Riccardo Crociani
+ * Generic dictionary interface
  */
 public interface Dictionary<K, V> {
 

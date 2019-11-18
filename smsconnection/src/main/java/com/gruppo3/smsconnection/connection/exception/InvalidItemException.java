@@ -1,6 +1,7 @@
 package com.gruppo3.smsconnection.connection.exception;
 
 /**
+ * @author Riccardo Crociani
  * InvalidItemException class
  * @author Riccardo Crociani
  */

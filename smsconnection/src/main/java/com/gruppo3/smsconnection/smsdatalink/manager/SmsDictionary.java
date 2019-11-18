@@ -59,6 +59,9 @@ public class SmsDictionary<K,V> implements Dictionary<K,V>{
        return null;
     }
 
+    /**
+     * Inner class Pair(K, V)
+     */
     private class Pair{
         private K key;
         private V value;
