@@ -1,29 +1,43 @@
 package com.gruppo3.smsconnection.smsdatalink;
 
-
-import com.gruppo3.smsconnection.connection.exceptions.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exceptions.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
 import com.gruppo3.smsconnection.connection.Message;
+/**
+ * @author Mattia Fanan
+ * sms implementation of payloadData
+ */
+public class SMSMessage extends Message<String> {
+    public static final int MAX_PAYLOAD_LENGTH=160;
+    DataLinkProtocol protocol=DataLinkProtocol.DirectSend;
 
-public class SMSMessage extends Message<SMSPeer,SMSPayloadData> {
-
-
-    public SMSMessage(SMSPeer peer,SMSPayloadData data) throws InvalidPeerException, InvalidDataException {
-        super(peer,data);
+    /**
+     * build the smsPayload
+     * @param data
+     * @throws InvalidDataException if a non valid data is passed
+     */
+    public SMSMessage(String data) throws InvalidDataException {
+        super(data);
     }
 
     /**
-     * Adds a string header before the message
+     * method that decides what is a valid data for the payload
+     * @param data to validate
+     * @return true if data is not null and shorther than MAX_PAYLOAD_LENGTH
      */
-    public boolean addHeader(String header) {
-        return data.setData(data.getData()+header);
+    @Override
+    protected boolean isValidData(String data) {
+        return data!=null && data.length()<=MAX_PAYLOAD_LENGTH;
     }
 
-    /**
-     * Helper function to write the message as a string
-     */
-    public String toString() {
-        return "SMSPeer: " + getPeer().getAddress() + ", SMSMessage: " + getPayloadData().getData();
+    public void setProtocol(DataLinkProtocol protocol) {
+        this.protocol=protocol;
     }
 
+    public DataLinkProtocol getProtocol() {
+        return protocol;
+    }
+
+    public enum DataLinkProtocol{
+        DirectSend
+    }
 }

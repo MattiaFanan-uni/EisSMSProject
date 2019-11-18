@@ -4,40 +4,101 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
 import android.content.Context;
 
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
+import com.gruppo3.smsconnection.connection.DataUnit;
+import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
+import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
 import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 
-public class SMSManager extends CommunicationHandler<SMSMessage> {
+import java.util.ArrayList;
 
-    private Context context;
+/**
+ * @author Mattia Fanan
+ */
+public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
 
-    public SMSManager(Context context) {
-        this.context=context;
+    private static ArrayList<SMSDataUnit> pendingMessages = new ArrayList<>();
+    private static ReceivedMessageListener<SMSDataUnit> smsReceivedListener;
+    private static SMSManager defInstance;
+
+    private SMSManager() {
+        pendingMessages=retreiveSavedPendingMessages();
+        defInstance=null;
+        smsReceivedListener=null;
     }
 
+    public static SMSManager getDefault(){
+        if(defInstance==null)
+            defInstance=new SMSManager();
+        return defInstance;
+    }
 
     /**
      * Adds the listener watching for incoming SMSMessages
      * @param listener The listener to wake up when a message is received
      */
-    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        SMSHandler.addReceiveListener(listener);
+    public void addReceiveListener(ReceivedMessageListener<SMSDataUnit> listener) {
+        smsReceivedListener=listener;
     }
 
     /**
      * Removes the listener of incoming messages
      */
     public void removeReceiveListener() {
-        SMSHandler.removeReceiveListener();
+        smsReceivedListener=null;
     }
 
     /**
      * Sends a given valid message
      */
-    public void sendMessage(SMSMessage message) {
-        SMSHandler.sendMessage(message);
+    public boolean sendDataUnit(SMSDataUnit dataUnit) {
+        if(dataUnit==null || !dataUnit.isValid())
+            return false;
+
+        SMSAdapter adpt;
+        try{adpt=new SMSAdapter(dataUnit);}
+        catch(InvalidDataException e){return false;}
+        catch(InvalidPeerException e){return false;}
+
+        if(adpt==null)return false;
+
+        SMSCore.sendMessage(adpt.getSMSAddress(),adpt.getSMSText());
+        return true;
+    }
+
+    public void handleMessage(SMSDataUnit dataUnit)
+    {
+        if (dataUnit!=null && dataUnit.isValid()){
+            if (smsReceivedListener == null)
+                pendingMessages.add(dataUnit);
+            else
+                smsReceivedListener.onMessageReceived(dataUnit);
+        }
+    }
+
+    public static boolean isPendingMessagesEmpty() {
+        return pendingMessages.isEmpty();
+    }
+
+    /**
+     * future
+     * retrive pending messages from database
+     * @return
+     */
+    private ArrayList<SMSDataUnit> retreiveSavedPendingMessages()
+    {
+        return new ArrayList<SMSDataUnit>();
     }
 
 
+    /**
+     * future
+     * save a pendingmessge in database
+     */
+    private void savePendingMessage(){
+
+    }
 }
 
