@@ -1,75 +1,85 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
+import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
 
 /**
+ * DataUnit abstract class
  * @author Mattia Fanan
- * abstraction of DataUnit
- * @param P message's peer type
- * @param M message's payload type
+ *
+ * @param H Header data-type
+ * @param M Payload data-type
  */
-public abstract class DataUnit<P extends Peer,M extends Message> {
-    protected M message;
-    protected P peer;
+public abstract class DataUnit<H extends Header, M extends Payload> {
+    protected H header;
+    protected M payload;
 
     /**
-     * build the message
-     * @param peer peer
-     * @param message payload
-     * @throws InvalidPeerException when invalid peer passed
-     * @throws InvalidDataException when invalid payload passed
+     * Create a message
+     * @param header Header of the DataUnit
+     * @param payload Payload of the DataUnit
+     * @throws InvalidHeaderException when an invalid header is passed
+     * @throws InvalidPayloadException when an invalid payload is passed
      */
-    public DataUnit(P peer, M message)throws InvalidPeerException, InvalidDataException {
-        if(peer==null || !peer.isValid())
-            throw new InvalidPeerException();
-        if(message==null || !message.isValid())
-            throw new InvalidDataException();
-        this.message=message;
-        this.peer=peer;
+    public DataUnit(H header, M payload) throws InvalidHeaderException, InvalidPayloadException {
+        if (header == null || !header.isValid())
+            throw new InvalidHeaderException();
+
+        if (payload == null || !payload.isValid())
+            throw new InvalidPayloadException();
+
+        this.payload = payload;
+        this.header = header;
     }
-    /**
-     * @return D the payloadData contained in the message
-     */
-    public M getMessage(){ return message; }
 
     /**
-     *@return P message's peer
+     * Get header of the DataUnit
+     * @return header of the DataUnit
      */
-    public P getPeer(){ return peer; }
+    public H getHeader() {
+        return header;
+    }
 
     /**
-     * set message's payload if a valid one is passed
-     * @param message message's payload
-     * @return true if the message's payload is valid
+     * Get payload of the DataUnit
+     * @return the payload of the DataUnit
      */
-    public boolean setMessage(M message){
-        if(!message.isValid())
+    public M getPayload() {
+        return payload;
+    }
+
+    /**
+     * Set header of the DataUnit
+     * @param header Header to assign to the DataUnit
+     * @return true if header is valid, false if header is not valid
+     */
+    public boolean setHeader(H header){
+        if (header == null || !header.isValid())
             return false;
-        this.message=message;
+
+        this.header = header;
         return true;
     }
 
     /**
-     * set message's peer if a valid one is passed
-     * @param peer message's peer
-     * @return true if the message's peer is valid
+     * Set payload of the DataUnit
+     * @param payload Payload to assign to the DataUnit
+     * @return true if payload is valid, false if payload is not valid
      */
-    public boolean setPeer(P peer){
-        if(!peer.isValid())
+    public boolean setPayload(M payload) {
+        if (!payload.isValid())
             return false;
-        this.peer=peer;
+
+        this.payload = payload;
         return true;
     }
 
     /**
-     * method for check message's validity
-     * @return true if is valid
+     * Check if DataUnit is valid
+     * @return true if DataUnit is valid, false if DataUnit is not valid
      */
-    public boolean isValid(){
-        return peer.isValid()&& message.isValid();
+    public boolean isValid() {
+        return header.isValid() && payload.isValid();
     }
-
-
 }
 
