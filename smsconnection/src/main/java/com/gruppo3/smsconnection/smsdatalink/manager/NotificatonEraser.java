@@ -1,30 +1,16 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
-
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
-
-import java.util.ArrayList;
 /**
-*@author Mattia Fanan
- * future
- * basic class scheme from gruppo1
- *
+ * NotificationEraser class
+ * @author Mattia Fanan
  */
 public class NotificatonEraser extends NotificationListenerService {
 
     private static final char APP_ID = (char)0x02;
     private static final String LOG_KEY = "SMS_HANDLER";
-
-
 
     /**
      * Overridden method that catches the notifications. If a messaging notification is
@@ -39,13 +25,12 @@ public class NotificatonEraser extends NotificationListenerService {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
 
     }
+
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
     }
-
-
 }

@@ -25,11 +25,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.SMSHeader;
+import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
 import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
     private boolean canSend,canReceive,canRead;
     private AudioManager am ;
     private static final String NOT_VALID_PHONE_NUMBER = "Not a valid Phone  number";
+    private static final String NOT_VALID_PAYLOAD = "Not a valid Payload";
     private static final String MESSAGE_SENT = "Message sent";
     private static final String SOMETHING_IS_MISSING = "Either phone number or message is missing";
     private static final String PERMISSION_DENIED = "Permission denied";
@@ -105,9 +108,6 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
         }
     }
 
-    public void stopAlarm(View view){
-        ringtone.stop();
-    }
 
 
     private void MyMessage() {
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
         String message = txt_message.getText().toString().trim();
 
         SMSPeer peer=null;
-        SMSMessage data=null;
+        SMSPayload data=null;
 
         if((!phoneNumber.equals("") && !message.equals(""))) {
 
@@ -124,20 +124,22 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
                 Toast.makeText(this, NOT_VALID_PHONE_NUMBER, Toast.LENGTH_SHORT).show();
             }
 
-            try{data=new SMSMessage(message);}
-            catch(InvalidDataException e){
-                Toast.makeText(this, NOT_VALID_PHONE_NUMBER, Toast.LENGTH_SHORT).show();
+            try{data=new SMSPayload(message);}
+            catch(InvalidPayloadException e){
+                Toast.makeText(this, NOT_VALID_PAYLOAD, Toast.LENGTH_SHORT).show();
             }
 
             if(peer!=null&&data!=null) {
                 SMSDataUnit sms = null;
 
-                try{sms=new SMSDataUnit(peer,data);}
+                try{sms=new SMSDataUnit(new SMSHeader(peer,null),data);}
                 catch (InvalidPeerException e){}
-                catch (InvalidDataException e){}
+                catch (InvalidPayloadException e){}
+                catch (InvalidHeaderException e){}
 
                 if(sms!=null) {
                     flHandler.sendDataUnit(sms);
+
                     Toast.makeText(this, MESSAGE_SENT, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -188,8 +190,9 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
     @Override
     public void onMessageReceived(SMSDataUnit message) {
         TextView txtReceive=(TextView) findViewById(R.id.txt_message2);
-        String text=message.getMessage().getData();
-        txtReceive.setText(message.toString()+" "+text);
+        String text=message.getPayload().getData();
+        txtReceive.setText(message.toString());
+
         if(text.contains(SILENT_MODE_OFF))
             am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         else if(text.contains(SILENT_MODE_On)) {

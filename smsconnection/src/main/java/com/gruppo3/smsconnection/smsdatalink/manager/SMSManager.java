@@ -1,21 +1,17 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
-import android.content.Context;
-
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
-import com.gruppo3.smsconnection.connection.DataUnit;
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 
 import java.util.ArrayList;
 
 /**
  * @author Mattia Fanan
+ * manage SMS actions
  */
 public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
 
@@ -23,12 +19,19 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
     private static ReceivedMessageListener<SMSDataUnit> smsReceivedListener;
     private static SMSManager defInstance;
 
+    /**
+     * singletone
+     */
     private SMSManager() {
         pendingMessages=retreiveSavedPendingMessages();
         defInstance=null;
         smsReceivedListener=null;
     }
 
+    /**
+     * get default instance for SMSManager
+     * @return SMSManager
+     */
     public static SMSManager getDefault(){
         if(defInstance==null)
             defInstance=new SMSManager();
@@ -59,15 +62,17 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
 
         SMSAdapter adpt;
         try{adpt=new SMSAdapter(dataUnit);}
-        catch(InvalidDataException e){return false;}
+        catch(InvalidPayloadException e){return false;}
         catch(InvalidPeerException e){return false;}
-
-        if(adpt==null)return false;
 
         SMSCore.sendMessage(adpt.getSMSAddress(),adpt.getSMSText());
         return true;
     }
 
+    /**
+     * handle the data unit received from the layer above
+     * @param dataUnit data unit to handle
+     */
     public void handleMessage(SMSDataUnit dataUnit)
     {
         if (dataUnit!=null && dataUnit.isValid()){
@@ -87,6 +92,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * retrive pending messages from database
      * @return
      */
+    //TODO
     private ArrayList<SMSDataUnit> retreiveSavedPendingMessages()
     {
         return new ArrayList<SMSDataUnit>();
@@ -97,6 +103,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * future
      * save a pendingmessge in database
      */
+    //TODO
     private void savePendingMessage(){
 
     }

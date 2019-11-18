@@ -8,17 +8,20 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
+import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
+import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
+import com.gruppo3.smsconnection.smsdatalink.SMSHeader;
 
 /**
  *@author Mattia Fanan
  *
  * basic class scheme from gruppo1
+ * it interfaces SMSMDataUnit with API
  */
 public class SMSCore extends BroadcastReceiver {
 
-    private static final String LOG_KEY = "SMS_CORE";
 
     /**
      * Sends a message (SMS) to the specified target, with sent and delivery confirmation.
@@ -45,18 +48,22 @@ public class SMSCore extends BroadcastReceiver {
                 shortMessage = SmsMessage.createFromPdu((byte[]) pdus[0],intent.getExtras().getString("format"));
             else
                 shortMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
+
             if(shortMessage!=null){
-                Log.i(LOG_KEY, "SMSDataUnit received");
+
+                //adapt the smsMessage to SMSDataUnit
                 SMSAdapter adpt=null;
                 try {
                     adpt = new SMSAdapter(shortMessage.getDisplayOriginatingAddress(),shortMessage.getDisplayMessageBody());
                 }
-                catch (InvalidDataException e){error=true;}
-                catch (InvalidPeerException e){error=false;}
-                SMSManager.getDefault().handleMessage(adpt.getSMSDataUnit());//is running?
+                catch (InvalidPayloadException e){error=true;}
+                catch (InvalidPeerException e){error=true;}
+                catch (InvalidHeaderException e){error=true;}
+
+                //if adapter build successfully//adapter also check if is a message to our app
+                if(!error)
+                    SMSManager.getDefault().handleMessage(adpt.getSMSDataUnit());
             }
-            else
-                Log.i(LOG_KEY, "SMSDataUnit lost");
         }
     }
 

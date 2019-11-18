@@ -2,41 +2,44 @@ package com.gruppo3.smsconnection.smsdatalink;
 
 
 import com.gruppo3.smsconnection.connection.DataUnit;
-import com.gruppo3.smsconnection.connection.exception.InvalidDataException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
+import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
 
 /**
  * @author Mattia Fanan
  * sms implementation of abstract message
  */
-public class SMSDataUnit extends DataUnit<SMSPeer, SMSMessage> {
+public class SMSDataUnit extends DataUnit<SMSHeader, SMSPayload> {
+
 
     /**
-     * build the smsMessage
-     * @param peer
-     * @param message
-     * @throws InvalidPeerException if a not valid peer is passed
-     * @throws InvalidDataException if a not valid payload is passed
+     * build the message
+     *
+     * @param header  header
+     * @param payload payload
+     * @throws InvalidHeaderException when invalid peer passed
+     * @throws InvalidPayloadException   when invalid payload passed
      */
-    public SMSDataUnit(SMSPeer peer, SMSMessage message) throws InvalidPeerException, InvalidDataException {
-        super(peer,message);
+    public SMSDataUnit(SMSHeader header, SMSPayload payload) throws InvalidHeaderException, InvalidPayloadException {
+        super(header, payload);
     }
 
     /**
-     * adds a header to the payload
-     * @param header Sring to add
-     * @return true if the headed is correctly added
+     * get a string of the data unit's properties
+     * @return String
      */
-    public boolean addHeader(String header) {
-        return message.setData(message.getData()+header);
-    }
+    @Override
+    public String toString()
+    {
+        String stringRapp="Message:"+getPayload().getData();
+        SMSPeer destination=getHeader().getDestinationPeer();
+        SMSPeer source=getHeader().getSourcePeer();
+        if(source!=null)
+            stringRapp=stringRapp+" ---Source:"+source.getAddress();
+        if(destination!=null)
+            stringRapp=stringRapp+" ---Source:"+destination.getAddress();
 
-    /**
-     * get a string rappresentation of the message
-     * @return String rappresenting the message
-     */
-    public String toString() {
-        return "SMSPeer: " + getPeer().getAddress() + ", SMSDataUnit: " + getMessage().getData();
+        return stringRapp;
     }
 
 }
