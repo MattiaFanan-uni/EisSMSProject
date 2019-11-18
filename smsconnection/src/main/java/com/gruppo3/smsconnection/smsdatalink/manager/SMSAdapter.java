@@ -28,7 +28,7 @@ public class SMSAdapter {
         this.dataUnit=dataUnit;
         //check validity + exception
         smsAddress=dataUnit.getHeader().getDestinationPeer().getAddress();
-        smsText=dataUnit.getHeader().getToAddHeder()+dataUnit.getPayload().getData();
+        smsText=dataUnit.getHeader().getHeader()+dataUnit.getPayload().getData();
     }
 
     /**
@@ -65,7 +65,7 @@ public class SMSAdapter {
         //extract data unit header
         String stamp=smsText.substring(0,SMSHeader.LENGTH);
         //compare the two headers
-        if(stamp.compareTo(header.getToAddHeder())!=0)
+        if(stamp.compareTo(header.getHeader())!=0)
             throw new InvalidPayloadException();
         //extract payload
         this.smsText=smsText.substring(SMSHeader.LENGTH);
