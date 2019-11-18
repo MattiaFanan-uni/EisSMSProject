@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
@@ -30,11 +31,13 @@ import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
 import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
+import com.gruppo3.smsconnection.smsdatalink.Utility.FileToStore;
 
 public class MainActivity extends AppCompatActivity implements ReceivedMessageListener<SMSDataUnit> {
 
     private EditText txt_message;
     private EditText txt_phone_number;
+    private EditText password;
     private SMSManager flHandler;
     private boolean canSend,canReceive,canRead;
     private AudioManager am ;
@@ -58,6 +61,22 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
 
         txt_message = (EditText) findViewById(R.id.txt_message);
         txt_phone_number = (EditText) findViewById(R.id.txt_phone_number);
+
+        password = (EditText) findViewById(R.id.txt_password);
+
+        Button passwordBtn = findViewById(R.id.btn_pw);
+        passwordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pwInput = password.getText().toString();
+                FileToStore newPassword = new FileToStore(getApplicationContext(), "pw_txt");
+                boolean successfulWriting = newPassword.writeFile(pwInput);
+                String pw_successMessage = "Nuova password applicata";
+                if(!successfulWriting){
+                    Toast.makeText(getApplicationContext(), pw_successMessage, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         flHandler= SMSManager.getDefault();
         flHandler.addReceiveListener(this);
