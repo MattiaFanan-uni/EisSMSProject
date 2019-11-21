@@ -4,10 +4,10 @@ package com.gruppo3.smsconnection.connection;
  * @author Riccardo Crociani
  * Generic dictionary interface
  */
-public interface Dictionary<K, V> {
+public interface NetDictionary<K, V> {
 
     /**
-     * Add the element
+     * Add the element in the first available position
      * @param key
      * @param value
      */
@@ -21,10 +21,10 @@ public interface Dictionary<K, V> {
     boolean remove(K key);
 
     /**
-     * Find the element
+     * Find the element with the specified key and return the value
      * @param key
      * @return value
      */
-    V find(K key);
+    V getValue(K key);
 
 }

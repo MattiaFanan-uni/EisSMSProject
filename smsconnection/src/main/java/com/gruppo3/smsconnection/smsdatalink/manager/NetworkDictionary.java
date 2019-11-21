@@ -5,25 +5,22 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
  */
 
 
-import com.gruppo3.smsconnection.connection.Dictionary;
+import com.gruppo3.smsconnection.connection.NetDictionary;
 import com.gruppo3.smsconnection.connection.exception.InvalidItemException;
 
 import java.util.ArrayList;
 
-public class SmsDictionary<K,V> implements Dictionary<K,V>{
+public class NetworkDictionary<K,V> implements NetDictionary<K,V> {
 
     private ArrayList<Pair> elements;
-    private int elementsSize;
-    private static final int INITIAL_SIZE = 30;
 
-    public SmsDictionary(){
+    public NetworkDictionary(){
         elements = new ArrayList<>();
-        elementsSize = 0;
     }
 
     /**
-     * The insertion always works out: if there is already an element with the specified key it is
-     * replaced with the new pair
+     * The insertion always works out: if there is alreaday an element with the specified key it is
+     * replaced with the new pair. Throws IllegalArgumentException if key is null
      * @param key
      * @param value
      * @throws IllegalArgumentException
@@ -39,7 +36,6 @@ public class SmsDictionary<K,V> implements Dictionary<K,V>{
     /**
      * Remove the element with the specified key
      * @param key
-     * @throws InvalidItemException
      */
     public boolean remove (K key){
         return elements.remove(key);
@@ -49,10 +45,9 @@ public class SmsDictionary<K,V> implements Dictionary<K,V>{
      * Return the value with specified key, if the key is not found return null
      * @param key
      * @return value
-     * @throws InvalidItemException
      */
-    public V find(K key){
-        for (int i= 0; i<elementsSize; i++){
+    public V getValue(K key){
+        for (int i= 0; i<elements.size(); i++){
             if(elements.get(i).getKey().equals(key))
                 return elements.get(i).getValue();
         }
