@@ -8,7 +8,7 @@ import com.gruppo3.smsconnection.connection.Peer;
  * sms implementation of Peer
  */
 public class SMSPeer extends Peer<String> {
-    public static final String METCH_EXPR="[0-9]{4,15}";
+    public static final String MATCH_EXPR="\\+?\\d{4,15}";
 
     /**
      * build smsPeer
@@ -22,10 +22,10 @@ public class SMSPeer extends Peer<String> {
     /**
      * method that decides what is a valid address for the peer
      * @param address to validate
-     * @return true if address metches METCH_EXPR
+     * @return true if address matches MaTCH_EXPR
      */
     @Override
     protected boolean isValidAddress(String address) {
-        return address.matches(METCH_EXPR);
+        return address.matches(MATCH_EXPR);
     }
 }

@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_SMS" />
 
     <application>
-        <receiver android:name=".smsdatalink.manager.SMSCore"
+        <receiver android:name=".smsdatalink.core.SMSCore"
             android:enabled="true"
             android:exported="true"
             android:directBootAware="true"> <!-- TODO: API 24+ -->

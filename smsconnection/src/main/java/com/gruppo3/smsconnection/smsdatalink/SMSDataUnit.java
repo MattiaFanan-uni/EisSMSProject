@@ -34,10 +34,11 @@ public class SMSDataUnit extends DataUnit<SMSHeader, SMSPayload> {
         String stringRapp="Message:"+getPayload().getData();
         SMSPeer destination=getHeader().getDestinationPeer();
         SMSPeer source=getHeader().getSourcePeer();
+
+        if(destination!=null)
+            stringRapp=stringRapp+" ---Destination:"+destination.getAddress();
         if(source!=null)
             stringRapp=stringRapp+" ---Source:"+source.getAddress();
-        if(destination!=null)
-            stringRapp=stringRapp+" ---Source:"+destination.getAddress();
 
         return stringRapp;
     }
