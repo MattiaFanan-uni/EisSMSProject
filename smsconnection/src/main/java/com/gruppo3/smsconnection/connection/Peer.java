@@ -17,7 +17,7 @@ public abstract class Peer<T> {
      * @throws InvalidPeerException if a non valid address is passed
      */
     public Peer(T address)throws InvalidPeerException {
-        if(!isValidAddress(address))
+        if(address==null || !isValidAddress(address))
             throw new InvalidPeerException();
         this.address=address;
     }
@@ -36,7 +36,7 @@ public abstract class Peer<T> {
      * @return true if address setted correctly
      */
     public boolean setAddress(T address){
-        if(!isValidAddress(address))
+        if(address==null || !isValidAddress(address))
             return false;
         this.address=address;
         return true;

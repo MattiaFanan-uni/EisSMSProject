@@ -2,10 +2,10 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
-import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
+import com.gruppo3.smsconnection.smsdatalink.core.SMSAdapter;
+import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
 
 import java.util.ArrayList;
 
@@ -20,10 +20,10 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
     private static SMSManager defInstance;
 
     /**
-     * singletone
+     * singleton
      */
     private SMSManager() {
-        pendingMessages=retreiveSavedPendingMessages();
+        pendingMessages=retrieveSavedPendingMessages() ;
         defInstance=null;
         smsReceivedListener=null;
     }
@@ -57,15 +57,11 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * Sends a given valid message
      */
     public boolean sendDataUnit(SMSDataUnit dataUnit) {
-        if(dataUnit==null || !dataUnit.isValid())
+
+        if(!dataUnit.isValid())
             return false;
 
-        SMSAdapter adpt;
-        try{adpt=new SMSAdapter(dataUnit);}
-        catch(InvalidPayloadException e){return false;}
-        catch(InvalidPeerException e){return false;}
-
-        SMSCore.sendMessage(adpt.getSMSAddress(),adpt.getSMSText());
+        SMSCore.sendMessage(SMSAdapter.adaptToAPIMessage(dataUnit));
         return true;
     }
 
@@ -93,7 +89,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * @return
      */
     //TODO
-    private ArrayList<SMSDataUnit> retreiveSavedPendingMessages()
+    private ArrayList<SMSDataUnit> retrieveSavedPendingMessages()
     {
         return new ArrayList<SMSDataUnit>();
     }

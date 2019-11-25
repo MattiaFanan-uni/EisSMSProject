@@ -15,7 +15,7 @@ public abstract class Header<P extends Peer, D> {
     /**
      * @return Header's data
      */
-    public abstract D getHeader();
+    public abstract D getStamp();
 
     /**
      * @return source peer in the Header
@@ -37,16 +37,22 @@ public abstract class Header<P extends Peer, D> {
      * @return true if sourcePeer is valid, false if sourcePeer is not valid
      */
     public boolean setSourcePeer(P sourcePeer) {
-        // Can set null peer only if Header.canHaveNullPeer = true
-        if (sourcePeer == null && !canHaveNullPeer)
-            return false;
 
-        if (sourcePeer != null) {
-            if (sourcePeer.isValid()) {
-                this.sourcePeer = sourcePeer;
-                return true;
-            }
+        if (sourcePeer == null){
+            //peers can't be both null
+            if(destinationPeer==null)return false;
+
+            if(!canHaveNullPeer)return false;
+
+            this.sourcePeer=sourcePeer;
+            return true;
         }
+
+        if (sourcePeer.isValid()) {
+            this.sourcePeer = sourcePeer;
+            return true;
+        }
+
 
         return false;
     }
@@ -57,16 +63,21 @@ public abstract class Header<P extends Peer, D> {
      * @return true if destinationPeer is valid, false if destinationPeer is not valid
      */
     public boolean setDestinationPeer(P destinationPeer){
-        // Can set null peer only if Header.canHaveNullPeer = true
-        if (destinationPeer == null && !canHaveNullPeer)
-            return false;
+        if (destinationPeer == null){
+            //peers can't be both null
+            if(sourcePeer==null)return false;
 
-        if (destinationPeer != null) {
-            if (destinationPeer.isValid()) {
-                this.destinationPeer = destinationPeer;
-                return true;
-            }
+            if(!canHaveNullPeer)return false;
+
+            this.destinationPeer=destinationPeer;
+            return true;
         }
+
+        if (destinationPeer.isValid()) {
+            this.destinationPeer = destinationPeer;
+            return true;
+        }
+
 
         return false;
     }

@@ -17,7 +17,7 @@ public abstract class Payload<T> {
      * @throws InvalidPayloadException when an invalid data is passed
      */
     public Payload(T data)throws InvalidPayloadException {
-        if(!isValidData(data))
+        if(data==null || !isValidData(data))
             throw new InvalidPayloadException();
 
         this.data = data;
@@ -37,7 +37,7 @@ public abstract class Payload<T> {
      * @return true if data is valid, false if data is not valid
      */
     public boolean setData(T data) {
-        if(!isValidData(data))
+        if(data==null || !isValidData(data))
             return false;
 
         this.data = data;

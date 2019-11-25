@@ -67,7 +67,7 @@ public abstract class DataUnit<H extends Header, M extends Payload> {
      * @return true if payload is valid, false if payload is not valid
      */
     public boolean setPayload(M payload) {
-        if (!payload.isValid())
+        if (payload==null || !payload.isValid())
             return false;
 
         this.payload = payload;

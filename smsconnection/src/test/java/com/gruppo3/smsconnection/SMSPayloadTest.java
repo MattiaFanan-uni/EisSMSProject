@@ -4,91 +4,118 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
 import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 
 public class SMSPayloadTest {
 
-    SMSDataUnit message;
 
     @Test
     public void setUp(){
+        SMSPayload payload;
         try {
-            message = new SMSDataUnit(new SMSPeer("390000000000000"), new SMSPayload("test"));
+            payload=new SMSPayload("test");
         }
-        catch (Exception e){Assert.fail("Should not throw an exception");}
+        catch (InvalidPayloadException e){Assert.fail("Should not throw InvalidPayloadException exception");}
+        catch (Exception e){Assert.fail("Should not throw this exception");}
     }
 
     @Test
-    public void numberIsNotTooLong() {
+    public void tooMuchData() {
+        SMSPayload payload;
         try {
-            message = new SMSDataUnit(new SMSPeer("3900000000000000"), new SMSPayload("test"));
+            payload=new SMSPayload(getAlphaNumericString(SMSPayload.MAX_PAYLOAD_LENGTH+1));
             Assert.fail("Should throw InvalidPeerException ");
         }
-        catch (InvalidPeerException e) {} //correct
-        catch (Exception e) {Assert.fail("Should throw InvalidPeerException");}
+        catch (InvalidPayloadException e) {} //correct
+        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
 
     @Test
-    public void textIsNotTooLong() {
+    public void nullData() {
+        SMSPayload payload;
         try {
-            message = new SMSDataUnit(new SMSPeer("3900000000000"), new SMSPayload("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"));
-            Assert.fail("Should throw InvalidPayloadException");
+            payload= new SMSPayload(null);
+            Assert.fail("Should throw InvalidPayloadException ");
         }
         catch (InvalidPayloadException e) {} //correct
-        catch (Exception e) {Assert.fail("Should throw Invalid DataException");}
+        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
 
     @Test
-    public void numberHasNoLetters(){
+    public void getDataTest() {
+        SMSPayload payload;
+        String inputText="qwerty";
         try {
-            message = new SMSDataUnit(new SMSPeer("3900p0a00c0d0"), new SMSPayload("test"));
-            Assert.fail("Should throw InvalidPeerException");
-        }catch(InvalidPeerException e){
-            //Correct
-        }catch(Exception e){
-            Assert.fail("Should throw InvalidPeerException");
+            payload= new SMSPayload(inputText);
+            if(payload.getData().compareTo(inputText)!=0)
+                Assert.fail("should be the same data");
         }
+        catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
+        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
 
     @Test
-    public void hasSameNumber(){
+    public void setDataTest() {
+        SMSPayload payload;
+        String startData="qwerty";
+        String changedData="poiu";
         try {
-            message = new SMSDataUnit(new SMSPeer("390000000000000"), new SMSPayload("test"));
-        }catch(Exception e){
-            Assert.fail("Should not throw an exception");
+            payload=  new SMSPayload(startData);
+            boolean changeResult=payload.setData(changedData);
+            if(!changeResult)
+                Assert.fail("result should be true");
+            if(payload.getData().compareTo(changedData)!=0)
+                Assert.fail("data should be changed");
         }
-        Assert.assertEquals(message.getPeer().getAddress(),"390000000000000");
+        catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
+        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
 
     @Test
-    public void hasSameText(){
+    public void setDataNullTest() {
+        SMSPayload payload;
+        String startData="qwerty";
+        String changedData=null;
         try {
-            message = new SMSDataUnit(new SMSPeer("390000000000000"), new SMSPayload("test"));
-        }catch(Exception e){
-            Assert.fail("Should not throw an exception");
+            payload=  new SMSPayload(startData);
+            boolean changeResult=payload.setData(changedData);
+            if(changeResult)
+                Assert.fail("result should be false");
+            if(payload.getData().compareTo(startData)!=0)
+                Assert.fail("data shouldn't be changed");
         }
-        Assert.assertEquals(message.getMessage().getData(),"test");
+        catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
+        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
 
-    @Test
-    public void isAddHeaderValid() {
-        String header = "headerTest";
-        try {
-            message = new SMSDataUnit(new SMSPeer("390000000000000"), new SMSPayload("test"));
-            message.addHeader(header);
+
+    // function to generate a random string of length n
+    private String getAlphaNumericString(int n)
+    {
+
+        // chose a Character random from this String
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(n);
+
+        for (int i = 0; i < n; i++) {
+
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index
+                    = (int)(AlphaNumericString.length()
+                    * Math.random());
+
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString
+                    .charAt(index));
         }
-        catch (Exception e) {Assert.fail("Should not throw an exception");}
+
+        return sb.toString();
     }
 
-    @Test
-    public void toStringTest() {
-        try {
-            message = new SMSDataUnit(new SMSPeer("390000000000000"), new SMSPayload("test"));
-        }
-        catch(Exception e){Assert.fail("Should not throw an exception");}
-        Assert.assertEquals(message.toString(), "SMSPeer: 390000000000000, SMSDataUnit: test");
-    }
+
 }
