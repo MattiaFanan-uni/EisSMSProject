@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
                 SMSDataUnit sms = null;
 
                 try{sms=new SMSDataUnit(new SMSHeader(peer,null),data);}
-                catch (InvalidPeerException e){}
                 catch (InvalidPayloadException e){}
                 catch (InvalidHeaderException e){}
 

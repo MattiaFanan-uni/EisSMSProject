@@ -1,8 +1,6 @@
 package com.gruppo3.smsconnection;
 
-import com.gruppo3.smsconnection.connection.Peer;
 import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.smsdatalink.SMSHeader;
 import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 
@@ -36,7 +34,6 @@ public class SMSHeaderTest {
         try{
             header=new SMSHeader(destination,source);
         }
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
         catch (InvalidHeaderException e){Assert.fail("shouldn't throw InvalidHeaderException");}
         if(header==null)
             Assert.fail("shouldn't be null");
@@ -59,7 +56,6 @@ public class SMSHeaderTest {
         try{
             header=new SMSHeader(destination,source);
         }
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
         catch (InvalidHeaderException e){Assert.fail("shouldn't throw InvalidHeaderException");}
         if(header==null)
             Assert.fail("shouldn't be null");
@@ -82,7 +78,6 @@ public class SMSHeaderTest {
         try{
             header=new SMSHeader(destination,source);
         }
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
         catch (InvalidHeaderException e){Assert.fail("shouldn't throw InvalidHeaderException");}
         if(header==null)
             Assert.fail("shouldn't be null");

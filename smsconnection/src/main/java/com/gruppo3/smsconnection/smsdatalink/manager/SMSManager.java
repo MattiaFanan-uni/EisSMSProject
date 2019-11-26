@@ -42,6 +42,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * Adds the listener watching for incoming SMSMessages
      * @param listener The listener to wake up when a message is received
      */
+    @Override
     public void addReceiveListener(ReceivedMessageListener<SMSDataUnit> listener) {
         smsReceivedListener=listener;
     }
@@ -49,6 +50,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
     /**
      * Removes the listener of incoming messages
      */
+    @Override
     public void removeReceiveListener() {
         smsReceivedListener=null;
     }
@@ -56,9 +58,10 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
     /**
      * Sends a given valid message
      */
+    @Override
     public boolean sendDataUnit(SMSDataUnit dataUnit) {
 
-        if(!dataUnit.isValid())
+        if(dataUnit==null)
             return false;
 
         SMSCore.sendMessage(SMSAdapter.adaptToAPIMessage(dataUnit));
@@ -71,7 +74,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      */
     public void handleMessage(SMSDataUnit dataUnit)
     {
-        if (dataUnit!=null && dataUnit.isValid()){
+        if (dataUnit!=null){
             if (smsReceivedListener == null)
                 pendingMessages.add(dataUnit);
             else

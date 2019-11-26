@@ -2,7 +2,6 @@ package com.gruppo3.smsconnection.smsdatalink;
 
 import com.gruppo3.smsconnection.connection.Header;
 import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 
 /**
  * @author Mattia Fanan
@@ -18,9 +17,8 @@ public class SMSHeader extends Header<SMSPeer,String> {
      * @param destination SMSPeer destination peer
      * @param source SMSPeer source peer
      * @throws InvalidHeaderException when all the peers are null
-     * @throws InvalidPeerException when a not valid peer is found
      */
-    public SMSHeader(SMSPeer destination,SMSPeer source)throws InvalidHeaderException,InvalidPeerException
+    public SMSHeader(SMSPeer destination,SMSPeer source)throws InvalidHeaderException
     {
         canHaveNullPeer=true;
 
@@ -29,15 +27,9 @@ public class SMSHeader extends Header<SMSPeer,String> {
             throw new InvalidHeaderException();
 
         if(destination!=null)
-            if(!destination.isValid())
-                throw new InvalidPeerException();
-            else
                 destinationPeer=destination;
 
         if(source!=null)
-            if(!source.isValid())
-                throw new InvalidPeerException();
-            else
                 sourcePeer=source;
     }
 
@@ -48,15 +40,6 @@ public class SMSHeader extends Header<SMSPeer,String> {
     @Override
     public String getStamp() {
         return stamp;
-    }
-
-    /**
-     * methods that decides what is a valid header
-     * @return true if is valid
-     */
-    @Override
-    public boolean isValid() {
-        return (sourcePeer!=null && sourcePeer.isValid()) || (destinationPeer!=null&&destinationPeer.isValid());
     }
 
 }

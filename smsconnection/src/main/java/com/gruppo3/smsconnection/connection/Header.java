@@ -48,13 +48,8 @@ public abstract class Header<P extends Peer, D> {
             return true;
         }
 
-        if (sourcePeer.isValid()) {
-            this.sourcePeer = sourcePeer;
-            return true;
-        }
-
-
-        return false;
+        this.sourcePeer = sourcePeer;
+        return true;
     }
 
     /**
@@ -73,18 +68,8 @@ public abstract class Header<P extends Peer, D> {
             return true;
         }
 
-        if (destinationPeer.isValid()) {
-            this.destinationPeer = destinationPeer;
-            return true;
-        }
-
-
-        return false;
+        this.destinationPeer = destinationPeer;
+        return true;
     }
 
-    /**
-     * Check if Header is valid
-     * @return true if Header is valid, false if Header is not valid
-     */
-    public abstract boolean isValid();
 }

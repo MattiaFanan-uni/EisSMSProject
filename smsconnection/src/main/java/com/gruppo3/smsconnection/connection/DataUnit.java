@@ -22,10 +22,10 @@ public abstract class DataUnit<H extends Header, M extends Payload> {
      * @throws InvalidPayloadException when an invalid payload is passed
      */
     public DataUnit(H header, M payload) throws InvalidHeaderException, InvalidPayloadException {
-        if (header == null || !header.isValid())
+        if (header == null)
             throw new InvalidHeaderException();
 
-        if (payload == null || !payload.isValid())
+        if (payload == null)
             throw new InvalidPayloadException();
 
         this.payload = payload;
@@ -54,7 +54,7 @@ public abstract class DataUnit<H extends Header, M extends Payload> {
      * @return true if header is valid, false if header is not valid
      */
     public boolean setHeader(H header){
-        if (header == null || !header.isValid())
+        if (header == null)
             return false;
 
         this.header = header;
@@ -67,19 +67,11 @@ public abstract class DataUnit<H extends Header, M extends Payload> {
      * @return true if payload is valid, false if payload is not valid
      */
     public boolean setPayload(M payload) {
-        if (payload==null || !payload.isValid())
+        if (payload==null)
             return false;
 
         this.payload = payload;
         return true;
-    }
-
-    /**
-     * Check if DataUnit is valid
-     * @return true if DataUnit is valid, false if DataUnit is not valid
-     */
-    public boolean isValid() {
-        return header.isValid() && payload.isValid();
     }
 }
 

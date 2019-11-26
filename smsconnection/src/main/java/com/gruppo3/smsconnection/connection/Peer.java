@@ -48,12 +48,4 @@ public abstract class Peer<T> {
      * @return true if is valid
      */
     protected abstract boolean isValidAddress(T address);
-
-    /**
-     * check if peer is valid
-     * @return true if is valid
-     */
-    public boolean isValid(){
-        return isValidAddress(address);
-    }
 }

@@ -44,13 +44,6 @@ public abstract class Payload<T> {
         return true;
     }
 
-    /**
-     * Check if Payload is valid
-     * @return true if Payload is valid, false if Payload is not valid
-     */
-    public boolean isValid(){
-        return isValidData(data);
-    }
 
     /**
      * Check if Payload's data is valid
