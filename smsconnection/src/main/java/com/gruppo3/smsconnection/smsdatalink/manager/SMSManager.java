@@ -4,7 +4,6 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.core.SMSAdapter;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  * @author Mattia Fanan
  * manage SMS actions
  */
-public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
+public final class SMSManager implements CommunicationHandler<SMSDataUnit> {
 
     private static ArrayList<SMSDataUnit> pendingMessages = new ArrayList<>();
     private static ReceivedMessageListener<SMSDataUnit> smsReceivedListener;
@@ -64,7 +63,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
         if(dataUnit==null)
             return false;
 
-        SMSCore.sendMessage(SMSAdapter.adaptToAPIMessage(dataUnit));
+        SMSCore.sendMessage(dataUnit);
         return true;
     }
 

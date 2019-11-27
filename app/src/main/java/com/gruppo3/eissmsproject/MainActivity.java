@@ -25,11 +25,13 @@ import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSHeader;
-import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
+import com.gruppo3.smsconnection.smsdatalink.SMSProtocolControlInformation;
+import com.gruppo3.smsconnection.smsdatalink.SMSServiceDataUnit;
 import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
+
+import java.nio.charset.Charset;
 
 public class MainActivity extends AppCompatActivity implements ReceivedMessageListener<SMSDataUnit> {
 
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
         String message = txt_message.getText().toString().trim();
 
         SMSPeer peer=null;
-        SMSPayload data=null;
+        SMSServiceDataUnit data=null;
 
         if((!phoneNumber.equals("") && !message.equals(""))) {
 
@@ -108,18 +110,16 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
                 Toast.makeText(this, "Not A Valid Phone Number", Toast.LENGTH_SHORT).show();
             }
 
-            try{data=new SMSPayload(message);}
-            catch(InvalidPayloadException e){
-                Toast.makeText(this, "Not A Valid Payload", Toast.LENGTH_SHORT).show();
-            }
-
-            if(peer!=null&&data!=null) {
+            if(peer!=null) {
 
                 SMSDataUnit sms = null;
 
-                try{sms=new SMSDataUnit(new SMSHeader(peer,null),data);}
+                try{
+                    sms=new SMSDataUnit(peer,null,message.getBytes("UTF-16"));
+                }
                 catch (InvalidPayloadException e){}
-                catch (InvalidHeaderException e){}
+                catch (InvalidPeerException e){}
+                catch (Exception e){}
 
                 if(sms!=null) {
                     flHandler.sendDataUnit(sms);
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
     @Override
     public void onMessageReceived(SMSDataUnit message) {
         TextView txtReceive=(TextView) findViewById(R.id.txt_message2);
-        String text=message.getPayload().getData();
+        String text=message.getData().toString();
         txtReceive.setText(message.toString());
         if(text.contains("alto"))
             am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
