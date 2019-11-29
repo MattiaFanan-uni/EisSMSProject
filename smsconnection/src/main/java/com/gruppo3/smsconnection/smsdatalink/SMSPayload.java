@@ -2,23 +2,22 @@ package com.gruppo3.smsconnection.smsdatalink;
 
 import androidx.annotation.NonNull;
 
-import com.gruppo3.smsconnection.connection.ServiceDataUnit;
+import com.gruppo3.smsconnection.connection.Payload;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 
 /**
  * @author Mattia Fanan
- * used to store data in SMSDataUnit
+ * data-link sms's payload
  */
-public class SMSServiceDataUnit implements ServiceDataUnit<byte[]> {
+public class SMSPayload implements Payload<byte[]> {
 
     private byte[] data;
     
     /**
-     * build the smsPayload
-     * @param data Payload's data
-     * @throws InvalidPayloadException if a non valid data is passed
+     * @param data  data to store in payload
+     * @throws InvalidPayloadException if non valid data is found
      */
-    public SMSServiceDataUnit(@NonNull byte[] data) throws InvalidPayloadException {
+    public SMSPayload(@NonNull byte[] data) throws InvalidPayloadException {
         if(!isValidData(data))
             throw new InvalidPayloadException();
         this.data=data;
@@ -28,17 +27,16 @@ public class SMSServiceDataUnit implements ServiceDataUnit<byte[]> {
 
     /**
      * method that decides what is a valid data for the payload
-     * @param data to validate
-     * @return true if data is not null and shorther than MAX_PAYLOAD_LENGTH
+     * @param data payload's data to validate
+     * @return <code>true</code> if data is shorter than MAX_PAYLOAD_LENGTH
      */
     private boolean isValidData(@NonNull byte[] data) {
-        return data!=null && data.length <= SMSProtocolControlInformation.MAX_PAYLOAD_LENGTH;
+        return data.length <= SMSMessage.MAX_PAYLOAD_LENGTH;
     }
 
 
     /**
-     * Get data of the ServiceDataUnit
-     *
+     * get payload's data
      * @return data of the payload
      */
     @Override
@@ -48,8 +46,7 @@ public class SMSServiceDataUnit implements ServiceDataUnit<byte[]> {
     }
 
     /**
-     * get the payload's size
-     *
+     * get payload's size
      * @return positive integer payload's size
      */
     @Override

@@ -9,7 +9,7 @@ import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
  * Handles SMS communications
  * @param <T> Message data-type
  */
-public interface CommunicationHandler<T extends ProtocolDataUnit> {
+public interface CommunicationHandler<T extends Message> {
     /**
      * Sends a valid message to a peer
      * @param dataUnit The message to send

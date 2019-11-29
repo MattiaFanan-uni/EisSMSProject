@@ -3,12 +3,10 @@ package com.gruppo3.smsconnection.connection;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 
-/**
- * @author Mattia Fanan
- * abstarcton of peer class
- * @param T type of address
- */
-public interface Peer<T> {
+import java.io.Serializable;
+
+
+public interface Peer<T> extends Serializable {
 
     /**
      * return the peer's address

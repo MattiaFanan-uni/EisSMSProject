@@ -3,15 +3,15 @@ package com.gruppo3.smsconnection.connection;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 
 /**
- * ServiceDataUnit abstract class
+ * Payload abstract class
  * @author Mattia Fanan
  *
- * @param T ServiceDataUnit's data data-type
+ * @param T Payload's data data-type
  */
-public interface ServiceDataUnit<T> {
+public interface Payload<T> {
 
     /**
-     * Get data of the ServiceDataUnit
+     * Get data of the Payload
      * @return data of the payload
      */
     T getData();

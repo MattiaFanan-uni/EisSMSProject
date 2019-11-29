@@ -7,8 +7,7 @@ import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 
 /**
@@ -23,9 +22,9 @@ public class SMSCore extends BroadcastReceiver {
     /**
      * Sends a data unit
      *
-     * @param dataUnit SMSDataUnit to send
+     * @param dataUnit SMSMessage to send
      */
-    public static void sendMessage(SMSDataUnit dataUnit) {
+    public static void sendMessage(SMSMessage dataUnit) {
         try{
             SmsManager.getDefault().sendTextMessage(dataUnit.getDestinationPeer().getAddress(), null,new String( dataUnit.getSDU(),"UTF-16"), null, null);
         }
@@ -33,7 +32,7 @@ public class SMSCore extends BroadcastReceiver {
     }
 
     /**
-     * Function called when a message is received. It delegates the message to the SMSDataUnit
+     * Function called when a message is received. It delegates the message to the SMSMessage
      * Handler which analyzes its content.
      *
      * @param context Received message context.
@@ -52,10 +51,10 @@ public class SMSCore extends BroadcastReceiver {
 
             if (shortMessage != null) {
 
-                //try to pass the SMSDataUnit built from incoming Sms to SMSManager
+                //try to pass the SMSMessage built from incoming Sms to SMSManager
                 try {
                     SMSManager.getDefault().handleMessage(
-                            SMSDataUnit.buildFromSDU(
+                            SMSMessage.buildFromSDU(
                                 shortMessage.getDisplayOriginatingAddress(),
                                 shortMessage.getDisplayMessageBody().getBytes("UTF-16")
                             )

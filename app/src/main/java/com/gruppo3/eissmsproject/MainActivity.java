@@ -20,20 +20,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSProtocolControlInformation;
-import com.gruppo3.smsconnection.smsdatalink.SMSServiceDataUnit;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
 import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 
-import java.nio.charset.Charset;
-
-public class MainActivity extends AppCompatActivity implements ReceivedMessageListener<SMSDataUnit> {
+public class MainActivity extends AppCompatActivity implements ReceivedMessageListener<SMSMessage> {
 
     private EditText txt_message;
     private EditText txt_phone_number;
@@ -101,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
         String message = txt_message.getText().toString().trim();
 
         SMSPeer peer=null;
-        SMSServiceDataUnit data=null;
+        SMSPayload data=null;
 
         if((!phoneNumber.equals("") && !message.equals(""))) {
 
@@ -112,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
 
             if(peer!=null) {
 
-                SMSDataUnit sms = null;
+                SMSMessage sms = null;
 
                 try{
-                    sms=new SMSDataUnit(peer,null,message.getBytes("UTF-16"));
+                    sms=new SMSMessage(peer,null,message.getBytes("UTF-16"));
                 }
                 catch (InvalidPayloadException e){}
                 catch (InvalidPeerException e){}
@@ -169,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
     }
 
     @Override
-    public void onMessageReceived(SMSDataUnit message) {
+    public void onMessageReceived(SMSMessage message) {
         TextView txtReceive=(TextView) findViewById(R.id.txt_message2);
         String text=message.getData().toString();
         txtReceive.setText(message.toString());

@@ -1,29 +1,61 @@
 package com.gruppo3.smsconnection;
 
+import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
-import com.gruppo3.smsconnection.smsdatalink.SMSServiceDataUnit;
+import java.io.UnsupportedEncodingException;
 
 public class SMSPayloadTest {
 
-/*
+    byte[] validData;
+    byte[] nullData=null;
+    byte[] tooMuchData;
+    byte[] maxData;
+
+
+    public SMSPayloadTest(){
+        try {
+            //2 * 10 bytes + 2 endstring bytes = 22 bytes
+            validData = getAlphaNumericString(10).getBytes("UTF-16");
+            //2 * MAXPAYLOAD_LENGTH +2
+            tooMuchData=getAlphaNumericString(SMSMessage.MAX_PAYLOAD_LENGTH).getBytes("UTF-16");
+            // 2 * ((MAXPAYLOAD_LENGTH/2 -2) +2) = MAXPAYLOAD_LENGTH
+            maxData=getAlphaNumericString((SMSMessage.MAX_PAYLOAD_LENGTH/2)-2).getBytes("UTF-16");
+        }
+        catch (UnsupportedEncodingException e){}
+    }
+
     @Test
     public void setUp(){
-        SMSServiceDataUnit payload;
+        SMSPayload payload;
         try {
-            payload=new SMSServiceDataUnit("test");
+            payload=new SMSPayload(validData);
         }
-        catch (InvalidPayloadException e){Assert.fail("Should not throw InvalidPayloadException exception");}
+        catch (InvalidPayloadException e){
+            Assert.fail("Should not throw InvalidPayloadException exception");}
         catch (Exception e){Assert.fail("Should not throw this exception");}
     }
 
     @Test
-    public void tooMuchData() {
-        SMSServiceDataUnit payload;
+    public void maxData() {
+        SMSPayload payload;
         try {
-            payload=new SMSServiceDataUnit(getAlphaNumericString(SMSServiceDataUnit.MAX_PAYLOAD_LENGTH+1));
+            payload=new SMSPayload(maxData);
+        }
+        catch (InvalidPayloadException e) { Assert.fail("Shouldn't throw InvalidPeerException ");}
+        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
+    }
+
+    @Test
+    public void tooMuchData() {
+        SMSPayload payload;
+        try {
+            payload=new SMSPayload(tooMuchData);
             Assert.fail("Should throw InvalidPeerException ");
         }
         catch (InvalidPayloadException e) {} //correct
@@ -32,22 +64,21 @@ public class SMSPayloadTest {
 
     @Test
     public void nullData() {
-        SMSServiceDataUnit payload;
+        SMSPayload payload;
         try {
-            payload= new SMSServiceDataUnit(null);
-            Assert.fail("Should throw InvalidPayloadException ");
+            payload= new SMSPayload(nullData);
+            Assert.fail("Should throw NullPointerException ");
         }
-        catch (InvalidPayloadException e) {} //correct
+        catch (NullPointerException e) {} //correct
         catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
 
     @Test
     public void getDataTest() {
-        SMSServiceDataUnit payload;
-        String inputText="qwerty";
+        SMSPayload payload;
         try {
-            payload= new SMSServiceDataUnit(inputText);
-            if(payload.getData().compareTo(inputText)!=0)
+            payload= new SMSPayload(validData);
+            if( !Arrays.equals( payload.getData(), validData))
                 Assert.fail("should be the same data");
         }
         catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
@@ -55,42 +86,19 @@ public class SMSPayloadTest {
     }
 
     @Test
-    public void setDataTest() {
-        SMSServiceDataUnit payload;
-        String startData="qwerty";
-        String changedData="poiu";
+    public void getSize(){
+        SMSPayload payload;
         try {
-            payload=  new SMSServiceDataUnit(startData);
-            boolean changeResult=payload.setData(changedData);
-            if(!changeResult)
-                Assert.fail("result should be true");
-            if(payload.getData().compareTo(changedData)!=0)
-                Assert.fail("data should be changed");
+            payload= new SMSPayload(validData);
+            if( payload.getSize()!=validData.length)
+                Assert.fail("should be the same size");
         }
         catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
         catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
-
-    @Test
-    public void setDataNullTest() {
-        SMSServiceDataUnit payload;
-        String startData="qwerty";
-        String changedData=null;
-        try {
-            payload=  new SMSServiceDataUnit(startData);
-            boolean changeResult=payload.setData(changedData);
-            if(changeResult)
-                Assert.fail("result should be false");
-            if(payload.getData().compareTo(startData)!=0)
-                Assert.fail("data shouldn't be changed");
-        }
-        catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
-        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
-    }
-
 
     // function to generate a random string of length n
-    private String getAlphaNumericString(int n)
+    public static String getAlphaNumericString(int n)
     {
 
         // chose a Character random from this String
@@ -117,5 +125,5 @@ public class SMSPayloadTest {
         return sb.toString();
     }
 
-*/
+
 }
