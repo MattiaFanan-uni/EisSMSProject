@@ -10,10 +10,14 @@ import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * @author Mattia Fanana
+ * net layer message
+ */
 public class ReplicatedNetMessage extends AbstractByteMessage<ReplicatedNetPeer> {
 
 
-    public static final String controlStamp=Character.toString((char)0xfeff0298);//ʘ
+    public static final String controlStamp=Character.toString('1');//is the id of this protocol
     //used from SMSPayload to check if it's data can be stored entirely
     public static final int MAX_PAYLOAD_LENGTH= SMSMessage.MAX_PAYLOAD_LENGTH - STRUCTURE.TOTAL_HEADER.getLength();//134(byte) = 67 utf-16
 

@@ -7,7 +7,7 @@ import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.Peer;
 /**
  * @author Mattia Fanan
- * data-link level sms's peer
+ * data-link layer sms's peer
  * it's address to be valid must have optional + for country code and from 4 to 15 digits
  */
 public class SMSPeer implements Peer<String> {

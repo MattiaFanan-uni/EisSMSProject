@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * @author Mattia Fanan
- * data-link level message
+ * data-link layer message
  */
 public class SMSMessage extends AbstractByteMessage<SMSPeer> {
 
