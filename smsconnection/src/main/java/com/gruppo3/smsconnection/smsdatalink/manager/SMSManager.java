@@ -1,11 +1,11 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
+
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.core.SMSAdapter;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 
 import java.util.ArrayList;
 
@@ -13,10 +13,10 @@ import java.util.ArrayList;
  * @author Mattia Fanan
  * manage SMS actions
  */
-public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
+public final class SMSManager implements CommunicationHandler<SMSMessage> {
 
-    private static ArrayList<SMSDataUnit> pendingMessages = new ArrayList<>();
-    private static ReceivedMessageListener<SMSDataUnit> smsReceivedListener;
+    private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
+    private static ReceivedMessageListener<SMSMessage> smsReceivedListener;
     private static SMSManager defInstance;
 
     /**
@@ -43,7 +43,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * @param listener The listener to wake up when a message is received
      */
     @Override
-    public void addReceiveListener(ReceivedMessageListener<SMSDataUnit> listener) {
+    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         smsReceivedListener=listener;
     }
 
@@ -59,12 +59,12 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * Sends a given valid message
      */
     @Override
-    public boolean sendDataUnit(SMSDataUnit dataUnit) {
+    public boolean sendDataUnit(SMSMessage dataUnit) {
 
         if(dataUnit==null)
             return false;
 
-        SMSCore.sendMessage(SMSAdapter.adaptToAPIMessage(dataUnit));
+        SMSCore.sendMessage(dataUnit);
         return true;
     }
 
@@ -72,7 +72,7 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * handle the data unit received from the layer above
      * @param dataUnit data unit to handle
      */
-    public void handleMessage(SMSDataUnit dataUnit)
+    public void handleMessage(SMSMessage dataUnit)
     {
         if (dataUnit!=null){
             if (smsReceivedListener == null)
@@ -92,9 +92,9 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * @return
      */
     //TODO
-    private ArrayList<SMSDataUnit> retrieveSavedPendingMessages()
+    private ArrayList<SMSMessage> retrieveSavedPendingMessages()
     {
-        return new ArrayList<SMSDataUnit>();
+        return new ArrayList<SMSMessage>();
     }
 
 
