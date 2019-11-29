@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection;
+package com.gruppo3.smsconnection.datalink;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidMessageException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
@@ -12,16 +12,17 @@ import org.junit.Test;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+import static com.gruppo3.smsconnection.Utils.getAlphaNumericString;
+
 public class SMSMessageTest {
     SMSPeer validPeer;
     SMSPeer nullPeer=null;
     byte[] validPayolad;
-    byte[] nullPayolad=null;
 
 
     public SMSMessageTest(){
         try {
-            validPayolad = SMSPayloadTest.getAlphaNumericString(20).getBytes("UTF-16");
+            validPayolad = getAlphaNumericString(20).getBytes("UTF-16");
             validPeer=new SMSPeer(SMSPeerTest.validAddress);
         }
         catch (Exception e){}
@@ -36,7 +37,7 @@ public class SMSMessageTest {
             message=new SMSMessage(validPeer,validPeer,validPayolad);
         }
         catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPeerException");}
+        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
         if(message==null)
             Assert.fail("shouldn't be null");
@@ -56,7 +57,7 @@ public class SMSMessageTest {
             message=new SMSMessage(nullPeer,validPeer,validPayolad);
         }
         catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPeerException");}
+        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
         if(message==null)
             Assert.fail("shouldn't be null");
@@ -76,7 +77,7 @@ public class SMSMessageTest {
             message=new SMSMessage(validPeer,nullPeer,validPayolad);
         }
         catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPeerException");}
+        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
         if(message==null)
             Assert.fail("shouldn't be null");
@@ -97,20 +98,7 @@ public class SMSMessageTest {
             Assert.fail("should throw InvalidPeerException");
         }
         catch (InvalidPeerException e){}//correct
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPeerException");}
-    }
-
-    @Test
-    public void setUpNullPayload()
-    {
-        SMSMessage message=null;
-        try{
-            message=new SMSMessage(validPeer,validPeer,nullPayolad);
-            Assert.fail("should throw NullPointerException");
-        }
-        catch (NullPointerException e){}//correct
         catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
     }
 
     @Test
@@ -120,12 +108,12 @@ public class SMSMessageTest {
             message=new SMSMessage(nullPeer,validPeer,validPayolad);
         }
         catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPeerException");}
+        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
         byte[] SDU=message.getSDU();
 
         try{
-            SMSMessage rebuildMessage=SMSMessage.buildFromSDU(validPeer.getAddress(),SDU);
+            SMSMessage rebuildMessage= SMSMessage.buildFromSDU(validPeer.getAddress(),SDU);
 
             if (!Arrays.equals(rebuildMessage.getData(),message.getData()))
                 Assert.fail("data should be unchanged");
@@ -149,7 +137,7 @@ public class SMSMessageTest {
             message=new SMSMessage(validPeer,validPeer,validPayolad);
         }
         catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPeerException");}
+        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
         String expected="Message:";
         try{

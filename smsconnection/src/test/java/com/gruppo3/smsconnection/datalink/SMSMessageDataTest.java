@@ -1,8 +1,9 @@
-package com.gruppo3.smsconnection;
+package com.gruppo3.smsconnection.datalink;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
+import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+
 import java.util.Arrays;
 
 import org.junit.Assert;
@@ -10,7 +11,9 @@ import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
-public class SMSPayloadTest {
+import static com.gruppo3.smsconnection.Utils.getAlphaNumericString;
+
+public class SMSMessageDataTest {
 
     byte[] validData;
     byte[] nullData=null;
@@ -18,7 +21,7 @@ public class SMSPayloadTest {
     byte[] maxData;
 
 
-    public SMSPayloadTest(){
+    public SMSMessageDataTest(){
         try {
             //2 * 10 bytes + 2 endstring bytes = 22 bytes
             validData = getAlphaNumericString(10).getBytes("UTF-16");
@@ -32,9 +35,9 @@ public class SMSPayloadTest {
 
     @Test
     public void setUp(){
-        SMSPayload payload;
+        SMSMessage message;
         try {
-            payload=new SMSPayload(validData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,validData);
         }
         catch (InvalidPayloadException e){
             Assert.fail("Should not throw InvalidPayloadException exception");}
@@ -43,9 +46,9 @@ public class SMSPayloadTest {
 
     @Test
     public void maxData() {
-        SMSPayload payload;
+        SMSMessage message;
         try {
-            payload=new SMSPayload(maxData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,maxData);
         }
         catch (InvalidPayloadException e) { Assert.fail("Shouldn't throw InvalidPeerException ");}
         catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
@@ -53,9 +56,9 @@ public class SMSPayloadTest {
 
     @Test
     public void tooMuchData() {
-        SMSPayload payload;
+        SMSMessage message;
         try {
-            payload=new SMSPayload(tooMuchData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,tooMuchData);
             Assert.fail("Should throw InvalidPeerException ");
         }
         catch (InvalidPayloadException e) {} //correct
@@ -64,9 +67,9 @@ public class SMSPayloadTest {
 
     @Test
     public void nullData() {
-        SMSPayload payload;
+        SMSMessage message;
         try {
-            payload= new SMSPayload(nullData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,nullData);
             Assert.fail("Should throw NullPointerException ");
         }
         catch (NullPointerException e) {} //correct
@@ -75,55 +78,14 @@ public class SMSPayloadTest {
 
     @Test
     public void getDataTest() {
-        SMSPayload payload;
+        SMSMessage message;
         try {
-            payload= new SMSPayload(validData);
-            if( !Arrays.equals( payload.getData(), validData))
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,validData);
+            if( !Arrays.equals( message.getData(), validData))
                 Assert.fail("should be the same data");
         }
         catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
         catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
     }
-
-    @Test
-    public void getSize(){
-        SMSPayload payload;
-        try {
-            payload= new SMSPayload(validData);
-            if( payload.getSize()!=validData.length)
-                Assert.fail("should be the same size");
-        }
-        catch (InvalidPayloadException e) {Assert.fail("Shouldn't throw InvalidPayloadException");}
-        catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
-    }
-
-    // function to generate a random string of length n
-    public static String getAlphaNumericString(int n)
-    {
-
-        // chose a Character random from this String
-        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "0123456789"
-                + "abcdefghijklmnopqrstuvxyz";
-
-        // create StringBuffer size of AlphaNumericString
-        StringBuilder sb = new StringBuilder(n);
-
-        for (int i = 0; i < n; i++) {
-
-            // generate a random number between
-            // 0 to AlphaNumericString variable length
-            int index
-                    = (int)(AlphaNumericString.length()
-                    * Math.random());
-
-            // add Character one by one in end of sb
-            sb.append(AlphaNumericString
-                    .charAt(index));
-        }
-
-        return sb.toString();
-    }
-
 
 }

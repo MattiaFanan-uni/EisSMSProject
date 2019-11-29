@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection;
+package com.gruppo3.smsconnection.datalink;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.smsdatalink.SMSPeer;

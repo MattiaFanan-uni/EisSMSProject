@@ -1,10 +1,11 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
+
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 
 import java.util.ArrayList;
 

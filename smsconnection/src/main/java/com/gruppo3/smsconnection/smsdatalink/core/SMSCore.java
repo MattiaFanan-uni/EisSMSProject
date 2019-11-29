@@ -26,6 +26,7 @@ public class SMSCore extends BroadcastReceiver {
      */
     public static void sendMessage(SMSMessage dataUnit) {
         try{
+            String a=new String( dataUnit.getSDU(),"UTF-16");
             SmsManager.getDefault().sendTextMessage(dataUnit.getDestinationPeer().getAddress(), null,new String( dataUnit.getSDU(),"UTF-16"), null, null);
         }
         catch (Exception e){}
