@@ -7,13 +7,7 @@ import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidHeaderException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.SMSHeader;
-import com.gruppo3.smsconnection.smsdatalink.SMSPayload;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 
 /**
@@ -26,16 +20,20 @@ public class SMSCore extends BroadcastReceiver {
 
 
     /**
-     * Sends APIMessage
+     * Sends a data unit
      *
-     * @param apiMessage APIMessage message to send
+     * @param dataUnit SMSMessage to send
      */
-    public static void sendMessage(APIMessage apiMessage) {
-        SmsManager.getDefault().sendTextMessage(apiMessage.getDestination(), null, apiMessage.getTextMessage(), null, null);
+    public static void sendMessage(SMSMessage dataUnit) {
+        try{
+            String a=new String( dataUnit.getSDU(),"UTF-16");
+            SmsManager.getDefault().sendTextMessage(dataUnit.getDestinationPeer().getAddress(), null,new String( dataUnit.getSDU(),"UTF-16"), null, null);
+        }
+        catch (Exception e){}
     }
 
     /**
-     * Function called when a message is received. It delegates the message to the SMSDataUnit
+     * Function called when a message is received. It delegates the message to the SMSMessage
      * Handler which analyzes its content.
      *
      * @param context Received message context.
@@ -53,15 +51,17 @@ public class SMSCore extends BroadcastReceiver {
                 shortMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
 
             if (shortMessage != null) {
-                APIMessage apiMessage=new APIMessage(null, shortMessage.getDisplayOriginatingAddress(), shortMessage.getDisplayMessageBody());
 
-                //try to pass the SMSDataUnit built from incoming Sms to SMSManager
+                //try to pass the SMSMessage built from incoming Sms to SMSManager
                 try {
-                    SMSManager.getDefault().handleMessage(SMSAdapter.adaptToSMSDataUnit(apiMessage));
+                    SMSManager.getDefault().handleMessage(
+                            SMSMessage.buildFromSDU(
+                                shortMessage.getDisplayOriginatingAddress(),
+                                shortMessage.getDisplayMessageBody().getBytes("UTF-16")
+                            )
+                    );
                 }
-                catch (InvalidPayloadException e) { }
-                catch (InvalidPeerException e) { }
-                catch (InvalidHeaderException e) { }
+                catch (Exception e){}
             }
         }
     }

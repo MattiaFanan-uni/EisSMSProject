@@ -1,11 +1,11 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
+
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSDataUnit;
-import com.gruppo3.smsconnection.smsdatalink.core.SMSAdapter;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
 
 import java.util.ArrayList;
 
@@ -13,10 +13,10 @@ import java.util.ArrayList;
  * @author Mattia Fanan
  * manage SMS actions
  */
-public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
+public final class SMSManager implements CommunicationHandler<SMSMessage> {
 
-    private static ArrayList<SMSDataUnit> pendingMessages = new ArrayList<>();
-    private static ReceivedMessageListener<SMSDataUnit> smsReceivedListener;
+    private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
+    private static ReceivedMessageListener<SMSMessage> smsReceivedListener;
     private static SMSManager defInstance;
 
     /**
@@ -42,13 +42,15 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * Adds the listener watching for incoming SMSMessages
      * @param listener The listener to wake up when a message is received
      */
-    public void addReceiveListener(ReceivedMessageListener<SMSDataUnit> listener) {
+    @Override
+    public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
         smsReceivedListener=listener;
     }
 
     /**
      * Removes the listener of incoming messages
      */
+    @Override
     public void removeReceiveListener() {
         smsReceivedListener=null;
     }
@@ -56,12 +58,13 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
     /**
      * Sends a given valid message
      */
-    public boolean sendDataUnit(SMSDataUnit dataUnit) {
+    @Override
+    public boolean sendDataUnit(SMSMessage dataUnit) {
 
-        if(!dataUnit.isValid())
+        if(dataUnit==null)
             return false;
 
-        SMSCore.sendMessage(SMSAdapter.adaptToAPIMessage(dataUnit));
+        SMSCore.sendMessage(dataUnit);
         return true;
     }
 
@@ -69,9 +72,9 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * handle the data unit received from the layer above
      * @param dataUnit data unit to handle
      */
-    public void handleMessage(SMSDataUnit dataUnit)
+    public void handleMessage(SMSMessage dataUnit)
     {
-        if (dataUnit!=null && dataUnit.isValid()){
+        if (dataUnit!=null){
             if (smsReceivedListener == null)
                 pendingMessages.add(dataUnit);
             else
@@ -89,9 +92,9 @@ public final class SMSManager extends CommunicationHandler<SMSDataUnit> {
      * @return
      */
     //TODO
-    private ArrayList<SMSDataUnit> retrieveSavedPendingMessages()
+    private ArrayList<SMSMessage> retrieveSavedPendingMessages()
     {
-        return new ArrayList<SMSDataUnit>();
+        return new ArrayList<SMSMessage>();
     }
 
 
