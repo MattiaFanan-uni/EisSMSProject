@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection.connection;
+package com.gruppo3.smsconnection.dictionary;
 
 /**
  * @author Riccardo Crociani

@@ -23,11 +23,10 @@ import android.widget.Toast;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.datalink.SMSMessage;
-import com.gruppo3.smsconnection.datalink.SMSPayload;
-import com.gruppo3.smsconnection.datalink.SMSPeer;
-import com.gruppo3.smsconnection.datalink.manager.NotificatonEraser;
-import com.gruppo3.smsconnection.datalink.manager.SMSManager;
+import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
+import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 
 public class MainActivity extends AppCompatActivity implements ReceivedMessageListener<SMSMessage> {
 
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
         String message = txt_message.getText().toString().trim();
 
         SMSPeer peer=null;
-        SMSPayload data=null;
 
         if((!phoneNumber.equals("") && !message.equals(""))) {
 

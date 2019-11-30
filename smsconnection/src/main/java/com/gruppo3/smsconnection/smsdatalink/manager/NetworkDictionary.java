@@ -5,7 +5,7 @@ package com.gruppo3.smsconnection.smsdatalink.manager;
  */
 
 
-import com.gruppo3.smsconnection.connection.NetDictionary;
+import com.gruppo3.smsconnection.dictionary.NetDictionary;
 import com.gruppo3.smsconnection.connection.exception.InvalidItemException;
 
 import java.util.ArrayList;
