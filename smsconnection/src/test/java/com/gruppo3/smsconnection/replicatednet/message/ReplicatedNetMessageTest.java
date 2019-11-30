@@ -1,18 +1,15 @@
-package com.gruppo3.smsconnection.replicatednet;
+package com.gruppo3.smsconnection.replicatednet.message;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidMessageException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import static com.gruppo3.smsconnection.Utils.getAlphaNumericString;
+import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
 public class ReplicatedNetMessageTest {
     ReplicatedNetPeer validPeer;

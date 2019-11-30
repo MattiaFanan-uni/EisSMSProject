@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection;
+package com.gruppo3.smsconnection.utils;
 
 public class Utils {
     // function to generate a random string of length n

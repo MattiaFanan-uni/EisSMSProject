@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
 import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 

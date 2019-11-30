@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection.replicatednet;
+package com.gruppo3.smsconnection.replicatednet.message;
 
 import androidx.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.gruppo3.smsconnection.connection.AbstractByteMessage;
 import com.gruppo3.smsconnection.connection.exception.InvalidMessageException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
 
 import java.io.UnsupportedEncodingException;
 

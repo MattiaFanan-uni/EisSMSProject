@@ -1,18 +1,19 @@
-package com.gruppo3.smsconnection.replicatednet;
+package com.gruppo3.smsconnection.datalink.message;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
+
+import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
-import static com.gruppo3.smsconnection.Utils.getAlphaNumericString;
+import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
-public class ReplicatedNetMessageDataTest {
+public class SMSMessageDataTest {
 
     byte[] validData;
     byte[] nullData=null;
@@ -20,26 +21,23 @@ public class ReplicatedNetMessageDataTest {
     byte[] maxData;
 
 
-    public ReplicatedNetMessageDataTest(){
+    public SMSMessageDataTest(){
         try {
             //2 * 10 bytes + 2 endstring bytes = 22 bytes
             validData = getAlphaNumericString(10).getBytes("UTF-16");
             //2 * MAXPAYLOAD_LENGTH +2
-            tooMuchData=getAlphaNumericString(ReplicatedNetMessage.MAX_PAYLOAD_LENGTH).getBytes("UTF-16");
+            tooMuchData=getAlphaNumericString(SMSMessage.MAX_PAYLOAD_LENGTH).getBytes("UTF-16");
             // 2 * ((MAXPAYLOAD_LENGTH/2 -2) +2) = MAXPAYLOAD_LENGTH
-            maxData=getAlphaNumericString((ReplicatedNetMessage.MAX_PAYLOAD_LENGTH/2)-2).getBytes("UTF-16");
+            maxData=getAlphaNumericString((SMSMessage.MAX_PAYLOAD_LENGTH/2)-2).getBytes("UTF-16");
         }
         catch (UnsupportedEncodingException e){}
     }
 
     @Test
     public void setUp(){
-        ReplicatedNetMessage message;
+        SMSMessage message;
         try {
-            message=new ReplicatedNetMessage(
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    validData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,validData);
         }
         catch (InvalidPayloadException e){
             Assert.fail("Should not throw InvalidPayloadException exception");}
@@ -48,12 +46,9 @@ public class ReplicatedNetMessageDataTest {
 
     @Test
     public void maxData() {
-        ReplicatedNetMessage message;
+        SMSMessage message;
         try {
-            message=new ReplicatedNetMessage(
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    maxData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,maxData);
         }
         catch (InvalidPayloadException e) { Assert.fail("Shouldn't throw InvalidPeerException ");}
         catch (Exception e) {Assert.fail("Shouldn't throw this Exception");}
@@ -61,12 +56,9 @@ public class ReplicatedNetMessageDataTest {
 
     @Test
     public void tooMuchData() {
-        ReplicatedNetMessage message;
+        SMSMessage message;
         try {
-            message=new ReplicatedNetMessage(
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    tooMuchData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,tooMuchData);
             Assert.fail("Should throw InvalidPeerException ");
         }
         catch (InvalidPayloadException e) {} //correct
@@ -75,12 +67,9 @@ public class ReplicatedNetMessageDataTest {
 
     @Test
     public void nullData() {
-        ReplicatedNetMessage message;
+        SMSMessage message;
         try {
-            message=new ReplicatedNetMessage(
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    nullData);;
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,nullData);
             Assert.fail("Should throw NullPointerException ");
         }
         catch (NullPointerException e) {} //correct
@@ -89,12 +78,9 @@ public class ReplicatedNetMessageDataTest {
 
     @Test
     public void getDataTest() {
-        ReplicatedNetMessage message;
+        SMSMessage message;
         try {
-            message=new ReplicatedNetMessage(
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    validData);
+            message=new SMSMessage(null, new SMSPeer(SMSPeerTest.validAddress) ,validData);
             if( !Arrays.equals( message.getData(), validData))
                 Assert.fail("should be the same data");
         }

@@ -1,4 +1,4 @@
-package com.gruppo3.smsconnection.smsdatalink;
+package com.gruppo3.smsconnection.smsdatalink.message;
 
 
 import androidx.annotation.NonNull;

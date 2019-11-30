@@ -1,7 +1,7 @@
-package com.gruppo3.smsconnection.datalink;
+package com.gruppo3.smsconnection.datalink.message;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
 
 import org.junit.Assert;
 import org.junit.Test;

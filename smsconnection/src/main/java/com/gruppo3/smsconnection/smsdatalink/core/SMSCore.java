@@ -7,7 +7,7 @@ import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 
 /**
