@@ -59,26 +59,26 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      * Sends a given valid message
      */
     @Override
-    public boolean sendDataUnit(SMSMessage dataUnit) {
+    public boolean sendMessage(SMSMessage message) {
 
-        if(dataUnit==null)
+        if(message==null)
             return false;
 
-        SMSCore.sendMessage(dataUnit);
+        SMSCore.sendMessage(message);
         return true;
     }
 
     /**
-     * handle the data unit received from the layer above
-     * @param dataUnit data unit to handle
+     * handle the message received from the layer above
+     * @param message message to be handled
      */
-    public void handleMessage(SMSMessage dataUnit)
+    public void handleMessage(SMSMessage message)
     {
-        if (dataUnit!=null){
+        if (message!=null){
             if (smsReceivedListener == null)
-                pendingMessages.add(dataUnit);
+                pendingMessages.add(message);
             else
-                smsReceivedListener.onMessageReceived(dataUnit);
+                smsReceivedListener.onMessageReceived(message);
         }
     }
 

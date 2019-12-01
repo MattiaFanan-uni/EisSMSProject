@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ReceivedMessageLi
                 catch (Exception e){}
 
                 if(sms!=null) {
-                    flHandler.sendDataUnit(sms);
+                    flHandler.sendMessage(sms);
 
                     Toast.makeText(this, "Messagio inviato", Toast.LENGTH_SHORT).show();
                 }

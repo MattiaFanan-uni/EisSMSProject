@@ -27,7 +27,7 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     private HashMap<K,V> resources;
     private int ID;
 
-    public ReplicatedNetDictionary(@NonNull ReplicatedNetPeer netPeer,@NonNull SMSPeer smsPeer) {
+    public ReplicatedNetDictionary(@NonNull ReplicatedNetPeer netPeer, @NonNull SMSPeer smsPeer) {
         ID= (new Random()).nextInt();
         peers=new TreeMap<>();
         resources=new HashMap<>();
@@ -58,7 +58,7 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     }
 
     /**
-     * Removes the resource having this key from this NetDictionary if present.
+     * Removes the resource having this key from this ReplicatedNetDictionary if present.
      *
      * @param resourceKey key of the resource to be removed
      * @return the previous value associated with key, or null if there was no mapping for key.
@@ -141,7 +141,7 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     }
 
     /**
-     * Removes the peer having this key from this NetDictionary if present.
+     * Removes the peer having this key from this ReplicatedNetDictionary if present.
      *
      * @param peerKey key of the peer to be removed
      * @return the previous value associated with key, or null if there was no mapping for key.

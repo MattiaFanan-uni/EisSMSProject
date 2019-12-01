@@ -123,4 +123,35 @@ public class ReplicatedNetPeerTest {
 
     }
 
+    @Test
+    public void Equals(){
+        ReplicatedNetPeer peer=null;
+        ReplicatedNetPeer equal=null;
+        try {
+            peer=new ReplicatedNetPeer(validAddress);
+            equal=new ReplicatedNetPeer(validAddress);
+        }
+        catch (InvalidPeerException e){Assert.fail("Should not throw InvalidPeerException exception");}
+        catch (Exception e){Assert.fail("Should not throw this exception");}
+
+        if(!peer.equals(equal))
+            Assert.fail("should be equal");
+
+    }
+
+    @Test
+    public void EqualsNotEquals(){
+        ReplicatedNetPeer peer=null;
+        ReplicatedNetPeer lower=null;
+        try {
+            peer=new ReplicatedNetPeer(validAddress);
+            lower=new ReplicatedNetPeer(lowerThanValidAddress);
+        }
+        catch (InvalidPeerException e){Assert.fail("Should not throw InvalidPeerException exception");}
+        catch (Exception e){Assert.fail("Should not throw this exception");}
+
+        if(peer.equals(lower))
+            Assert.fail("shouldn't be equal");
+
+    }
 }

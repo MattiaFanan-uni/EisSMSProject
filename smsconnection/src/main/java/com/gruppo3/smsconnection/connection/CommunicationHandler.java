@@ -12,9 +12,9 @@ import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 public interface CommunicationHandler<T extends Message> {
     /**
      * Sends a valid message to a peer
-     * @param dataUnit The message to send
+     * @param message The message to send
      */
-    boolean sendDataUnit(T dataUnit);
+    boolean sendMessage(T message);
 
     /**
      * Adds a listener that gets called when a message is received
