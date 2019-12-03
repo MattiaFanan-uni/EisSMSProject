@@ -2,16 +2,13 @@ package com.gruppo3.smsconnection.connection;
 
 import androidx.annotation.NonNull;
 
-import java.io.Serializable;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddPeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemovePeerNetCommand;
+
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * @author Riccardo Crociani
- * Generic dictionary interface for net resource sharing
- */
-public interface NetDictionary<RK extends Serializable, RV extends Serializable, PK extends Serializable, PV extends Serializable>
-        extends Serializable,ResourceDictionary<RK,RV> {
+public interface PeerDictionary<K extends Peer, V extends Peer> {
 
     /**
      * If the specified key is not already associated with a value associates it with the given value and returns null, else returns the current value.
@@ -19,21 +16,21 @@ public interface NetDictionary<RK extends Serializable, RV extends Serializable,
      * @param peerValue value to be associated with the specified key
      * @return the previous value associated with the specified key, or null if there was no mapping for the key.
      */
-    PV putPeerIfAbsent (@NonNull PK peerKey, PV peerValue);
+    V putPeerIfAbsent (@NonNull K peerKey, V peerValue);
 
     /**
      * Removes the peer having this key from this ReplicatedNetDictionary if present.
      * @param peerKey key of the peer to be removed
      * @return the previous value associated with key, or null if there was no mapping for key.
      */
-    PV removePeer(@NonNull PK peerKey);
+    V removePeer(@NonNull K peerKey);
 
     /**
      *Returns the peer value to which the specified peer key is mapped, or null if this map contains no mapping for the key
      * @param peerKey the key whose associated peer value is to be returned
      * @return the peer value to which the specified key is mapped, or null if this map contains no mapping for the key
      */
-    PV getPeer(@NonNull PK peerKey);
+    V getPeer(@NonNull K peerKey);
 
     /**
      * Returns the number of peers that can access tis dictionary.
@@ -46,18 +43,19 @@ public interface NetDictionary<RK extends Serializable, RV extends Serializable,
      * @param peerKey key of the peer whose presence in this dictionary is to be tested
      * @return <code>true</code> if this dictionary contains a mapping for the specified key
      */
-    boolean containsPeerKey(@NonNull PK peerKey);
+    boolean containsPeerKey(@NonNull K peerKey);
 
     /**
      * Check if the Dictionary contains a peer having the specified value
      * @param peerValue value of the peer whose presence in this dictionary is to be tested
      * @return <code>true</code> if this dictionary contains a mapping for the specified value
      */
-    boolean containsPeerValue(PV peerValue);
+    boolean containsPeerValue(V peerValue);
 
     /**
      * Return all the peer that can access this dictionary in acsending order
      * @return an iterator on all the peer that can access this dictionary
      */
-    Iterator<Map.Entry<PK, PV>> getPeersIteratorAscending();
+    Iterator<Map.Entry<K, V>> getPeersIteratorAscending();
+
 }

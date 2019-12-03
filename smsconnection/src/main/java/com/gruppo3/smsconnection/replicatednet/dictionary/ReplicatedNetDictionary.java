@@ -2,7 +2,12 @@ package com.gruppo3.smsconnection.replicatednet.dictionary;
 
 import androidx.annotation.NonNull;
 
-import com.gruppo3.smsconnection.connection.NetDictionary;
+import com.gruppo3.smsconnection.connection.PeerNetDictionary;
+import com.gruppo3.smsconnection.connection.ResourceNetDictionary;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddPeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddResourceNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemovePeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemoveResourceNetCommand;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
 
@@ -21,7 +26,8 @@ import java.util.TreeMap;
  * - netDictionary<ReplicatedPeer, SMSPeer> contains the peer allowed to write and read the dictionray
  */
 
-public class ReplicatedNetDictionary<K extends Serializable,V extends Serializable> implements NetDictionary<K,V, ReplicatedNetPeer,SMSPeer> {
+public class ReplicatedNetDictionary<K extends Serializable,V extends Serializable >
+        implements ResourceNetDictionary<K,V>, PeerNetDictionary<ReplicatedNetPeer,SMSPeer> {
 
     private TreeMap<ReplicatedNetPeer,SMSPeer> peers;
     private HashMap<K,V> resources;
@@ -126,6 +132,30 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     }
 
     /**
+     * Return a command for inserting a resource in a ResourceNetDictionary
+     *
+     * @param resourceKey   Key of the resource to insert
+     * @param resourceValue Value of the resource to insert
+     * @return AddResourceCommand ready for execute the requested insertion
+     */
+    @Override
+    public AddResourceNetCommand<K, V> getAddResourceCommand(K resourceKey, V resourceValue) {
+        return new AddResourceNetCommand<>(resourceKey,resourceValue);
+    }
+
+    /**
+     * Return a command for removing a resource in a ResourceNetDictionary
+     *
+     * @param resourceKey Key of the resource to remove
+     * @return RemoveResourceCommand ready for execute the requested deletion
+     */
+    @Override
+    public RemoveResourceNetCommand<K, V> getRemoveResourceCommand(K resourceKey) {
+        return new RemoveResourceNetCommand<>(resourceKey);
+    }
+
+
+    /**
      * If the specified key is not already associated with a value associates it with the given value and returns null, else returns the current value.
      * @param peerKey   key with which the specified value is to be associated
      * @param peerValue value to be associated with the specified key
@@ -210,4 +240,30 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     public Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> getPeersIteratorAscending() {
         return peers.entrySet().iterator();
     }
+
+
+    /**
+     * Return a command for inserting a resource in a PeerNetDictionary
+     *
+     * @param peerKey   Key of the peer to insert
+     * @param peerValue Value of the peer to insert
+     * @return AddPeerNetCommand ready for execute the requested insertion
+     */
+    @Override
+    public AddPeerNetCommand<ReplicatedNetPeer, SMSPeer> getAddPeerNetCommand(ReplicatedNetPeer peerKey, SMSPeer peerValue) {
+        return new AddPeerNetCommand<>(peerKey,peerValue);
+    }
+
+    /**
+     * Return a command for removing a peer in a PeerNetDictionary
+     *
+     * @param peerKey Key of the peer to remove
+     * @return RemovePeerNetCommand ready for execute the requested deletion
+     */
+    @Override
+    public RemovePeerNetCommand<ReplicatedNetPeer, SMSPeer> getRemovePeerNetCommand(ReplicatedNetPeer peerKey) {
+        return new RemovePeerNetCommand<>(peerKey);
+    }
+
+
 }

@@ -24,7 +24,7 @@ set JAVA_EXE=java.exe
 if "%ERRORLEVEL%" == "0" goto init
 
 echo.
-echo ERROR: JAVA_HOME is not set and no 'java' netCommand could be found in your PATH.
+echo ERROR: JAVA_HOME is not set and no 'java' resourceNetCommand could be found in your PATH.
 echo.
 echo Please set the JAVA_HOME variable in your environment to match the
 echo location of your Java installation.
@@ -46,12 +46,12 @@ echo location of your Java installation.
 goto fail
 
 :init
-@rem Get netCommand-line arguments, handling Windows variants
+@rem Get resourceNetCommand-line arguments, handling Windows variants
 
 if not "%OS%" == "Windows_NT" goto win9xME_args
 
 :win9xME_args
-@rem Slurp the netCommand line arguments.
+@rem Slurp the resourceNetCommand line arguments.
 set CMD_LINE_ARGS=
 set _SKIP=2
 
@@ -61,7 +61,7 @@ if "x%~1" == "x" goto execute
 set CMD_LINE_ARGS=%*
 
 :execute
-@rem Setup the netCommand line
+@rem Setup the resourceNetCommand line
 
 set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
 

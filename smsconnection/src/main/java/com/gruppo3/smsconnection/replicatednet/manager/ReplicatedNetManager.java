@@ -9,10 +9,8 @@ import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.replicatednet.dictionary.ReplicatedNetDictionary;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.NetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.addPeerNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.addResourceNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.removeResourceNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.PeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.ResourceNetCommand;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetMessage;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetUnknownDestinationMessage;
@@ -104,7 +102,7 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
         V result = replicatedNetDictionary.putResourceIfAbsent(resourceKey,resourceValue);
         if(result!=null)
         {
-            broadcast(new addResourceNetCommand<>(resourceKey,resourceValue));
+            broadcast(replicatedNetDictionary.getAddResourceCommand(resourceKey,resourceValue));
         }
         return result;
     }
@@ -121,7 +119,7 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
         V result = replicatedNetDictionary.removeResource(resourceKey);
         if(result!=null)
         {
-            broadcast(new removeResourceNetCommand<>(resourceKey));
+            broadcast(replicatedNetDictionary.getRemoveResourceCommand(resourceKey));
         }
         return result;
     }
@@ -180,10 +178,10 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
     }
 
     ////////////////////////////////////////////BROADCAST
-    private void broadcast(NetCommand netCommand){
+    private void broadcast(ResourceNetCommand resourceNetCommand){
 
         Iterator<Map.Entry<ReplicatedNetPeer,SMSPeer>> peersIterator=replicatedNetDictionary.getPeersIteratorAscending();
-        byte[] byteCommand=ObjectSerializer.getSerializedBytes(netCommand);
+        byte[] byteCommand=ObjectSerializer.getSerializedBytes(resourceNetCommand);
 
         if(byteCommand!=null)
             while(peersIterator.hasNext()){
@@ -240,7 +238,7 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
 
             try {
                 ReplicatedNetMessage message = new ReplicatedNetMessage(netPeer, replicatedNetMe,
-                        ObjectSerializer.getSerializedBytes(new addPeerNetCommand(currentNetPeer,currentSmsPeer)));
+                        ObjectSerializer.getSerializedBytes(replicatedNetDictionary.getAddPeerNetCommand(currentNetPeer,currentSmsPeer)));
                 sendMessage(message);
 
             } catch (Exception e) { }
@@ -256,7 +254,7 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
 
             try {
                 ReplicatedNetMessage message = new ReplicatedNetMessage(netPeer, replicatedNetMe,
-                        ObjectSerializer.getSerializedBytes(new addResourceNetCommand<>(currentKey,currentValue)));
+                        ObjectSerializer.getSerializedBytes(replicatedNetDictionary.getAddResourceCommand(currentKey,currentValue)));
                 sendMessage(message);
 
             } catch (Exception e) { }
@@ -302,8 +300,21 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
         if(netMessage!=null)
         {
             //retrieve command and execute
-            NetCommand command=ObjectSerializer.getDeserializedObject(netMessage.getData());
-            command.execute(replicatedNetDictionary);
+            try {
+                //first i try PeerCommand cause extends peer is more restrictive
+                PeerNetCommand command = ObjectSerializer.getDeserializedObject(netMessage.getData());
+                command.execute(replicatedNetDictionary);
+
+            }catch (Exception e){
+
+                try{
+                    ResourceNetCommand command=ObjectSerializer.getDeserializedObject(netMessage.getData());
+                    command.execute(replicatedNetDictionary);
+                }
+                catch (Exception ex){}
+            }
+
+
         }
         else {
             try {
