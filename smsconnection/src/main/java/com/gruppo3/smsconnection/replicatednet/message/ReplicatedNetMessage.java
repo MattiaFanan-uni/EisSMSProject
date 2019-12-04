@@ -87,7 +87,6 @@ public class ReplicatedNetMessage extends AbstractByteMessage<ReplicatedNetPeer>
             short payloadLength=(short)(
                     (short)new String(bytePayloadLength, "UTF-16").charAt(0)-Short.MIN_VALUE
             );
-
             //retrieve data
             byte[] data=new byte[payloadLength];
             System.arraycopy(lowerLayerSDU, STRUCTURE.TOTAL_HEADER.getLength(), data , 0, payloadLength);

@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ReplicatedNetManager<K extends Serializable, V extends Serializable>
+public class  ReplicatedNetManager<K extends Serializable, V extends Serializable>
         implements Serializable,
         CommunicationHandler<ReplicatedNetMessage>,
         ResourceDictionary<K,V> ,
@@ -100,7 +100,7 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
     public V putResourceIfAbsent(@NonNull K resourceKey, V resourceValue) {
 
         V result = replicatedNetDictionary.putResourceIfAbsent(resourceKey,resourceValue);
-        if(result!=null)
+        if(result==null)
         {
             broadcast(replicatedNetDictionary.getAddResourceCommand(resourceKey,resourceValue));
         }
