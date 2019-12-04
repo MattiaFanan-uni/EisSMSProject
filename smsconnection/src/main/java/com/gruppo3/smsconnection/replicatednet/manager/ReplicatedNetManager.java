@@ -41,6 +41,7 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
     //////////////////////////////////////CONSTRUCTOR
     public ReplicatedNetManager(ReplicatedNetPeer replicatedNetMe, SMSPeer smsMe){
         smsManager=SMSManager.getDefault();
+        smsManager.addReceiveListener(this);
         listener=null;
         this.replicatedNetMe= replicatedNetMe;
         this.smsMe=smsMe;
