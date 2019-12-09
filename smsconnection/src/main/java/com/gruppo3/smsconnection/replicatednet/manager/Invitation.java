@@ -9,14 +9,20 @@ public class Invitation implements Serializable {
     private long code;
     private boolean accepted;
 
-    public Invitation(){
-        code=(new Random()).nextLong();
-        accepted=false;
+    public Invitation() {
+        code = (new Random()).nextLong();
+        accepted = false;
     }
 
-    public void accept(){accepted=true;}
+    public void accept() {
+        accepted = true;
+    }
 
-    public boolean isAccepted(){return accepted;}
+    public boolean isAccepted() {
+        return accepted;
+    }
 
-    public long getCode(){return code;}
+    public long getCode() {
+        return code;
+    }
 }

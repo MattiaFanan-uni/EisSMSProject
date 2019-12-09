@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class ObjectSerializer {
 
-    public static <T extends Serializable> byte[] getSerializedBytes(T toSerialize){
+    public static <T extends Serializable> byte[] getSerializedBytes(T toSerialize) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out = null;
@@ -21,10 +21,9 @@ public class ObjectSerializer {
             out.writeObject(toSerialize);
             out.flush();
             return bos.toByteArray();
-        }
-        catch (IOException e){return null;}
-
-        finally {
+        } catch (IOException e) {
+            return null;
+        } finally {
             try {
                 bos.close();
             } catch (IOException ex) {
@@ -33,17 +32,17 @@ public class ObjectSerializer {
         }
     }
 
-    public static <T extends Serializable> T getDeserializedObject(byte[] toDeserialize){
+    public static <T extends Serializable> T getDeserializedObject(byte[] toDeserialize) {
 
         ByteArrayInputStream bis = new ByteArrayInputStream(toDeserialize);
         ObjectInput in = null;
         try {
             in = new ObjectInputStream(bis);
             Object o = in.readObject();
-            return (T)o;
-        }
-        catch (IOException|ClassNotFoundException e){return null;}
-        finally {
+            return (T) o;
+        } catch (IOException | ClassNotFoundException e) {
+            return null;
+        } finally {
             try {
                 if (in != null) {
                     in.close();

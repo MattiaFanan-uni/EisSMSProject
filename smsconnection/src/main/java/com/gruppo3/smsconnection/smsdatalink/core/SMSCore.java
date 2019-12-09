@@ -7,12 +7,12 @@ import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
-import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
 
 /**
- *@author Mattia Fanan
- *
+ * @author Mattia Fanan
+ * <p>
  * basic class scheme from gruppo1
  * it interfaces SMSMDataUnit with API
  */
@@ -25,11 +25,11 @@ public class SMSCore extends BroadcastReceiver {
      * @param dataUnit SMSMessage to send
      */
     public static void sendMessage(SMSMessage dataUnit) {
-        try{
-            String a=new String( dataUnit.getSDU(),"UTF-16");
-            SmsManager.getDefault().sendTextMessage(dataUnit.getDestinationPeer().getAddress(), null,new String( dataUnit.getSDU(),"UTF-16"), null, null);
+        try {
+            String a = new String(dataUnit.getSDU(), "UTF-16");
+            SmsManager.getDefault().sendTextMessage(dataUnit.getDestinationPeer().getAddress(), null, new String(dataUnit.getSDU(), "UTF-16"), null, null);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
     /**
@@ -56,12 +56,12 @@ public class SMSCore extends BroadcastReceiver {
                 try {
                     SMSManager.getDefault().handleMessage(
                             SMSMessage.buildFromSDU(
-                                shortMessage.getDisplayOriginatingAddress(),
-                                shortMessage.getDisplayMessageBody().getBytes("UTF-16")
+                                    shortMessage.getDisplayOriginatingAddress(),
+                                    shortMessage.getDisplayMessageBody().getBytes("UTF-16")
                             )
                     );
+                } catch (Exception e) {
                 }
-                catch (Exception e){}
             }
         }
     }

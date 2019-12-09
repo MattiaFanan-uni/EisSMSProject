@@ -2,14 +2,15 @@ package com.gruppo3.smsconnection.connection.exception;
 
 /**
  * InvalidHeaderException class
+ *
  * @author Mattia Fanan
  */
 public class InvalidHeaderException extends Exception {
-    public InvalidHeaderException(){
+    public InvalidHeaderException() {
         super();
     }
 
-    public InvalidHeaderException(String s){
+    public InvalidHeaderException(String s) {
         super(s);
     }
 }

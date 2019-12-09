@@ -1,7 +1,6 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
-
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
@@ -23,28 +22,30 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      * singleton
      */
     private SMSManager() {
-        pendingMessages=retrieveSavedPendingMessages() ;
-        defInstance=null;
-        smsReceivedListener=null;
+        pendingMessages = retrieveSavedPendingMessages();
+        defInstance = null;
+        smsReceivedListener = null;
     }
 
     /**
      * get default instance for SMSManager
+     *
      * @return SMSManager
      */
-    public static SMSManager getDefault(){
-        if(defInstance==null)
-            defInstance=new SMSManager();
+    public static SMSManager getDefault() {
+        if (defInstance == null)
+            defInstance = new SMSManager();
         return defInstance;
     }
 
     /**
      * Adds the listener watching for incoming SMSMessages
+     *
      * @param listener The listener to wake up when a message is received
      */
     @Override
     public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        smsReceivedListener=listener;
+        smsReceivedListener = listener;
     }
 
     /**
@@ -52,7 +53,7 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      */
     @Override
     public void removeReceiveListener() {
-        smsReceivedListener=null;
+        smsReceivedListener = null;
     }
 
     /**
@@ -61,7 +62,7 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
     @Override
     public boolean sendMessage(SMSMessage message) {
 
-        if(message==null)
+        if (message == null)
             return false;
 
         SMSCore.sendMessage(message);
@@ -70,11 +71,11 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
 
     /**
      * handle the message received from the layer above
+     *
      * @param message message to be handled
      */
-    public void handleMessage(SMSMessage message)
-    {
-        if (message!=null){
+    public void handleMessage(SMSMessage message) {
+        if (message != null) {
             if (smsReceivedListener == null)
                 pendingMessages.add(message);
             else
@@ -89,11 +90,11 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
     /**
      * future
      * retrive pending messages from database
+     *
      * @return
      */
     //TODO
-    private ArrayList<SMSMessage> retrieveSavedPendingMessages()
-    {
+    private ArrayList<SMSMessage> retrieveSavedPendingMessages() {
         return new ArrayList<SMSMessage>();
     }
 
@@ -103,7 +104,7 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      * save a pendingmessge in database
      */
     //TODO
-    private void savePendingMessage(){
+    private void savePendingMessage() {
 
     }
 }

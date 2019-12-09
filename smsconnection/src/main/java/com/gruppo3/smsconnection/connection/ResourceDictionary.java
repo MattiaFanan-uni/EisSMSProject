@@ -2,14 +2,11 @@ package com.gruppo3.smsconnection.connection;
 
 import androidx.annotation.NonNull;
 
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddResourceNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemoveResourceNetCommand;
-
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
-public interface ResourceDictionary<K extends Serializable,V extends Serializable> extends Serializable {
+public interface ResourceDictionary<K extends Serializable, V extends Serializable> extends Serializable {
 
     /**
      * If the specified key is not already associated with a value associates it with the given value and returns null, else returns the current value.
@@ -18,7 +15,7 @@ public interface ResourceDictionary<K extends Serializable,V extends Serializabl
      * @param resourceValue value to be associated with the specified key
      * @return the previous value associated with the specified key, or null if there was no mapping for the key.
      */
-    V putResourceIfAbsent (@NonNull K resourceKey, V resourceValue);
+    V putResourceIfAbsent(@NonNull K resourceKey, V resourceValue);
 
     /**
      * Removes the resource having this key from this ReplicatedNetDictionary if present.
@@ -29,7 +26,7 @@ public interface ResourceDictionary<K extends Serializable,V extends Serializabl
     V removeResource(@NonNull K resourceKey);
 
     /**
-     *Returns the resource value to which the specified resource key is mapped, or null if this map contains no mapping for the key
+     * Returns the resource value to which the specified resource key is mapped, or null if this map contains no mapping for the key
      *
      * @param resourceKey the key whose associated resource value is to be returned
      * @return the resource value to which the specified key is mapped, or null if this map contains no mapping for the key

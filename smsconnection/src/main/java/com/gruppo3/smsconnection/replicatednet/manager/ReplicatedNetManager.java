@@ -9,8 +9,7 @@ import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.replicatednet.dictionary.ReplicatedNetDictionary;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.PeerNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.ResourceNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.StringParser;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetMessage;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetUnknownDestinationMessage;
@@ -24,31 +23,32 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class  ReplicatedNetManager<K extends Serializable, V extends Serializable>
+public class ReplicatedNetManager<K extends Serializable, V extends Serializable>
         implements Serializable,
         CommunicationHandler<ReplicatedNetMessage>,
-        ResourceDictionary<K,V> ,
-        ReceivedMessageListener<SMSMessage>{
+        ResourceDictionary<K, V>,
+        ReceivedMessageListener<SMSMessage> {
 
     private transient SMSManager smsManager;
     private transient ReceivedMessageListener<ReplicatedNetMessage> listener;
     //da gestire tipo in un array
     private ReplicatedNetPeer replicatedNetMe;
     private SMSPeer smsMe;
-    private ReplicatedNetDictionary<K,V> replicatedNetDictionary;
-    private TreeMap<Long,SMSPeer> invitedTokenList;
+    private ReplicatedNetDictionary<K, V> replicatedNetDictionary;
+    private TreeMap<Long, SMSPeer> invitedTokenList;
 
     //////////////////////////////////////CONSTRUCTOR
-    public ReplicatedNetManager(ReplicatedNetPeer replicatedNetMe, SMSPeer smsMe){
-        smsManager=SMSManager.getDefault();
+    public ReplicatedNetManager(ReplicatedNetPeer replicatedNetMe, SMSPeer smsMe, @NonNull StringParser<K> resourceKeyParser, @NonNull StringParser<V> resourceValueParser) {
+        smsManager = SMSManager.getDefault();
         smsManager.addReceiveListener(this);
-        listener=null;
-        this.replicatedNetMe= replicatedNetMe;
-        this.smsMe=smsMe;
-        replicatedNetDictionary =new ReplicatedNetDictionary<>(replicatedNetMe,smsMe);
-        invitedTokenList=new TreeMap<>();
+        listener = null;
+        this.replicatedNetMe = replicatedNetMe;
+        this.smsMe = smsMe;
+        replicatedNetDictionary = new ReplicatedNetDictionary<>(replicatedNetMe, smsMe, resourceKeyParser, resourceValueParser);
+        invitedTokenList = new TreeMap<>();
     }
     ///////////////////////////////////////////////////COMMUNICATION_HANDLER
+
     /**
      * Sends a valid message to a peer
      *
@@ -57,14 +57,15 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
     @Override
     public boolean sendMessage(ReplicatedNetMessage message) {
 
-        SMSMessage smsMessage=null;
+        SMSMessage smsMessage = null;
 
-        SMSPeer destinationPeer= replicatedNetDictionary.getPeer(message.getDestinationPeer());
+        SMSPeer destinationPeer = replicatedNetDictionary.getPeer(message.getDestinationPeer());
 
-        try{
-            smsMessage=new SMSMessage(destinationPeer,smsMe,message.getSDU());
+        try {
+            smsMessage = new SMSMessage(destinationPeer, smsMe, message.getSDU());
+        } catch (InvalidPeerException | InvalidPayloadException e) {
+            return false;
         }
-        catch (InvalidPeerException| InvalidPayloadException e){return false;}
 
         return smsManager.sendMessage(smsMessage);
     }
@@ -76,7 +77,7 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
      */
     @Override
     public void addReceiveListener(ReceivedMessageListener<ReplicatedNetMessage> listener) {
-        this.listener=listener;
+        this.listener = listener;
     }
 
     /**
@@ -84,7 +85,7 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
      */
     @Override
     public void removeReceiveListener() {
-        listener=null;
+        listener = null;
     }
 
     /**
@@ -96,14 +97,12 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
      */
 
     /////////////////////////////////////RESOURCE DICTIONARY///////////////////
-
     @Override
     public V putResourceIfAbsent(@NonNull K resourceKey, V resourceValue) {
 
-        V result = replicatedNetDictionary.putResourceIfAbsent(resourceKey,resourceValue);
-        if(result==null)
-        {
-            broadcast(replicatedNetDictionary.getAddResourceCommand(resourceKey,resourceValue));
+        V result = replicatedNetDictionary.putResourceIfAbsent(resourceKey, resourceValue);
+        if (result == null) {
+            broadcast(replicatedNetDictionary.getAddResourceCommand(resourceKey, resourceValue));
         }
         return result;
     }
@@ -118,8 +117,7 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
     public V removeResource(@NonNull K resourceKey) {
 
         V result = replicatedNetDictionary.removeResource(resourceKey);
-        if(result!=null)
-        {
+        if (result != null) {
             broadcast(replicatedNetDictionary.getRemoveResourceCommand(resourceKey));
         }
         return result;
@@ -179,86 +177,86 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
     }
 
     ////////////////////////////////////////////BROADCAST
-    private void broadcast(ResourceNetCommand resourceNetCommand){
+    private void broadcast(String resourceNetCommand) {
 
-        Iterator<Map.Entry<ReplicatedNetPeer,SMSPeer>> peersIterator=replicatedNetDictionary.getPeersIteratorAscending();
-        byte[] byteCommand=ObjectSerializer.getSerializedBytes(resourceNetCommand);
+        Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> peersIterator = replicatedNetDictionary.getPeersIteratorAscending();
+        byte[] byteCommand = ObjectSerializer.getSerializedBytes(resourceNetCommand);
 
-        if(byteCommand!=null)
-            while(peersIterator.hasNext()){
-                ReplicatedNetPeer currentPeer=peersIterator.next().getKey();
+        if (byteCommand != null)
+            while (peersIterator.hasNext()) {
+                ReplicatedNetPeer currentPeer = peersIterator.next().getKey();
                 //i don't send to myself
-                if(!currentPeer.equals(replicatedNetMe))
+                if (!currentPeer.equals(replicatedNetMe))
                     try {
                         ReplicatedNetMessage message = new ReplicatedNetMessage(currentPeer, replicatedNetMe, byteCommand);
                         sendMessage(message);
+                    } catch (Exception e) {
                     }
-                    catch (Exception e){}
             }
     }
+
     /////////////////////////////////////////ADD PEER
     //TODO
-    public void invite(SMSPeer toInvite){
+    public void invite(SMSPeer toInvite) {
         try {
-            Invitation invitation=new Invitation();
-            invitedTokenList.put(invitation.getCode(),toInvite);
+            Invitation invitation = new Invitation();
+            invitedTokenList.put(invitation.getCode(), toInvite);
             ReplicatedNetUnknownDestinationMessage message = new ReplicatedNetUnknownDestinationMessage(replicatedNetMe, ObjectSerializer.getSerializedBytes(invitation));
-            sendMessage(message,toInvite);
+            sendMessage(message, toInvite);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
-    private void handShake(Invitation invitation, ReplicatedNetPeer sourcePeer, SMSPeer toHandshake){
-        if(invitedTokenList.containsKey(invitation.getCode()))
-        {
+    private void handShake(Invitation invitation, ReplicatedNetPeer sourcePeer, SMSPeer toHandshake) {
+        if (invitedTokenList.containsKey(invitation.getCode())) {
             SMSPeer toAddSmsPeer = invitedTokenList.remove(invitation.getCode());
-            replicatedNetDictionary.putPeerIfAbsent( sourcePeer,toAddSmsPeer);
+            replicatedNetDictionary.putPeerIfAbsent(sourcePeer, toAddSmsPeer);
             updateNewPeer(sourcePeer);
-        }
-        else
-        {
+        } else {
             try {
                 ReplicatedNetUnknownDestinationMessage message = new ReplicatedNetUnknownDestinationMessage(replicatedNetMe, ObjectSerializer.getSerializedBytes(invitation));
                 sendMessage(message, toHandshake);
+            } catch (Exception e) {
             }
-            catch (Exception e){}
         }
 
     }
 
-    private void updateNewPeer(ReplicatedNetPeer netPeer){
-        Iterator<Map.Entry<ReplicatedNetPeer,SMSPeer>> peersIterator=replicatedNetDictionary.getPeersIteratorAscending();
-        Iterator<Map.Entry<K,V>> resourcesIterator=replicatedNetDictionary.getResourcesIterator();
+    private void updateNewPeer(ReplicatedNetPeer netPeer) {
+        Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> peersIterator = replicatedNetDictionary.getPeersIteratorAscending();
+        Iterator<Map.Entry<K, V>> resourcesIterator = replicatedNetDictionary.getResourcesIterator();
 
         //send all peers to new peer
-        while(peersIterator.hasNext()) {
+        while (peersIterator.hasNext()) {
 
-            Map.Entry<ReplicatedNetPeer,SMSPeer> entry=peersIterator.next();
+            Map.Entry<ReplicatedNetPeer, SMSPeer> entry = peersIterator.next();
             ReplicatedNetPeer currentNetPeer = entry.getKey();
             SMSPeer currentSmsPeer = entry.getValue();
 
             try {
                 ReplicatedNetMessage message = new ReplicatedNetMessage(netPeer, replicatedNetMe,
-                        ObjectSerializer.getSerializedBytes(replicatedNetDictionary.getAddPeerNetCommand(currentNetPeer,currentSmsPeer)));
+                        ObjectSerializer.getSerializedBytes(replicatedNetDictionary.getAddPeerNetCommand(currentNetPeer, currentSmsPeer)));
                 sendMessage(message);
 
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
 
         }
 
         //send all resources to new peer
-        while(resourcesIterator.hasNext()) {
+        while (resourcesIterator.hasNext()) {
 
-            Map.Entry<K,V> entry=resourcesIterator.next();
+            Map.Entry<K, V> entry = resourcesIterator.next();
             K currentKey = entry.getKey();
             V currentValue = entry.getValue();
 
             try {
                 ReplicatedNetMessage message = new ReplicatedNetMessage(netPeer, replicatedNetMe,
-                        ObjectSerializer.getSerializedBytes(replicatedNetDictionary.getAddResourceCommand(currentKey,currentValue)));
+                        ObjectSerializer.getSerializedBytes(replicatedNetDictionary.getAddResourceCommand(currentKey, currentValue)));
                 sendMessage(message);
 
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
 
         }
 
@@ -272,17 +270,19 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
      */
     public boolean sendMessage(ReplicatedNetUnknownDestinationMessage message, SMSPeer destinationSmsPeer) {
 
-        SMSMessage smsMessage=null;
+        SMSMessage smsMessage = null;
 
-        try{
-            smsMessage=new SMSMessage(destinationSmsPeer,smsMe,message.getSDU());
+        try {
+            smsMessage = new SMSMessage(destinationSmsPeer, smsMe, message.getSDU());
+        } catch (InvalidPeerException | InvalidPayloadException e) {
+            return false;
         }
-        catch (InvalidPeerException| InvalidPayloadException e){return false;}
 
         return smsManager.sendMessage(smsMessage);
     }
 
     ///////////////////////////////////////SMS_LISTENER
+
     /**
      * Called by NotificatonEraser whenever a message is received.
      *
@@ -290,42 +290,30 @@ public class  ReplicatedNetManager<K extends Serializable, V extends Serializabl
      */
     @Override
     public void onMessageReceived(SMSMessage message) {
-        ReplicatedNetUnknownDestinationMessage uKNetMessage=null;
-        ReplicatedNetMessage netMessage=null;
+        ReplicatedNetUnknownDestinationMessage uKNetMessage = null;
+        ReplicatedNetMessage netMessage = null;
 
         try {
             netMessage = ReplicatedNetMessage.buildFromSDU(message.getData());
+        } catch (InvalidPeerException | InvalidPayloadException | InvalidMessageException e) {
         }
-        catch (InvalidPeerException| InvalidPayloadException |InvalidMessageException e){}
 
-        if(netMessage!=null)
-        {
-            //retrieve command and execute
-            try {
-                //first i try PeerCommand cause extends peer is more restrictive
-                PeerNetCommand command = ObjectSerializer.getDeserializedObject(netMessage.getData());
-                command.execute(replicatedNetDictionary);
+        if (netMessage != null) {
+            //retrieve command
+            String command = netMessage.getData().toString();
+            //only one executes correctly
+            replicatedNetDictionary.getPeerCommandExecutor().execute(replicatedNetDictionary, command);
+            replicatedNetDictionary.getResourceCommandExecutor().execute(replicatedNetDictionary, command);
 
-            }catch (Exception e){
-
-                try{
-                    ResourceNetCommand command=ObjectSerializer.getDeserializedObject(netMessage.getData());
-                    command.execute(replicatedNetDictionary);
-                }
-                catch (Exception ex){}
-            }
-
-
-        }
-        else {
+        } else {
             try {
                 uKNetMessage = ReplicatedNetUnknownDestinationMessage.buildFromSDU(message.getData());
 
-                Invitation invitation=ObjectSerializer.getDeserializedObject(uKNetMessage.getData());
+                Invitation invitation = ObjectSerializer.getDeserializedObject(uKNetMessage.getData());
 
-                handShake(invitation,uKNetMessage.getSourcePeer(),message.getSourcePeer());
+                handShake(invitation, uKNetMessage.getSourcePeer(), message.getSourcePeer());
+            } catch (InvalidPeerException | InvalidPayloadException | InvalidMessageException e) {
             }
-            catch (InvalidPeerException | InvalidPayloadException | InvalidMessageException e) { }
         }
     }
 

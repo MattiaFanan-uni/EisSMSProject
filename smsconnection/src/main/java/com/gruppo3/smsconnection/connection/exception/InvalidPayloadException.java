@@ -2,14 +2,15 @@ package com.gruppo3.smsconnection.connection.exception;
 
 /**
  * InvalidPayloadException class
+ *
  * @author Mattia Fanan
  */
 public class InvalidPayloadException extends Exception {
-    public InvalidPayloadException(){
+    public InvalidPayloadException() {
         super();
     }
 
-    public InvalidPayloadException(String s){
+    public InvalidPayloadException(String s) {
         super(s);
     }
 }
