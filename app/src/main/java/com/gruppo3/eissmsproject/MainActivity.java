@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.gruppo3.smsconnection.replicatednet.manager.ReplicatedNetManager;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
+import com.gruppo3.smsconnection.utils.StringSelfParser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             smsMe = new SMSPeer(phoneNumberET.getText().toString());
             netMe = new ReplicatedNetPeer(toSHA1(smsMe.getAddress().getBytes("UTF-8")));
 
-            ReplicatedNetManager<String, String> netManager = new ReplicatedNetManager<>(netMe, smsMe);
+            ReplicatedNetManager<String, String> netManager = new ReplicatedNetManager<>(netMe, smsMe, new StringSelfParser(),new StringSelfParser());
             Intent callNetActivityIntent = new Intent(this, NetActivity.class);
             callNetActivityIntent.putExtra(bundleName, netManager);
 

@@ -2,10 +2,11 @@ package com.gruppo3.smsconnection.connection;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
-public interface PeerDictionary<K extends Peer, V extends Peer> {
+public interface PeerDictionary<K extends Peer, V extends Peer> extends Serializable {
 
     /**
      * If the specified key is not already associated with a value associates it with the given value and returns null, else returns the current value.
