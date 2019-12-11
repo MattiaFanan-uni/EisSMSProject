@@ -5,7 +5,7 @@ import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
 
 public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPeer, SMSPeer> {
-    private static final String controlCode = "£";
+    public static final char controlCode = '$';
     private StringParser<ReplicatedNetPeer> peerKeyParser;
     private StringParser<SMSPeer> peerValueParser;
 
@@ -98,7 +98,7 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
         return controlCode + "P" + "I" + keyLength + key + valueLength + value;
     }
 
-    public boolean isCommand(String command) {
-        return command.startsWith(controlCode);
+    private boolean isCommand(String command) {
+        return command.charAt(0)==controlCode;
     }
 }

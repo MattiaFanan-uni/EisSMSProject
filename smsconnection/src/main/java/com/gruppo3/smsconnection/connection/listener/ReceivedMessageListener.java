@@ -2,6 +2,8 @@ package com.gruppo3.smsconnection.connection.listener;
 
 import com.gruppo3.smsconnection.connection.Message;
 
+import java.io.Serializable;
+
 /**
  * ReceivedMessageListener interface
  *
@@ -10,7 +12,7 @@ import com.gruppo3.smsconnection.connection.Message;
  * <p>
  * Contains the interface of the method to call when an SMS is received
  */
-public interface ReceivedMessageListener<T extends Message> {
+public interface ReceivedMessageListener<T extends Message> extends Serializable {
     /**
      * Called by NotificatonEraser whenever a message is received.
      *

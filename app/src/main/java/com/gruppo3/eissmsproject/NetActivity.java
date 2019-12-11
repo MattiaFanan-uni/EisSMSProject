@@ -17,7 +17,6 @@ public class NetActivity extends AppCompatActivity {
 
     ReplicatedNetManager<String, String> netManager;
     ListView listData;
-    String bundleName = "netManager";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +24,7 @@ public class NetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_net);
 
         listData = findViewById(R.id.listViewData);
-
-        Intent startingIntent = getIntent();
-        netManager = (ReplicatedNetManager<String, String>) startingIntent.getExtras().get(bundleName);
+        netManager = ReplicatedNetManager.getDefault();
 
         updateDataListView();
 
@@ -35,9 +32,9 @@ public class NetActivity extends AppCompatActivity {
 
 
     private void updateDataListView() {
-        Iterator<Map.Entry<String, String>> iterator = netManager.getResourcesIterator();
+        Iterator<Map.Entry<String, String>> iterator = netManager.getDictionary().getResourcesIterator();
         if (iterator.hasNext()) {
-            Map.Entry<String, String>[] arrayData = new Map.Entry[netManager.numberOfResources()];
+            Map.Entry<String, String>[] arrayData = new Map.Entry[netManager.getDictionary().numberOfResources()];
 
 
             int i = 0;
@@ -58,7 +55,6 @@ public class NetActivity extends AppCompatActivity {
     public void onAddResourceButtonClick(View view) {
 
         Intent callAddResourceActivityIntent = new Intent(this, AddResourceActivity.class);
-        callAddResourceActivityIntent.putExtra(bundleName, netManager);
 
         startActivity(callAddResourceActivityIntent);
     }
@@ -66,7 +62,6 @@ public class NetActivity extends AppCompatActivity {
     public void onAddPeerButtonClick(View view) {
 
         Intent callAddResourceActivityIntent = new Intent(this, AddPeerActivity.class);
-        callAddResourceActivityIntent.putExtra(bundleName, netManager);
 
         startActivity(callAddResourceActivityIntent);
     }

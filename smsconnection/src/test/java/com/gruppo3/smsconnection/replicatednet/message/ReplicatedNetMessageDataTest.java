@@ -1,33 +1,28 @@
 package com.gruppo3.smsconnection.replicatednet.message;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
+
+import com.gruppo3.smsconnection.connection.exception.InvalidMessageException;
+import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
 public class ReplicatedNetMessageDataTest {
 
-    byte[] validData;
-    byte[] nullData = null;
-    byte[] tooMuchData;
-    byte[] maxData;
+    String validData;
+    String nullData = null;
+    String tooMuchData;
+    String maxData;
 
 
     public ReplicatedNetMessageDataTest() {
-        try {
-            //2 * 10 bytes + 2 endstring bytes = 22 bytes
-            validData = getAlphaNumericString(10).getBytes("UTF-16");
-            //2 * MAXPAYLOAD_LENGTH +2
-            tooMuchData = getAlphaNumericString(ReplicatedNetMessage.MAX_PAYLOAD_LENGTH).getBytes("UTF-16");
-            // 2 * ((MAXPAYLOAD_LENGTH/2 -2) +2) = MAXPAYLOAD_LENGTH
-            maxData = getAlphaNumericString((ReplicatedNetMessage.MAX_PAYLOAD_LENGTH / 2) - 2).getBytes("UTF-16");
-        } catch (UnsupportedEncodingException e) {
-        }
+        validData = getAlphaNumericString(10);
+        tooMuchData = getAlphaNumericString(ReplicatedNetMessage.MAX_PAYLOAD_LENGTH + 6);
+        maxData = getAlphaNumericString(ReplicatedNetMessage.MAX_PAYLOAD_LENGTH);
     }
 
     @Test
@@ -38,10 +33,10 @@ public class ReplicatedNetMessageDataTest {
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     validData);
-        } catch (InvalidPayloadException e) {
-            Assert.fail("Should not throw InvalidPayloadException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
+        } catch (InvalidMessageException e) {
+            Assert.fail("Should not throw InvalidMessageException exception");
+        } catch (InvalidPeerException e) {
+            Assert.fail("Should not throw InvalidPeerException exception");
         }
     }
 
@@ -53,10 +48,10 @@ public class ReplicatedNetMessageDataTest {
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     maxData);
-        } catch (InvalidPayloadException e) {
-            Assert.fail("Shouldn't throw InvalidPeerException ");
-        } catch (Exception e) {
-            Assert.fail("Shouldn't throw this Exception");
+        } catch (InvalidMessageException e) {
+            Assert.fail("Should not throw InvalidMessageException exception");
+        } catch (InvalidPeerException e) {
+            Assert.fail("Should not throw InvalidPeerException exception");
         }
     }
 
@@ -68,11 +63,10 @@ public class ReplicatedNetMessageDataTest {
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     tooMuchData);
-            Assert.fail("Should throw InvalidPeerException ");
-        } catch (InvalidPayloadException e) {
-        } //correct
-        catch (Exception e) {
-            Assert.fail("Shouldn't throw this Exception");
+            Assert.fail("Should throw InvalidMessageException ");
+        } catch (InvalidMessageException e) { }//correct
+        catch (InvalidPeerException e) {
+            Assert.fail("Should not throw InvalidPeerException exception");
         }
     }
 
@@ -84,7 +78,7 @@ public class ReplicatedNetMessageDataTest {
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     nullData);
-            ;
+
             Assert.fail("Should throw NullPointerException ");
         } catch (NullPointerException e) {
         } //correct
@@ -101,10 +95,10 @@ public class ReplicatedNetMessageDataTest {
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     validData);
-            if (!Arrays.equals(message.getData(), validData))
+            if (!message.getData().equals(validData))
                 Assert.fail("should be the same data");
-        } catch (InvalidPayloadException e) {
-            Assert.fail("Shouldn't throw InvalidPayloadException");
+        } catch (InvalidMessageException e) {
+            Assert.fail("Shouldn't throw InvalidMessageException");
         } catch (Exception e) {
             Assert.fail("Shouldn't throw this Exception");
         }

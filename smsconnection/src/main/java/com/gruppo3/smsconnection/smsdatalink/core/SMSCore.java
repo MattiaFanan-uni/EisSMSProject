@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
@@ -22,13 +23,14 @@ public class SMSCore extends BroadcastReceiver {
     /**
      * Sends a data unit
      *
-     * @param dataUnit SMSMessage to send
+     * @param message SMSMessage to send
      */
-    public static void sendMessage(SMSMessage dataUnit) {
+    public static void sendMessage(SMSMessage message) {
         try {
-            String a = new String(dataUnit.getSDU(), "UTF-16");
-            SmsManager.getDefault().sendTextMessage(dataUnit.getDestinationPeer().getAddress(), null, new String(dataUnit.getSDU(), "UTF-16"), null, null);
+            Log.d("PDU", "sending length "+message.getSDU().length());
+            SmsManager.getDefault().sendTextMessage(message.getDestinationPeer().getAddress(), null, message.getSDU(), null, null);
         } catch (Exception e) {
+            Log.d("PDU", "sending problem pdu");
         }
     }
 
@@ -54,13 +56,14 @@ public class SMSCore extends BroadcastReceiver {
 
                 //try to pass the SMSMessage built from incoming Sms to SMSManager
                 try {
-                    SMSManager.getDefault().handleMessage(
-                            SMSMessage.buildFromSDU(
-                                    shortMessage.getDisplayOriginatingAddress(),
-                                    shortMessage.getDisplayMessageBody().getBytes("UTF-16")
-                            )
+                    SMSMessage message=SMSMessage.buildFromSDU(
+                            shortMessage.getDisplayOriginatingAddress(),
+                            shortMessage.getDisplayMessageBody()
                     );
+                    SMSManager.getDefault().handleMessage(message);
+                    Log.d("PDU","pdu length : "+shortMessage.getDisplayMessageBody().length());
                 } catch (Exception e) {
+                    Log.d("PDU","pdu error");
                 }
             }
         }

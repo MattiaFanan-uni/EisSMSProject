@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Invitation implements Serializable {
 
-    private static char controlCode = '@';
+    public static char controlCode = '@';
     private long code;
     private boolean accepted;
 

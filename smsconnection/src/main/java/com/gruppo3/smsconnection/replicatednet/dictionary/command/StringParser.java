@@ -1,6 +1,8 @@
 package com.gruppo3.smsconnection.replicatednet.dictionary.command;
 
-public interface StringParser<T> {
+import java.io.Serializable;
+
+public interface StringParser<T> extends Serializable {
 
     String parseString(T data);
 

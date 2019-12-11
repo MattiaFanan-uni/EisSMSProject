@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gruppo3.smsconnection.replicatednet.dictionary.ReplicatedNetDictionary;
 import com.gruppo3.smsconnection.replicatednet.manager.ReplicatedNetManager;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
@@ -18,7 +19,6 @@ import java.security.NoSuchAlgorithmException;
 public class MainActivity extends AppCompatActivity {
 
     private EditText phoneNumberET;
-    String bundleName = "netManager";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,10 @@ public class MainActivity extends AppCompatActivity {
             smsMe = new SMSPeer(phoneNumberET.getText().toString());
             netMe = new ReplicatedNetPeer(toSHA1(smsMe.getAddress().getBytes("UTF-8")));
 
-            ReplicatedNetManager<String, String> netManager = new ReplicatedNetManager<>(netMe, smsMe, new StringSelfParser(),new StringSelfParser());
+            ReplicatedNetDictionary<String,String> dictionary=new ReplicatedNetDictionary<>(netMe, smsMe, new StringSelfParser(),new StringSelfParser());
+            ReplicatedNetManager<String,String> repManager=ReplicatedNetManager.getDefault();
+            repManager.addDictionary(netMe, smsMe, dictionary);
             Intent callNetActivityIntent = new Intent(this, NetActivity.class);
-            callNetActivityIntent.putExtra(bundleName, netManager);
 
             startActivity(callNetActivityIntent);
         } catch (Exception e) {

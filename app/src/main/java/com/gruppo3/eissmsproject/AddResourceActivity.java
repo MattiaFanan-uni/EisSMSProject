@@ -16,7 +16,6 @@ import com.gruppo3.smsconnection.replicatednet.manager.ReplicatedNetManager;
 public class AddResourceActivity extends AppCompatActivity {
 
     ReplicatedNetManager<String, String> netManager;
-    String bundleName = "netManager";
     EditText keyEditText;
     EditText valueEditText;
 
@@ -25,8 +24,7 @@ public class AddResourceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_resource);
 
-        Intent startingIntent = getIntent();
-        netManager = (ReplicatedNetManager<String, String>) startingIntent.getExtras().get(bundleName);
+        netManager = ReplicatedNetManager.getDefault();
 
         keyEditText = findViewById(R.id.keyEditText);
         valueEditText = findViewById(R.id.valueEditText);
@@ -49,13 +47,14 @@ public class AddResourceActivity extends AppCompatActivity {
         insert(keyEditText.getText().toString(), valueEditText.getText().toString());
 
         Intent callNetActivityIntent = new Intent(this, NetActivity.class);
-        callNetActivityIntent.putExtra(bundleName, netManager);
         startActivity(callNetActivityIntent);
     }
 
-    private String insert(String key, String value) {
+    private void insert(String key, String value) {
 
-        return netManager.putResourceIfAbsent(key, value);
+        String command=netManager.getDictionary().getAddResourceCommand(key,value);
+        netManager.getDictionary().getResourceCommandExecutor().execute(netManager.getDictionary(),command);
+        netManager.broadcast(command);
 
     }
 }

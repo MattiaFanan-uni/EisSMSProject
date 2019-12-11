@@ -1,6 +1,8 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
+import android.util.Log;
+
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
@@ -14,7 +16,6 @@ import java.util.ArrayList;
  */
 public final class SMSManager implements CommunicationHandler<SMSMessage> {
 
-    private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
     private static ReceivedMessageListener<SMSMessage> smsReceivedListener;
     private static SMSManager defInstance;
 
@@ -22,7 +23,8 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      * singleton
      */
     private SMSManager() {
-        pendingMessages = retrieveSavedPendingMessages();
+
+        Log.d("MESSAGE","sms in manager UP");
         defInstance = null;
         smsReceivedListener = null;
     }
@@ -45,6 +47,8 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      */
     @Override
     public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
+
+        Log.d("MESSAGE","listener sms up");
         smsReceivedListener = listener;
     }
 
@@ -62,9 +66,12 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
     @Override
     public boolean sendMessage(SMSMessage message) {
 
-        if (message == null)
+        if (message == null) {
+            Log.d("MESSAGE","null sms in manager send");
             return false;
+        }
 
+        Log.d("MESSAGE","sms in manager send");
         SMSCore.sendMessage(message);
         return true;
     }
@@ -76,36 +83,11 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      */
     public void handleMessage(SMSMessage message) {
         if (message != null) {
-            if (smsReceivedListener == null)
-                pendingMessages.add(message);
-            else
-                smsReceivedListener.onMessageReceived(message);
+            Log.d("MESSAGE","sms in manager receive");
+            smsReceivedListener.onMessageReceived(message);
         }
-    }
-
-    public static boolean isPendingMessagesEmpty() {
-        return pendingMessages.isEmpty();
-    }
-
-    /**
-     * future
-     * retrive pending messages from database
-     *
-     * @return
-     */
-    //TODO
-    private ArrayList<SMSMessage> retrieveSavedPendingMessages() {
-        return new ArrayList<SMSMessage>();
-    }
-
-
-    /**
-     * future
-     * save a pendingmessge in database
-     */
-    //TODO
-    private void savePendingMessage() {
-
+        else
+            Log.d("MESSAGE","null sms in manager receive");
     }
 }
 

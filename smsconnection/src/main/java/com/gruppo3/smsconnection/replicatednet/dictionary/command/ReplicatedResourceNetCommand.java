@@ -5,7 +5,7 @@ import com.gruppo3.smsconnection.connection.ResourceNetDictionary;
 import java.io.Serializable;
 
 public class ReplicatedResourceNetCommand<K extends Serializable, V extends Serializable> implements ResourceNetCommand<K, V> {
-    private static final String controlCode = "£";
+    public static final char controlCode = '£';
     private StringParser<K> resourceKeyParser;
     private StringParser<V> resourceValueParser;
 
@@ -27,9 +27,8 @@ public class ReplicatedResourceNetCommand<K extends Serializable, V extends Seri
     }
 
     public boolean isCommand(String command) {
-        return command.startsWith(controlCode);
+        return command.charAt(0)==controlCode;
     }
-
     /**
      * execute an action over a PeerNetDictionary
      *
