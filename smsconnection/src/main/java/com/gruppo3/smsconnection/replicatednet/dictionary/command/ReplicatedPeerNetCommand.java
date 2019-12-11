@@ -3,18 +3,21 @@ package com.gruppo3.smsconnection.replicatednet.dictionary.command;
 import com.gruppo3.smsconnection.connection.PeerNetDictionary;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
+import com.gruppo3.smsconnection.utils.IntegerParser;
 
 public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPeer, SMSPeer> {
     public static final char controlCode = '$';
     private StringParser<ReplicatedNetPeer> peerKeyParser;
     private StringParser<SMSPeer> peerValueParser;
 
+    //code_target_action_lengthKey_key  may  lengthValue_value
     private static final int CODE_START = 0;
-    private static final int CONTROL_COMPONENT = 1;
+    private static final int CONTROL_COMPONENT = 1;//flag
+    private static final int LENGTH_CHAR = 8;//length of a field
     private static final int TARGET_START = CODE_START + CONTROL_COMPONENT;
     private static final int ACTION_START = TARGET_START + CONTROL_COMPONENT;
     private static final int LENGTH_KEY_START = ACTION_START + CONTROL_COMPONENT;
-    private static final int KEY_START = LENGTH_KEY_START + CONTROL_COMPONENT;
+    private static final int KEY_START = LENGTH_KEY_START + LENGTH_CHAR;//it is after a length char
 
     public ReplicatedPeerNetCommand(StringParser<ReplicatedNetPeer> peerKeyParser, StringParser<SMSPeer> peerValueParser) {
         if (peerKeyParser == null || peerValueParser == null)
@@ -47,7 +50,7 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
             String action = command.substring(ACTION_START, LENGTH_KEY_START);
 
             //retrieve key
-            int keyLENGTH = command.charAt(LENGTH_KEY_START);
+            int keyLENGTH = new IntegerParser().parseData(command.substring(LENGTH_KEY_START, LENGTH_KEY_START + LENGTH_CHAR));
             String keyToParse = command.substring(KEY_START, KEY_START + keyLENGTH);
             ReplicatedNetPeer key = peerKeyParser.parseData(keyToParse);
 
@@ -56,8 +59,8 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
                     return dictionary.removePeer(key) != null;
                 case "I":
                     //retrieve value
-                    int lengthValueEnd = KEY_START + keyLENGTH + CONTROL_COMPONENT;
-                    int valueLENGTH = command.charAt(KEY_START + keyLENGTH);
+                    int lengthValueEnd = KEY_START + keyLENGTH + LENGTH_CHAR;
+                    int valueLENGTH = new IntegerParser().parseData(command.substring(KEY_START + keyLENGTH, lengthValueEnd));
                     String valueToParse = command.substring(lengthValueEnd, lengthValueEnd + valueLENGTH);
                     SMSPeer value = peerValueParser.parseData(valueToParse);
                     return dictionary.putPeerIfAbsent(key, value) == null;
@@ -78,7 +81,7 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
     @Override
     public String getRemoveCommand(ReplicatedNetPeer peerKey) {
         String key = peerKeyParser.parseString(peerKey);
-        String keyLength = (char) key.length() + "";
+        String keyLength = new IntegerParser().parseString(key.length());
         return controlCode + "P" + "R" + keyLength + key;
     }
 
@@ -93,12 +96,12 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
     public String getInsertCommand(ReplicatedNetPeer peerKey, SMSPeer peerValue) {
         String key = peerKeyParser.parseString(peerKey);
         String value = peerValueParser.parseString(peerValue);
-        String keyLength = (char) key.length() + "";
-        String valueLength = (char) value.length() + "";
+        String keyLength = new IntegerParser().parseString(key.length());
+        String valueLength = new IntegerParser().parseString(value.length());
         return controlCode + "P" + "I" + keyLength + key + valueLength + value;
     }
 
     private boolean isCommand(String command) {
-        return command.charAt(0)==controlCode;
+        return command.charAt(0) == controlCode;
     }
 }
