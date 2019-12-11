@@ -65,4 +65,9 @@ public class NetActivity extends AppCompatActivity {
 
         startActivity(callAddResourceActivityIntent);
     }
+
+    public void onRefreshButtonClick(View view) {
+
+       updateDataListView();
+    }
 }
