@@ -1,7 +1,6 @@
 package com.gruppo3.smsconnection.replicatednet.message;
 
 import com.gruppo3.smsconnection.connection.exception.InvalidMessageException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
 import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 
 import org.junit.Assert;
@@ -13,99 +12,95 @@ import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
 public class ReplicatedNetMessageTest {
     ReplicatedNetPeer validPeer;
-    ReplicatedNetPeer nullPeer=null;
-    byte[] validPayolad;
+    ReplicatedNetPeer nullPeer = null;
+    String validPayload;
 
 
-    public ReplicatedNetMessageTest(){
+    public ReplicatedNetMessageTest() {
         try {
-            validPayolad = getAlphaNumericString(10).getBytes("UTF-16");
-            validPeer=new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
+            validPayload = getAlphaNumericString(10);
+            validPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
 
     @Test
-    public void setUpBothPeers()
-    {
-        ReplicatedNetMessage message=null;
+    public void setUpBothPeers() {
+        ReplicatedNetMessage message = null;
         try {
-            message=new ReplicatedNetMessage(validPeer, validPeer, validPayolad);
+            message = new ReplicatedNetMessage(validPeer, validPeer, validPayload);
+        } catch (InvalidPeerException e) {
+            Assert.fail("shouldn't throw InvalidPeerException");
+        } catch (InvalidMessageException e) {
+            Assert.fail("shouldn't throw InvalidMessageException");
         }
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
-        if(message==null)
+        if (message == null)
             Assert.fail("shouldn't be null");
-        if(!message.getSourcePeer().equals(validPeer))
+        if (!message.getSourcePeer().equals(validPeer))
             Assert.fail("source peers should be the same");
-        if(!message.getDestinationPeer().equals(validPeer))
+        if (!message.getDestinationPeer().equals(validPeer))
             Assert.fail("destination peers should be the same");
-        if(!Arrays.equals(message.getData(),validPayolad))
+        if (!message.getData().equals(validPayload))
             Assert.fail("data should be the same");
     }
 
     @Test
-    public void setUpSource()
-    {
-        ReplicatedNetMessage message=null;
+    public void setUpSource() {
+        ReplicatedNetMessage message = null;
         try {
-            message=new ReplicatedNetMessage(null, validPeer, validPayolad);
-            Assert.fail("should throw InvalidPeerException");
+            message = new ReplicatedNetMessage(null, validPeer, validPayload);
+        } catch (InvalidPeerException e) {
+            Assert.fail("shouldn't throw InvalidPeerException");
+        } catch (InvalidMessageException e) {
+            Assert.fail("shouldn't throw InvalidMessageException");
         }
-        catch (InvalidPeerException e){}//correct
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
     }
 
     @Test
-    public void setUpDestination()
-    {
-        ReplicatedNetMessage message=null;
+    public void setUpDestination() {
+        ReplicatedNetMessage message = null;
         try {
-            message=new ReplicatedNetMessage(validPeer, null, validPayolad);
-            Assert.fail("should throw InvalidPeerException");
+            message = new ReplicatedNetMessage(validPeer, null, validPayload);
+        } catch (InvalidPeerException e) {
+            Assert.fail("shouldn't throw InvalidPeerException");
+        } catch (InvalidMessageException e) {
+            Assert.fail("shouldn't throw InvalidMessageException");
         }
-        catch (InvalidPeerException e){}//correct
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
     }
 
     @Test
-    public void setUpBothNull()
-    {
-        ReplicatedNetMessage message=null;
+    public void setUpBothNull() {
+        ReplicatedNetMessage message = null;
         try {
-            message=new ReplicatedNetMessage(null, null, validPayolad);
+            message = new ReplicatedNetMessage(null, null, validPayload);
             Assert.fail("should throw InvalidPeerException");
+        } catch (InvalidPeerException e) { }//correct
+        catch (InvalidMessageException e) {
+            Assert.fail("shouldn't throw InvalidMessageException");
         }
-        catch (InvalidPeerException e){}//correct
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
     }
 
 
     @Test
-    public void buildFromSDU(){
-        ReplicatedNetMessage message=null;
-        try{
-            message=new ReplicatedNetMessage(validPeer, validPeer, validPayolad);
+    public void buildFromSDU() {
+        ReplicatedNetMessage message = null;
+        try {
+            message = new ReplicatedNetMessage(validPeer, validPeer, validPayload);
+        } catch (InvalidPeerException e) {
+            Assert.fail("shouldn't throw InvalidPeerException");
+        } catch (InvalidMessageException e) {
+            Assert.fail("shouldn't throw InvalidMessageException");
         }
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
 
-        byte[] SDU=message.getSDU();
+        String SDU = message.getSDU();
 
-        try{
-            ReplicatedNetMessage rebuildMessage= ReplicatedNetMessage.buildFromSDU(SDU);
+        try {
+            ReplicatedNetMessage rebuildMessage = ReplicatedNetMessage.buildFromSDU(SDU);
 
-            if (!Arrays.equals(rebuildMessage.getData(),message.getData()))
+            if (!rebuildMessage.getData().equals(message.getData()))
                 Assert.fail("data should be unchanged");
-
-            //address!=address
-            if (!Arrays.equals(
-                    rebuildMessage.getDestinationPeer().getAddress(),
-                    message.getDestinationPeer().getAddress()
-            ))
-                Assert.fail("destination should be unchanged");
 
             //address!=address
             if (!Arrays.equals(
@@ -113,10 +108,11 @@ public class ReplicatedNetMessageTest {
                     message.getSourcePeer().getAddress()
             ))
                 Assert.fail("source should be unchanged");
+        } catch (InvalidPeerException e) {
+            Assert.fail("shouldn't throw InvalidPeerException");
+        } catch (InvalidMessageException e) {
+            Assert.fail("shouldn't throw InvalidMessageException");
         }
-        catch (InvalidPayloadException e){Assert.fail("shouldn't throw InvalidPayloadException");}
-        catch (InvalidPeerException e){Assert.fail("shouldn't throw InvalidPeerException");}
-        catch (InvalidMessageException e){Assert.fail("shouldn't throw InvalidMessageException");}
 
     }
 

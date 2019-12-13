@@ -2,8 +2,7 @@ package com.gruppo3.smsconnection.utils;
 
 public class Utils {
     // function to generate a random string of length n
-    public static String getAlphaNumericString(int n)
-    {
+    public static String getAlphaNumericString(int n) {
 
         // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -18,7 +17,7 @@ public class Utils {
             // generate a random number between
             // 0 to AlphaNumericString variable length
             int index
-                    = (int)(AlphaNumericString.length()
+                    = (int) (AlphaNumericString.length()
                     * Math.random());
 
             // add Character one by one in end of sb
