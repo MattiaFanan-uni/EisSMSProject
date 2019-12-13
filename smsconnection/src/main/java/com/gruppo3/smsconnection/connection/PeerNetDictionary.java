@@ -1,24 +1,29 @@
 package com.gruppo3.smsconnection.connection;
 
-import com.gruppo3.smsconnection.connection.PeerDictionary;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddPeerNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemovePeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.PeerNetCommand;
 
-public interface PeerNetDictionary<K extends Peer,V extends Peer> extends PeerDictionary<K,V> {
+public interface PeerNetDictionary<K extends Peer, V extends Peer> extends PeerDictionary<K, V> {
     /**
-     * Return a command for inserting a resource in a PeerNetDictionary
+     * Return the <code>String</code> encoding for the insert command to be execute
      *
-     * @param peerKey       Key of the peer to insert
-     * @param peerValue     Value of the peer to insert
-     * @return  AddPeerNetCommand ready for execute the requested insertion
+     * @param peerKey   Key of the peer to insert
+     * @param peerValue Value of the peer to insert
+     * @return the <code>String</code> encoding for the insert command to be execute
      */
-    AddPeerNetCommand<K,V> getAddPeerNetCommand(K peerKey, V peerValue);
+    String getAddPeerNetCommand(K peerKey, V peerValue);
 
     /**
-     * Return a command for removing a peer in a PeerNetDictionary
+     * Return the <code>String</code> encoding for the remove command to be execute
      *
-     * @param peerKey       Key of the peer to remove
-     * @return  RemovePeerNetCommand ready for execute the requested deletion
+     * @param peerKey Key of the peer to remove
+     * @return the <code>String</code> encoding for the remove command to be execute
      */
-    RemovePeerNetCommand<K,V> getRemovePeerNetCommand(K peerKey);
+    String getRemovePeerNetCommand(K peerKey);
+
+    /**
+     * Gets the command executor for execute <code>String</code> encoded commands
+     *
+     * @return the command executor for execute <code>String</code> encoded commands
+     */
+    PeerNetCommand<K, V> getPeerCommandExecutor();
 }

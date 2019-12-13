@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 
 import com.gruppo3.smsconnection.connection.PeerNetDictionary;
 import com.gruppo3.smsconnection.connection.ResourceNetDictionary;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddPeerNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.AddResourceNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemovePeerNetCommand;
-import com.gruppo3.smsconnection.replicatednet.dictionary.command.RemoveResourceNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.PeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.ReplicatedPeerNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.ReplicatedResourceNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.ResourceNetCommand;
+import com.gruppo3.smsconnection.replicatednet.dictionary.command.StringParser;
 import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
 import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
+import com.gruppo3.smsconnection.utils.ReplicatedNetPeerParser;
+import com.gruppo3.smsconnection.utils.SMSPeerParser;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,46 +23,55 @@ import java.util.TreeMap;
 
 /**
  * @author Riccardo Crociani
- *
+ * <p>
  * ReplicatedNetDictionary contains 2 NetworkDictionary:
  * - genericDictionary<K, V> Risorse-utenti
  * - netDictionary<ReplicatedPeer, SMSPeer> contains the peer allowed to write and read the dictionray
  */
 
-public class ReplicatedNetDictionary<K extends Serializable,V extends Serializable >
-        implements ResourceNetDictionary<K,V>, PeerNetDictionary<ReplicatedNetPeer,SMSPeer> {
+public class ReplicatedNetDictionary<K extends Serializable, V extends Serializable>
+        implements ResourceNetDictionary<K, V>, PeerNetDictionary<ReplicatedNetPeer, SMSPeer> {
 
-    private TreeMap<ReplicatedNetPeer,SMSPeer> peers;
-    private HashMap<K,V> resources;
+    private TreeMap<ReplicatedNetPeer, SMSPeer> peers;
+    private HashMap<K, V> resources;
     private int ID;
+    private static final ReplicatedPeerNetCommand peerCommand = new ReplicatedPeerNetCommand(new ReplicatedNetPeerParser(), new SMSPeerParser());
+    private ReplicatedResourceNetCommand<K, V> resourceCommand;
 
-    public ReplicatedNetDictionary(@NonNull ReplicatedNetPeer netPeer, @NonNull SMSPeer smsPeer) {
-        ID= (new Random()).nextInt();
-        peers=new TreeMap<>();
-        resources=new HashMap<>();
-        putPeerIfAbsent(netPeer,smsPeer);
+    public ReplicatedNetDictionary(@NonNull ReplicatedNetPeer netPeer, @NonNull SMSPeer smsPeer,
+                                   @NonNull StringParser<K> resourceKeyParser, @NonNull StringParser<V> resourceValueParser) {
+        if (netPeer == null || smsPeer == null || resourceKeyParser == null || resourceValueParser == null)
+            throw new NullPointerException();
+
+        ID = (new Random()).nextInt();
+        peers = new TreeMap<>();
+        resources = new HashMap<>();
+        putPeerIfAbsent(netPeer, smsPeer);
+        resourceCommand = new ReplicatedResourceNetCommand<>(resourceKeyParser, resourceValueParser);
     }
 
     /**
      * return the dictionary ID
+     *
      * @return the dictionary ID
      */
-    public int getDictionaryID(){
+    public int getDictionaryID() {
         return ID;
     }
 
     /**
      * If the specified key is not already associated with a value associates it with the given value and returns null, else returns the current value.
+     *
      * @param resourceKey   key with which the specified value is to be associated
      * @param resourceValue value to be associated with the specified key
      * @return the previous value associated with the specified key, or null if there was no mapping for the key.
      */
     @Override
     public V putResourceIfAbsent(@NonNull K resourceKey, V resourceValue) {
-        if(resourceValue==null)
+        if (resourceValue == null)
             throw new NullPointerException();
-        if(!containsResourceKey(resourceKey))
-            return resources.put(resourceKey,resourceValue);
+        if (!containsResourceKey(resourceKey))
+            return resources.put(resourceKey, resourceValue);
         return getResource(resourceKey);
     }
 
@@ -132,41 +144,18 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     }
 
     /**
-     * Return a command for inserting a resource in a ResourceNetDictionary
-     *
-     * @param resourceKey   Key of the resource to insert
-     * @param resourceValue Value of the resource to insert
-     * @return AddResourceCommand ready for execute the requested insertion
-     */
-    @Override
-    public AddResourceNetCommand<K, V> getAddResourceCommand(K resourceKey, V resourceValue) {
-        return new AddResourceNetCommand<>(resourceKey,resourceValue);
-    }
-
-    /**
-     * Return a command for removing a resource in a ResourceNetDictionary
-     *
-     * @param resourceKey Key of the resource to remove
-     * @return RemoveResourceCommand ready for execute the requested deletion
-     */
-    @Override
-    public RemoveResourceNetCommand<K, V> getRemoveResourceCommand(K resourceKey) {
-        return new RemoveResourceNetCommand<>(resourceKey);
-    }
-
-
-    /**
      * If the specified key is not already associated with a value associates it with the given value and returns null, else returns the current value.
+     *
      * @param peerKey   key with which the specified value is to be associated
      * @param peerValue value to be associated with the specified key
      * @return the previous value associated with the specified key, or null if there was no mapping for the key.
      */
     @Override
-    public SMSPeer putPeerIfAbsent (@NonNull ReplicatedNetPeer peerKey, SMSPeer peerValue) {
-        if(peerValue==null)
+    public SMSPeer putPeerIfAbsent(@NonNull ReplicatedNetPeer peerKey, SMSPeer peerValue) {
+        if (peerValue == null)
             throw new NullPointerException();
-        if(!containsPeerKey(peerKey))
-            return peers.put(peerKey,peerValue);
+        if (!containsPeerKey(peerKey))
+            return peers.put(peerKey, peerValue);
         return getPeer(peerKey);
     }
 
@@ -179,7 +168,7 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
     @Override
     public SMSPeer removePeer(@NonNull ReplicatedNetPeer peerKey) {
         //one peer in necessary
-        if(numberOfPeers()<2)
+        if (numberOfPeers() < 2)
             return null;
         return peers.remove(peerKey);
     }
@@ -241,29 +230,70 @@ public class ReplicatedNetDictionary<K extends Serializable,V extends Serializab
         return peers.entrySet().iterator();
     }
 
-
     /**
-     * Return a command for inserting a resource in a PeerNetDictionary
+     * Return the <code>String</code> encoding for the insert command to be execute
      *
      * @param peerKey   Key of the peer to insert
      * @param peerValue Value of the peer to insert
-     * @return AddPeerNetCommand ready for execute the requested insertion
+     * @return the <code>String</code> encoding for the insert command to be execute
      */
     @Override
-    public AddPeerNetCommand<ReplicatedNetPeer, SMSPeer> getAddPeerNetCommand(ReplicatedNetPeer peerKey, SMSPeer peerValue) {
-        return new AddPeerNetCommand<>(peerKey,peerValue);
+    public String getAddPeerNetCommand(ReplicatedNetPeer peerKey, SMSPeer peerValue) {
+        return peerCommand.getInsertCommand(peerKey, peerValue);
     }
 
     /**
-     * Return a command for removing a peer in a PeerNetDictionary
+     * Return the <code>String</code> encoding for the remove command to be execute
      *
      * @param peerKey Key of the peer to remove
-     * @return RemovePeerNetCommand ready for execute the requested deletion
+     * @return the <code>String</code> encoding for the remove command to be execute
      */
     @Override
-    public RemovePeerNetCommand<ReplicatedNetPeer, SMSPeer> getRemovePeerNetCommand(ReplicatedNetPeer peerKey) {
-        return new RemovePeerNetCommand<>(peerKey);
+    public String getRemovePeerNetCommand(ReplicatedNetPeer peerKey) {
+        return peerCommand.getRemoveCommand(peerKey);
     }
 
+    /**
+     * Gets the command executor for execute <code>String</code> encoded commands
+     *
+     * @return the command executor for execute <code>String</code> encoded commands
+     */
+    //TODO only return the executor part
+    @Override
+    public PeerNetCommand<ReplicatedNetPeer, SMSPeer> getPeerCommandExecutor() {
+        return peerCommand;
+    }
 
+    /**
+     * Returns the <code>String</code> encoding for the insert command to be execute
+     *
+     * @param resourceKey   Key of the resource to insert
+     * @param resourceValue Value of the resource to insert
+     * @return the <code>String</code> encoding for the insert command to be execute
+     */
+    @Override
+    public String getAddResourceCommand(K resourceKey, V resourceValue) {
+        return resourceCommand.getInsertCommand(resourceKey, resourceValue);
+    }
+
+    /**
+     * Returns the <code>String</code> encoding for the remove command to be execute
+     *
+     * @param resourceKey Key of the resource to remove
+     * @return the <code>String</code> encoding for the remove command to be execute
+     */
+    @Override
+    public String getRemoveResourceCommand(K resourceKey) {
+        return resourceCommand.getRemoveCommand(resourceKey);
+    }
+
+    /**
+     * Gets the command executor for execute <code>String</code> encoded commands
+     *
+     * @return the command executor for execute <code>String</code> encoded commands
+     */
+    @Override
+    public ResourceNetCommand<K, V> getResourceCommandExecutor() {
+        return resourceCommand;
+    }
 }
