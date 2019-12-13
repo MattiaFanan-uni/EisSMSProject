@@ -1,11 +1,12 @@
 package com.gruppo3.smsconnection.smsdatalink.manager;
 
 
+import android.util.Log;
 
 import com.gruppo3.smsconnection.connection.CommunicationHandler;
 import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
 import com.gruppo3.smsconnection.smsdatalink.core.SMSCore;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSMessage;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,6 @@ import java.util.ArrayList;
  */
 public final class SMSManager implements CommunicationHandler<SMSMessage> {
 
-    private static ArrayList<SMSMessage> pendingMessages = new ArrayList<>();
     private static ReceivedMessageListener<SMSMessage> smsReceivedListener;
     private static SMSManager defInstance;
 
@@ -23,28 +23,33 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      * singleton
      */
     private SMSManager() {
-        pendingMessages=retrieveSavedPendingMessages() ;
-        defInstance=null;
-        smsReceivedListener=null;
+
+        Log.d("MESSAGE","sms in manager UP");
+        defInstance = null;
+        smsReceivedListener = null;
     }
 
     /**
      * get default instance for SMSManager
+     *
      * @return SMSManager
      */
-    public static SMSManager getDefault(){
-        if(defInstance==null)
-            defInstance=new SMSManager();
+    public static SMSManager getDefault() {
+        if (defInstance == null)
+            defInstance = new SMSManager();
         return defInstance;
     }
 
     /**
      * Adds the listener watching for incoming SMSMessages
+     *
      * @param listener The listener to wake up when a message is received
      */
     @Override
     public void addReceiveListener(ReceivedMessageListener<SMSMessage> listener) {
-        smsReceivedListener=listener;
+
+        Log.d("MESSAGE","listener sms up");
+        smsReceivedListener = listener;
     }
 
     /**
@@ -52,59 +57,37 @@ public final class SMSManager implements CommunicationHandler<SMSMessage> {
      */
     @Override
     public void removeReceiveListener() {
-        smsReceivedListener=null;
+        smsReceivedListener = null;
     }
 
     /**
      * Sends a given valid message
      */
     @Override
-    public boolean sendDataUnit(SMSMessage dataUnit) {
+    public boolean sendMessage(SMSMessage message) {
 
-        if(dataUnit==null)
+        if (message == null) {
+            Log.d("MESSAGE","null sms in manager send");
             return false;
+        }
 
-        SMSCore.sendMessage(dataUnit);
+        Log.d("MESSAGE","sms in manager send");
+        SMSCore.sendMessage(message);
         return true;
     }
 
     /**
-     * handle the data unit received from the layer above
-     * @param dataUnit data unit to handle
+     * handle the message received from the layer above
+     *
+     * @param message message to be handled
      */
-    public void handleMessage(SMSMessage dataUnit)
-    {
-        if (dataUnit!=null){
-            if (smsReceivedListener == null)
-                pendingMessages.add(dataUnit);
-            else
-                smsReceivedListener.onMessageReceived(dataUnit);
+    public void handleMessage(SMSMessage message) {
+        if (message != null) {
+            Log.d("MESSAGE","sms in manager receive");
+            smsReceivedListener.onMessageReceived(message);
         }
-    }
-
-    public static boolean isPendingMessagesEmpty() {
-        return pendingMessages.isEmpty();
-    }
-
-    /**
-     * future
-     * retrive pending messages from database
-     * @return
-     */
-    //TODO
-    private ArrayList<SMSMessage> retrieveSavedPendingMessages()
-    {
-        return new ArrayList<SMSMessage>();
-    }
-
-
-    /**
-     * future
-     * save a pendingmessge in database
-     */
-    //TODO
-    private void savePendingMessage(){
-
+        else
+            Log.d("MESSAGE","null sms in manager receive");
     }
 }
 

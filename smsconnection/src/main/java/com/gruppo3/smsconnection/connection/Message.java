@@ -3,12 +3,12 @@ package com.gruppo3.smsconnection.connection;
 /**
  * Message interface
  * interface for Message
- * @author Mattia Fanan
  *
- * @param P Header data-type
- * @param D Payload data-type
+ * @param <P> Peer data-type
+ * @param <T> Payload data-type
+ * @author Mattia Fanan
  */
-public interface Message<P extends Peer,T>{
+public interface Message<P extends Peer, T> {
 
     /**
      * @return source peer in the Header

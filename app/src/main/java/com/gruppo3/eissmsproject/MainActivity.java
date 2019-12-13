@@ -1,189 +1,70 @@
 package com.gruppo3.eissmsproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.app.NotificationManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gruppo3.smsconnection.connection.exception.InvalidPayloadException;
-import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
-import com.gruppo3.smsconnection.connection.listener.ReceivedMessageListener;
-import com.gruppo3.smsconnection.smsdatalink.SMSMessage;
-import com.gruppo3.smsconnection.smsdatalink.SMSPeer;
-import com.gruppo3.smsconnection.smsdatalink.manager.NotificatonEraser;
-import com.gruppo3.smsconnection.smsdatalink.manager.SMSManager;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements ReceivedMessageListener<SMSMessage> {
+import com.gruppo3.smsconnection.replicatednet.dictionary.ReplicatedNetDictionary;
+import com.gruppo3.smsconnection.replicatednet.manager.ReplicatedNetManager;
+import com.gruppo3.smsconnection.replicatednet.message.ReplicatedNetPeer;
+import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
+import com.gruppo3.smsconnection.utils.StringSelfParser;
 
-    private EditText txt_message;
-    private EditText txt_phone_number;
-    private SMSManager flHandler;
-    private boolean canSend,canReceive,canRead;
-    private AudioManager am ;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText phoneNumberET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!checkNotificationListenerPermission()){
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
-            startActivity(intent);
-        }
-
-        canReceive=false;
-        canReceive=false;
-        canSend=false;
-
-        am= (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        txt_message = (EditText) findViewById(R.id.txt_message);
-        txt_phone_number = (EditText) findViewById(R.id.txt_phone_number);
-
-        flHandler= SMSManager.getDefault();
-        flHandler.addReceiveListener(this);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_SMS},6);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECEIVE_SMS},5);
-        }
+        phoneNumberET = findViewById(R.id.phoneNumberET);
 
 
     }
 
-    private boolean checkNotificationListenerPermission() {
-        ComponentName cn = new ComponentName(this, NotificatonEraser.class);
-        String flat = Settings.Secure.getString(this.getContentResolver(), "enabled_notification_listeners");
-        final boolean enabled = flat != null && flat.contains(cn.flattenToString());
-        return enabled;
-    }
+    //check if there is a valid phone number and call th net activity
+    public void onPhoneNumberBtnClick(View view) {
 
-    public void btn_send(View view) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)== PackageManager.PERMISSION_GRANTED) {
-            canSend=true;
-            MyMessage();
-        }
+        SMSPeer smsMe = null;
+        ReplicatedNetPeer netMe = null;
 
-        else {
-            canSend=false;
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.SEND_SMS},3);
-        }
-    }
+        try {
+            smsMe = new SMSPeer(phoneNumberET.getText().toString());
+            netMe = new ReplicatedNetPeer(toSHA1(smsMe.getAddress().getBytes("UTF-8")));
 
+            ReplicatedNetDictionary<String,String> dictionary=new ReplicatedNetDictionary<>(netMe, smsMe, new StringSelfParser(),new StringSelfParser());
+            ReplicatedNetManager<String,String> repManager=ReplicatedNetManager.getDefault();
+            repManager.addDictionary(netMe, smsMe, dictionary);
+            Intent callNetActivityIntent = new Intent(this, NetActivity.class);
 
-
-    private void MyMessage() {
-        String phoneNumber = txt_phone_number.getText().toString().trim();
-        String message = txt_message.getText().toString().trim();
-
-        SMSPeer peer=null;
-
-        if((!phoneNumber.equals("") && !message.equals(""))) {
-
-            try{peer=new SMSPeer(phoneNumber);}
-            catch(InvalidPeerException e){
-                Toast.makeText(this, "Not A Valid Phone Number", Toast.LENGTH_SHORT).show();
-            }
-
-            if(peer!=null) {
-
-                SMSMessage sms = null;
-
-                try{
-                    sms=new SMSMessage(peer,null,message.getBytes("UTF-16"));
-                }
-                catch (InvalidPayloadException e){}
-                catch (InvalidPeerException e){}
-                catch (Exception e){}
-
-                if(sms!=null) {
-                    flHandler.sendDataUnit(sms);
-
-                    Toast.makeText(this, "Messagio inviato", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }
-
-        else {
-            Toast.makeText(this, "manca il numero o il messaggio", Toast.LENGTH_SHORT).show();
+            startActivity(callNetActivityIntent);
+        } catch (Exception e) {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case 3:
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    MyMessage();
-                }
-                else{
-                    Toast.makeText(this, "Non hai i permessi", Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case 0:
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    canReceive=true;
-                }
-                else{
-                    Toast.makeText(this, "Non hai i permessi", Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case 1:
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    canRead=true;
-                }
-                else{
-                    Toast.makeText(this, "Non hai i permessi", Toast.LENGTH_SHORT).show();
-                }
-                break;
+    public byte[] toSHA1(byte[] convertMe) {
+        String algorithm = "SHA-1";
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-    }
 
-    @Override
-    public void onMessageReceived(SMSMessage message) {
-        TextView txtReceive=(TextView) findViewById(R.id.txt_message2);
-        String text=message.getData().toString();
-        txtReceive.setText(message.toString());
-        if(text.contains("alto"))
-            am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        else if(text.contains("basso")) {
+        byte[] digest = md.digest(convertMe);
+        byte[] rightLength = new byte[ReplicatedNetPeer.LENGTH];
 
-            NotificationManager notificationManager =
-                    (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        for (int i = 0; i < ReplicatedNetPeer.LENGTH; i++)
+            rightLength[i] = digest[i];
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-
-                Intent intent = new Intent(
-                        android.provider.Settings
-                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-
-                startActivity(intent);
-            }
-            am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-        }
+        return rightLength;
     }
 }
