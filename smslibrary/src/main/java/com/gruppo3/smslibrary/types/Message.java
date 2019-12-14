@@ -27,10 +27,10 @@ public class Message {
      * @param source      Peer representing the message sender
      * @param destination Peer representing the message recipient
      * @param payload     String containing the data to be sent
-     * @throws InvalidMessageException If an invalid Payload is passed or both Peers are null
+     * @throws InvalidMessageException If an invalid Payload is passed
      */
     public Message(Peer source, Peer destination, String payload) throws InvalidMessageException {
-        if (!isValidPayload(payload) || (source == null && destination == null))
+        if (!isValidPayload(payload))
             throw new InvalidMessageException();
 
         this.payload = payload;

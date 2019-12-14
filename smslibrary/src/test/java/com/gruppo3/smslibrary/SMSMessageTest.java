@@ -68,11 +68,6 @@ public class SMSMessageTest {
         Assert.assertEquals(message.getPayload(), validPayload);
     }
 
-    @Test(expected = InvalidMessageException.class)
-    public void setUpBothNull() {
-        new Message(null, null, validPayload);
-    }
-
     @Test
     public void buildFromSDU() {
         //try to rebuilt the message from the string received from the getSdu method
