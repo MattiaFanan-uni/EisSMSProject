@@ -6,39 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+    <TextView
+        android:id="@+id/textView_actualPhoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="178dp" />
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="200dp"
+        android:text="Actual phone number: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+    <TextView
+        android:id="@+id/textView_sourcePeer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="160dp"
+        android:text="Source peer: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/phoneNumberBtn"
-            android:layout_width="312dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="113dp"
-            android:onClick="onPhoneNumberBtnClick"
-            android:text="ENTER PHONE NUMBER"
-            app:layout_constraintTop_toBottomOf="@+id/phoneNumberET"
-            tools:layout_editor_absoluteX="48dp" />
+    <TextView
+        android:id="@+id/textView_messagePayload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="120dp"
+        android:text="Message payload: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <EditText
-            android:id="@+id/phoneNumberET"
-            android:layout_width="305dp"
-            android:layout_height="59dp"
-            android:layout_marginTop="200dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Phone Number"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="49dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/editText_destinationPhoneNumber"
+        android:layout_width="360dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:hint="Recipient"
+        android:inputType="textPersonName"
+        android:text="5556"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText_messageText"
+        android:layout_width="356dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Message text"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_destinationPhoneNumber" />
+
+    <Button
+        android:id="@+id/btn_sendMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="28dp"
+        android:text="SEND MESSAGE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_messageText"
+        android:onClick="btn_sendMessage_onClick" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
