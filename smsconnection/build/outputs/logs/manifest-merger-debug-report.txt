@@ -1,0 +1,65 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+	package
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:2:5-40
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:1-19:12
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:1:11-69
+uses-permission#android.permission.SEND_SMS
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:4:5-67
+	android:name
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:4:22-64
+uses-permission#android.permission.RECEIVE_SMS
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:5:5-70
+	android:name
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:5:22-67
+uses-permission#android.permission.READ_SMS
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:6:5-67
+	android:name
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:6:22-64
+application
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:8:5-18:19
+receiver#com.gruppo3.smsconnection.smsdatalink.core.SMSCore
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:9:9-17:20
+	android:enabled
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:11:13-35
+	android:exported
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:12:13-36
+	android:name
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:10:13-53
+intent-filter#action:name:android.provider.Telephony.SMS_RECEIVED
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:14:13-16:29
+action#android.provider.Telephony.SMS_RECEIVED
+ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:15:17-82
+	android:name
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:15:25-79
+uses-sdk
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		ADDED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml

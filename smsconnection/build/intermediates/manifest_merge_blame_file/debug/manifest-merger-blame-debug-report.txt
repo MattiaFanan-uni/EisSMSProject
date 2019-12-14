@@ -1,0 +1,42 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.gruppo3.smsconnection"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+8-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.SEND_SMS" />
+11-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:4:5-67
+11-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+12-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:5:5-70
+12-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:5:22-67
+13    <uses-permission android:name="android.permission.READ_SMS" />
+13-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:6:5-67
+13-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:6:22-64
+14
+15    <application>
+15-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:8:5-18:19
+16        <receiver
+16-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:9:9-17:20
+17            android:name="com.gruppo3.smsconnection.smsdatalink.core.SMSCore"
+17-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:10:13-53
+18            android:enabled="true"
+18-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:11:13-35
+19            android:exported="true" >
+19-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:12:13-36
+20            <intent-filter>
+20-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:14:13-16:29
+21                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+21-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:15:17-82
+21-->C:\Users\roberto\AndroidStudioProjects\EisSMSProject\smsconnection\src\main\AndroidManifest.xml:15:25-79
+22            </intent-filter>
+23        </receiver>
+24    </application>
+25
+26</manifest>
