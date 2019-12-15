@@ -7,30 +7,28 @@ import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
 import com.gruppo3.smsconnection.utils.StringSelfParser;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class ReplicatedNetDictionaryTest {
 
-    ReplicatedNetPeer netPeer;
-    ReplicatedNetPeer nullNetPeer = null;
-    SMSPeer smsPeer;
-    SMSPeer nullSmsPeer = null;
+    private ReplicatedNetPeer netPeer;
+    private ReplicatedNetPeer nullNetPeer = null;
+    private SMSPeer smsPeer;
+    private SMSPeer nullSmsPeer = null;
 
 
-    public ReplicatedNetDictionaryTest() {
-        try {
-            netPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
-            smsPeer = new SMSPeer(SMSPeerTest.validAddress);
-        } catch (Exception e) {
-        }
+    @Before
+    public void init() {
+        netPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
+        smsPeer = new SMSPeer(SMSPeerTest.validAddress);
     }
 
     @Test
     public void setUp() {
-        ReplicatedNetDictionary<String, String> dict = null;
         try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+            ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
             if (dict.numberOfPeers() != 1)
                 Assert.fail("should start with 1 peer");
         } catch (NullPointerException e) {
@@ -38,24 +36,24 @@ public class ReplicatedNetDictionaryTest {
         }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setUpNullNetPeer() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(nullNetPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            Assert.fail("should throw NullPointerException");
-        } catch (NullPointerException e) {
-        }//correct
+        new ReplicatedNetDictionary<>(nullNetPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void setUpNullSMSPeer() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, nullSmsPeer, new StringSelfParser(), new StringSelfParser());
-            Assert.fail("should throw NullPointerException");
-        } catch (NullPointerException e) {
-        }//correct
+        new ReplicatedNetDictionary<>(netPeer, nullSmsPeer, new StringSelfParser(), new StringSelfParser());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setUpNullResourceKeyParser() {
+        new ReplicatedNetDictionary<>(netPeer, smsPeer, null, new StringSelfParser());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setUpNullResourceValueParser() {
+        new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), null);
     }
 
 }

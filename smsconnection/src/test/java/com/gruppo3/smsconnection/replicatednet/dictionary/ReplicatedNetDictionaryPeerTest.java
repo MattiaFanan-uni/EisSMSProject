@@ -7,115 +7,90 @@ import com.gruppo3.smsconnection.smsdatalink.message.SMSPeer;
 import com.gruppo3.smsconnection.utils.StringSelfParser;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Map;
 
 public class ReplicatedNetDictionaryPeerTest {
-    ReplicatedNetPeer netPeer;
-    ReplicatedNetPeer nullNetPeer = null;
-    ReplicatedNetPeer greaterNetPeer;
-    ReplicatedNetPeer lowerNetPeer;
-    SMSPeer smsPeer;
-    SMSPeer nullSmsPeer = null;
-    SMSPeer otherSmsPeer;
+    private ReplicatedNetPeer netPeer;
+    private ReplicatedNetPeer nullNetPeer = null;
+    private ReplicatedNetPeer greaterNetPeer;
+    private ReplicatedNetPeer lowerNetPeer;
+    private SMSPeer smsPeer;
+    private SMSPeer nullSmsPeer = null;
+    private SMSPeer otherSmsPeer;
 
 
-    public ReplicatedNetDictionaryPeerTest() {
-        try {
-            netPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
-            greaterNetPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.greaterThanValidAddress);
-            lowerNetPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.lowerThanValidAddress);
-            smsPeer = new SMSPeer(SMSPeerTest.validAddress);
-            otherSmsPeer = new SMSPeer(SMSPeerTest.validCountryCodeAddress);
-        } catch (Exception e) {
-        }
+    @Before
+    public void init() {
+        netPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
+        greaterNetPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.greaterThanValidAddress);
+        lowerNetPeer = new ReplicatedNetPeer(ReplicatedNetPeerTest.lowerThanValidAddress);
+        smsPeer = new SMSPeer(SMSPeerTest.validAddress);
+        otherSmsPeer = new SMSPeer(SMSPeerTest.validCountryCodeAddress);
     }
 
     //////////////////////////////////////////////////ADD
     @Test
     public void addPeersAbsent() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+
         try {
             SMSPeer returnedSMSPeer = dict.putPeerIfAbsent(greaterNetPeer, otherSmsPeer);
-            if (returnedSMSPeer != null)
-                Assert.fail("should return null");
-            if (dict.numberOfPeers() != 2)
-                Assert.fail("number of peers should be 2");
+            Assert.assertNotNull(returnedSMSPeer);
+            Assert.assertEquals(2, dict.numberOfPeers());
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
+        } catch (IllegalArgumentException e) {
+            Assert.fail("shouldn't throw IllegalArgumentException");
         }
     }
 
     @Test
     public void addPeersAlreadyIn() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+
         try {
             SMSPeer returnedSMSPeer = dict.putPeerIfAbsent(netPeer, otherSmsPeer);
 
-            if (returnedSMSPeer.getAddress().compareTo(smsPeer.getAddress()) != 0)
-                Assert.fail("should return smsPeer already in");
+            Assert.assertEquals(returnedSMSPeer, smsPeer);
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
+        } catch (IllegalArgumentException e) {
+            Assert.fail("shouldn't throw IllegalArgumentException");
         }
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void addPeersNullKey() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.putPeerIfAbsent(nullNetPeer, otherSmsPeer);
-            Assert.fail("should throw NullPointerException");
-        } catch (NullPointerException e) {
-        }//correct
+        new ReplicatedNetDictionary<>(
+                netPeer,
+                smsPeer,
+                new StringSelfParser(),
+                new StringSelfParser()
+        ).putPeerIfAbsent(nullNetPeer, otherSmsPeer);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void addPeersNullValue() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.putPeerIfAbsent(netPeer, nullSmsPeer);
-            Assert.fail("should throw NullPointerException");
-        } catch (NullPointerException e) {
-        }//correct
+        new ReplicatedNetDictionary<>(
+                netPeer,
+                smsPeer,
+                new StringSelfParser(),
+                new StringSelfParser()
+        ).putPeerIfAbsent(netPeer, nullSmsPeer);
     }
 
     //////////////////////////////////////////////////REMOVE
     @Test
-    public void removePeersAbsent() {
-        ReplicatedNetDictionary<String, String> dict = null;
+    public void removePeerAbsent() {
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
+
         try {
-            //i need 2 cause removing last peer return always null
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.removePeer(lowerNetPeer);
-            if (returnedSMSPeer != null)
-                Assert.fail("should return null");
+            Assert.assertNotNull(dict.removePeer(lowerNetPeer));
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
         }
@@ -123,161 +98,99 @@ public class ReplicatedNetDictionaryPeerTest {
 
     @Test
     public void removePeersAlreadyIn() {
-        ReplicatedNetDictionary<String, String> dict = null;
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, otherSmsPeer);
+
         try {
-            //i need 2 cause removing last peer return always null
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, otherSmsPeer);
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.removePeer(greaterNetPeer);
-            if (returnedSMSPeer.getAddress().compareTo(otherSmsPeer.getAddress()) != 0)
-                Assert.fail("should return SMSPeer removed");
+            Assert.assertEquals(dict.removePeer(greaterNetPeer), otherSmsPeer);
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
         }
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void removePeersNullKey() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            //i need 2 cause removing last peer return always null
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.removePeer(nullNetPeer);
-            Assert.fail("should throw NullPointerException");
-        } catch (NullPointerException e) {
-        }//correct
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, smsPeer);//if <2 peers return null
+
+        dict.removePeer(nullNetPeer);
     }
 
     @Test
     public void removePeersLastPeerCount() {
-        ReplicatedNetDictionary<String, String> dict = null;
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+
         try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.removePeer(netPeer);
             //when i try to remove last peer it always return null
-            if (dict.numberOfPeers() != 1)
-                Assert.fail("shouldn't remove last peer");
+            Assert.assertNull(dict.removePeer(netPeer));
+
+            Assert.assertEquals(1, dict.numberOfPeers());
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
         }
     }
 
-    @Test
-    public void removePeersLastPeerReturn() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
-        try {
-            SMSPeer returnedSMSPeer = dict.removePeer(netPeer);
-            //when i try to remove last peer it always return null
-            if (returnedSMSPeer != null)
-                Assert.fail("should return null");
-        } catch (NullPointerException e) {
-            Assert.fail("shouldn't throw NullPointerException");
-        }
-    }
 
     //////////////////////////////////////////////////////////NUMBER_OF_PEERS
     @Test
     public void numberOfPeers() {
         ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
-            dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
+        dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
+        dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
 
-            if (dict.numberOfPeers() != 3)
-                Assert.fail("should have 3 peers");
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
+        Assert.assertEquals(3, dict.numberOfPeers());
     }
 
     //////////////////////////////////////////////////ITERATOR
 
     @Test
     public void getIterator() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
-            dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
+        dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
 
-            Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> iterator = dict.getPeersIteratorAscending();
+        Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> iterator = dict.getPeersIteratorAscending();
 
-            if (iterator == null)
-                Assert.fail("iterator shuldn't be null");
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
+        Assert.assertNotNull(iterator);
     }
 
     @Test
     public void getIteratorRightNumberOfItems() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
-            dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
+        dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
 
-            Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> iterator = dict.getPeersIteratorAscending();
+        Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> iterator = dict.getPeersIteratorAscending();
 
-            int numberOfItems = 0;
+        int numberOfItems = 0;
 
-            while (iterator.hasNext()) {
-                iterator.next();
-                numberOfItems++;
-            }
-
-            if (numberOfItems != 3)
-                Assert.fail("should have 3 peers");
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
+        while (iterator.hasNext()) {
+            iterator.next();
+            numberOfItems++;
         }
+
+        Assert.assertEquals(3, numberOfItems);
     }
 
     @Test
     public void getIteratorRightItemsOrderAscending() {
-        ReplicatedNetDictionary<String, String> dict = null;
-        try {
-            dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
-            dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
-            dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
+        ReplicatedNetDictionary<String, String> dict = new ReplicatedNetDictionary<>(netPeer, smsPeer, new StringSelfParser(), new StringSelfParser());
+        dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
+        dict.putPeerIfAbsent(lowerNetPeer, otherSmsPeer);
 
-            Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> iterator = dict.getPeersIteratorAscending();
+        Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> iterator = dict.getPeersIteratorAscending();
 
-            //first item lower
-            Map.Entry<ReplicatedNetPeer, SMSPeer> firstElement = iterator.next();
-            if (!firstElement.getKey().equals(lowerNetPeer))
-                Assert.fail("should be lower netPeer");
+        //first item lower
+        Map.Entry<ReplicatedNetPeer, SMSPeer> firstElement = iterator.next();
+        Assert.assertEquals(firstElement.getKey(),lowerNetPeer);
 
-            //second item
-            Map.Entry<ReplicatedNetPeer, SMSPeer> secondElement = iterator.next();
-            if (!secondElement.getKey().equals(netPeer))
-                Assert.fail("should be mid netPeer");
+        //second item
+        Map.Entry<ReplicatedNetPeer, SMSPeer> secondElement = iterator.next();
+        Assert.assertEquals(secondElement.getKey(),netPeer);
 
-            //last item greater
-            Map.Entry<ReplicatedNetPeer, SMSPeer> lastElement = iterator.next();
-            if (!lastElement.getKey().equals(greaterNetPeer))
-                Assert.fail("should be greater netPeer");
-        } catch (NullPointerException e) {
-            Assert.fail("Error in ReplicatedNetDictionaryTest");
-        }
+        //last item greater
+        Map.Entry<ReplicatedNetPeer, SMSPeer> lastElement = iterator.next();
+        Assert.assertEquals(lastElement.getKey(),greaterNetPeer);
     }
 }

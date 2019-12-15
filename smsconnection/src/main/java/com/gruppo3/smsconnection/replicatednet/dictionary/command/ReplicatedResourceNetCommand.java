@@ -12,7 +12,7 @@ public class ReplicatedResourceNetCommand<K extends Serializable, V extends Seri
 
     //code_target_action_lengthKey_key  may  lengthValue_value
     private static final int CODE_START = 0;
-    private static final int CONTROL_COMPONENT = 1;//flag
+    private static final int CONTROL_COMPONENT = 1;//length of a flag
     private static final int LENGTH_CHAR = 8;//length of a field
     private static final int TARGET_START = CODE_START + CONTROL_COMPONENT;
     private static final int ACTION_START = TARGET_START + CONTROL_COMPONENT;
@@ -30,8 +30,9 @@ public class ReplicatedResourceNetCommand<K extends Serializable, V extends Seri
     }
 
     public boolean isCommand(String command) {
-        return command.charAt(0)==controlCode;
+        return command.charAt(0) == controlCode;
     }
+
     /**
      * execute an action over a PeerNetDictionary
      *
