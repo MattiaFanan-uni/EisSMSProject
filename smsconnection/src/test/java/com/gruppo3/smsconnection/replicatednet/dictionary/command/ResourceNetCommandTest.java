@@ -13,8 +13,8 @@ import org.junit.Test;
 
 public class ResourceNetCommandTest {
 
-    ReplicatedNetPeer netPeerA;
-    SMSPeer smsPeerA;
+    private ReplicatedNetPeer netPeerA;
+    private SMSPeer smsPeerA;
 
     private static final String keyA = "A";
     private static final String valueA = "B";

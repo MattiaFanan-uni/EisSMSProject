@@ -10,9 +10,9 @@ import org.junit.Test;
 import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
 public class ReplicatedNetMessageTest {
-    ReplicatedNetPeer validPeer;
-    ReplicatedNetPeer nullPeer = null;
-    String validPayload;
+    private ReplicatedNetPeer validPeer;
+    private ReplicatedNetPeer nullPeer = null;
+    private String validPayload;
 
 
     @Before

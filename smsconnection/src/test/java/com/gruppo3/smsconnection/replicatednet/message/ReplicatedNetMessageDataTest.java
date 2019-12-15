@@ -12,10 +12,10 @@ import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
 public class ReplicatedNetMessageDataTest {
 
-    String validData;
-    String nullData = null;
-    String tooMuchData;
-    String maxData;
+    private String validData;
+    private String nullData = null;
+    private String tooMuchData;
+    private String maxData;
 
     @Before
     public void init() {

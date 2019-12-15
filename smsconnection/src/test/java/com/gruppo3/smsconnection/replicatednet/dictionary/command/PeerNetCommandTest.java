@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PeerNetCommandTest {
-    ReplicatedNetPeer netPeerA;
-    SMSPeer smsPeerA;
-    ReplicatedNetPeer netPeerB;
-    SMSPeer smsPeerB;
+    private ReplicatedNetPeer netPeerA;
+    private SMSPeer smsPeerA;
+    private ReplicatedNetPeer netPeerB;
+    private SMSPeer smsPeerB;
     public static final StringParser<ReplicatedNetPeer> netPeerParser = new ReplicatedNetPeerParser();
     public static final StringParser<SMSPeer> smsPeerParser = new SMSPeerParser();
     public static final StringParser<String> stringParser = new StringSelfParser();
@@ -37,7 +37,7 @@ public class PeerNetCommandTest {
     @Test
     public void setUp() {
         try {
-            ReplicatedPeerNetCommand command = new ReplicatedPeerNetCommand(netPeerParser, smsPeerParser);
+            new ReplicatedPeerNetCommand(netPeerParser, smsPeerParser);
         } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't call NullPointerException");
         }
@@ -45,8 +45,8 @@ public class PeerNetCommandTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void setUpSomeNullParser() {
-        ReplicatedPeerNetCommand command = new ReplicatedPeerNetCommand(null, smsPeerParser);
-        command = new ReplicatedPeerNetCommand(netPeerParser, null);
+        new ReplicatedPeerNetCommand(null, smsPeerParser);
+        new ReplicatedPeerNetCommand(netPeerParser, null);
     }
 
     @Test
