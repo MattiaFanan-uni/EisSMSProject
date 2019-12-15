@@ -2,49 +2,59 @@ package com.gruppo3.smsconnection.utils;
 
 import com.gruppo3.smsconnection.replicatednet.dictionary.command.StringParser;
 
+/**
+ * Utility object used to map an Integer to a String and reverse<br>
+ * <i>convert to char the hex representation of the 32-bit long number</i>
+ *
+ * @author Mattia Fanan
+ */
 public class IntegerParser implements StringParser<Integer> {
 
+    /**
+     * Parses a String from an Integer
+     *
+     * @param data the Integer to parse from
+     * @return the parsed String
+     */
     @Override
     public String parseString(Integer data) {
-        return byteToHex(intToByte(data));
+        return ReplicatedNetPeerParser.bytesToHex(intToByte(data));
     }
 
+    /**
+     * Parses an Integer from the passed String
+     *
+     * @param string the string to parse from
+     * @return the parsed Integer
+     */
     @Override
     public Integer parseData(String string) {
-        return byteToInt(hexToByte(string));
+        return byteToInt(ReplicatedNetPeerParser.hexToBytes(string));
     }
 
-    private String byteToHex(byte[] hashInBytes) {
 
-        StringBuilder sb = new StringBuilder();
-        for (byte b : hashInBytes) {
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString();
-
-    }
-
-    private byte[] hexToByte(String hex) {
-        byte[] val = new byte[hex.length() / 2];
-
-        for (int i = 0; i < val.length; i++) {
-            int index = i * 2;
-            int j = Integer.parseInt(hex.substring(index, index + 2), 16);
-            val[i] = (byte) j;
-        }
-        return val;
-    }
-
-    private byte[] intToByte(int num) {
+    /**
+     * Maps an Integer in its 4 byte representation
+     *
+     * @param toMap the Integer to map
+     * @return the mapped <code>byte[]</code>
+     */
+    protected static byte[] intToByte(int toMap) {
         return new byte[]{
-                (byte) (num >> 24),
-                (byte) (num >> 16),
-                (byte) (num >> 8),
-                (byte) num
+                (byte) (toMap >> 24),
+                (byte) (toMap >> 16),
+                (byte) (toMap >> 8),
+                (byte) toMap
         };
     }
 
-    private int byteToInt(byte[] bytes) {
+    /**
+     * Maps the first 4 byte of <code>byte[]</code> in its Integer 32-bit representation
+     *
+     * @param bytes the <code>byte[]</code> to map
+     * @return the mapped Integer
+     */
+    protected static int byteToInt(byte[] bytes) {
 
         return ((bytes[0] & 0xFF) << 24) |
                 ((bytes[1] & 0xFF) << 16) |

@@ -22,6 +22,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * ReplicatedNetManager is the manager of the {@link ReplicatedNetDictionary}
+ *
+ * @param <K> the type of resource key
+ * @param <V> the type of resource value
+ * @author Mattia Fanan
+ */
 public class ReplicatedNetManager<K extends Serializable, V extends Serializable>
         implements Serializable,
         CommunicationHandler<ReplicatedNetMessage>,
@@ -48,20 +55,31 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
         return defaultInstance;
     }
 
-    //////////////////////////////////////////////////ADD
+    /**
+     * Sets the dictionary to manage and the owner fields
+     *
+     * @param replicatedNetMe the {@link ReplicatedNetPeer} of the owner of this dictionary
+     * @param smsMe           the {@link SMSPeer} of the owner of this dictionary
+     * @param dictionary      the {@link ReplicatedNetDictionary} to manage
+     */
     public void addDictionary(ReplicatedNetPeer replicatedNetMe, SMSPeer smsMe, ReplicatedNetDictionary<K, V> dictionary) {
         this.replicatedNetMe = replicatedNetMe;
         this.smsMe = smsMe;
         replicatedNetDictionary = dictionary;
     }
 
+    /**
+     * Gets the dictionary managed by this manager
+     *
+     * @return the dictionary managed by this manager
+     */
     public ReplicatedNetDictionary<K, V> getDictionary() {
         return replicatedNetDictionary;
     }
     ///////////////////////////////////////////////////COMMUNICATION_HANDLER
 
     /**
-     * Sends a valid message to a peer
+     * Sends a valid {@link ReplicatedNetMessage}
      *
      * @param message The message to send
      */
@@ -105,6 +123,12 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
     }
 
     ////////////////////////////////////////////BROADCAST
+
+    /**
+     * Broadcasts a {@link com.gruppo3.smsconnection.replicatednet.dictionary.command.ResourceNetCommand} to the whole net
+     *
+     * @param resourceNetCommand the command to broadcast
+     */
     public void broadcast(@NonNull String resourceNetCommand) {
 
         if (resourceNetCommand == null)
@@ -127,23 +151,39 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
     }
 
     /////////////////////////////////////////ADD PEER
-    //TODO
+
+    /**
+     * Sends an invitation to a specific {@link SMSPeer}
+     *
+     * @param toInvite the {@link SMSPeer} to invite
+     */
     public void invite(SMSPeer toInvite) {
         if (!replicatedNetDictionary.containsPeerValue(toInvite)) {
             try {
                 Invitation invitation = new Invitation();
                 //save token
-                invitedTokenList.put(invitation.getCode(), toInvite);
-                Log.d("COMMUNICATION", "invite " + invitedTokenList.size());
-                //send invitation
-                ReplicatedNetMessage message = new ReplicatedNetMessage(null, replicatedNetMe, invitation.getStringInvitation());
-                sendMessage(message, toInvite);
+                SMSPeer alreadyPresent = invitedTokenList.put(invitation.getCode(), toInvite);
+
+                if (alreadyPresent == null) {//this means that i haven't already send an invitation to this Peer
+
+                    Log.d("COMMUNICATION", "invite " + invitedTokenList.size());
+                    //send invitation
+                    ReplicatedNetMessage message = new ReplicatedNetMessage(null, replicatedNetMe, invitation.getStringInvitation());
+                    sendMessage(message, toInvite);
+                }
             } catch (Exception e) {
             }
         } else
-            Log.d("COMMUNICATION", "peer already in");
+            Log.d("COMMUNICATION", "peer already in dictionary");
     }
 
+    /**
+     * Manage the handShake operation for the bootstrap process
+     *
+     * @param invitation  the invitation related to the bootstrap
+     * @param sourcePeer  the source peer involved in the bootstrap
+     * @param toHandshake the destination peer involved in the bootstrap
+     */
     private void handShake(Invitation invitation, ReplicatedNetPeer sourcePeer, SMSPeer
             toHandshake) {
 
@@ -151,14 +191,20 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
             //end invitation process
             Log.d("COMMUNICATION", "end invitation" + invitedTokenList.size());
             if (invitedTokenList.containsKey(invitation.getCode())) {
-                SMSPeer toAddSmsPeer = invitedTokenList.remove(invitation.getCode());
-                replicatedNetDictionary.putPeerIfAbsent(sourcePeer, toHandshake);
-                Log.d("COMMUNICATION", "" + replicatedNetDictionary.numberOfPeers());
 
-                updateNewPeer(sourcePeer);
+                SMSPeer toAddSmsPeer = invitedTokenList.remove(invitation.getCode());
+
+                if (toAddSmsPeer.equals(toHandshake)) {
+                    replicatedNetDictionary.putPeerIfAbsent(sourcePeer, toHandshake);
+                    Log.d("COMMUNICATION", "" + replicatedNetDictionary.numberOfPeers());
+
+                    updateNewPeer(sourcePeer);
+                } else
+                    Log.d("COMMUNICATION", "handshaking with wrong peer");
             } else
                 Log.d("COMMUNICATION", "not contains token");
         } else {
+
             //reply invitation
             Log.d("COMMUNICATION", "reply invitation");
             invitation.accept();
@@ -173,6 +219,11 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
 
     }
 
+    /**
+     * Sends all peers and resources to the joined member
+     *
+     * @param netPeer the peer of the joined member
+     */
     private void updateNewPeer(ReplicatedNetPeer netPeer) {
         Log.d("COMMUNICATION", "in update NEW Peer");
         Iterator<Map.Entry<ReplicatedNetPeer, SMSPeer>> peersIterator = replicatedNetDictionary.getPeersIteratorAscending();

@@ -12,7 +12,7 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
 
     //code_target_action_lengthKey_key  may  lengthValue_value
     private static final int CODE_START = 0;
-    private static final int CONTROL_COMPONENT = 1;//flag
+    private static final int CONTROL_COMPONENT = 1;//length of a flag
     private static final int LENGTH_CHAR = 8;//length of a field
     private static final int TARGET_START = CODE_START + CONTROL_COMPONENT;
     private static final int ACTION_START = TARGET_START + CONTROL_COMPONENT;
@@ -20,9 +20,10 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
     private static final int KEY_START = LENGTH_KEY_START + LENGTH_CHAR;//it is after a length char
 
     public ReplicatedPeerNetCommand(StringParser<ReplicatedNetPeer> peerKeyParser, StringParser<SMSPeer> peerValueParser) {
-        if (peerKeyParser == null || peerValueParser == null)
-            throw new NullPointerException();
-
+        if (peerKeyParser == null)
+            throw new IllegalArgumentException("null key parser");
+        if (peerValueParser == null)
+            throw new IllegalArgumentException("null value parser");
         this.peerKeyParser = peerKeyParser;
         this.peerValueParser = peerValueParser;
 
@@ -64,9 +65,9 @@ public class ReplicatedPeerNetCommand implements PeerNetCommand<ReplicatedNetPee
                     String valueToParse = command.substring(lengthValueEnd, lengthValueEnd + valueLENGTH);
                     SMSPeer value = peerValueParser.parseData(valueToParse);
                     return dictionary.putPeerIfAbsent(key, value) == null;
+                default:
+                    return false;
             }
-
-            return false;
         } catch (Exception e) {
             return false;
         }
