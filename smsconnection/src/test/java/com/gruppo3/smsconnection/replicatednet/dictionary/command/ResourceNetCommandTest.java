@@ -31,7 +31,7 @@ public class ResourceNetCommandTest {
     @Test
     public void setUp() {
         try {
-            ReplicatedResourceNetCommand<String, String> command = new ReplicatedResourceNetCommand<>(stringParser, stringParser);
+            new ReplicatedResourceNetCommand<>(stringParser, stringParser);
         } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't call NullPointerException");
         }
@@ -39,8 +39,8 @@ public class ResourceNetCommandTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void setUpSomeNullParser() {
-        ReplicatedResourceNetCommand<String, String> command = new ReplicatedResourceNetCommand<>(null, stringParser);
-        command = new ReplicatedResourceNetCommand<>(stringParser, null);
+        new ReplicatedResourceNetCommand<>(null, stringParser);
+        new ReplicatedResourceNetCommand<>(stringParser, null);
     }
 
     @Test

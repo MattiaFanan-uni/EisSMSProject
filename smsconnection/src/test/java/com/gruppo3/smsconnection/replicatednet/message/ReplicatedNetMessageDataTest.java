@@ -13,7 +13,6 @@ import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 public class ReplicatedNetMessageDataTest {
 
     private String validData;
-    private String nullData = null;
     private String tooMuchData;
     private String maxData;
 
@@ -65,7 +64,7 @@ public class ReplicatedNetMessageDataTest {
         new ReplicatedNetMessage(
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
                     new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress),
-                    nullData);
+                    null);
     }
 
     @Test

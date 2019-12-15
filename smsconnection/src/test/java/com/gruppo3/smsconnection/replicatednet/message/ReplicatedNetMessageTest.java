@@ -11,7 +11,6 @@ import static com.gruppo3.smsconnection.utils.Utils.getAlphaNumericString;
 
 public class ReplicatedNetMessageTest {
     private ReplicatedNetPeer validPeer;
-    private ReplicatedNetPeer nullPeer = null;
     private String validPayload;
 
 
