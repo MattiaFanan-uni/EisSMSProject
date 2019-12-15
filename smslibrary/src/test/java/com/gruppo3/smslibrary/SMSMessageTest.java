@@ -1,6 +1,5 @@
 package com.gruppo3.smslibrary;
 
-
 import com.gruppo3.smslibrary.exceptions.InvalidMessageException;
 import com.gruppo3.smslibrary.exceptions.InvalidPeerException;
 import com.gruppo3.smslibrary.types.Message;
@@ -10,16 +9,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.gruppo3.smslibrary.Utils.Utils.getAlphaNumericString;
+import static com.gruppo3.smslibrary.utils.Utils.getAlphaNumericString;
 
 public class SMSMessageTest {
-    Peer validPeer;
-    String validPayload;
+    private Peer validPeer;
+    private String validPayload;
 
     @Before
     public void init() {
         validPayload = getAlphaNumericString(20);
-        validPeer = new Peer(SMSPeerTest.validAddress);
+        validPeer = new Peer(SMSPeerTest.getValidAddress());
     }
 
 

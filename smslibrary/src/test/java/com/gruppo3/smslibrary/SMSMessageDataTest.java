@@ -8,13 +8,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.gruppo3.smslibrary.Utils.Utils.getAlphaNumericString;
+import static com.gruppo3.smslibrary.utils.Utils.getAlphaNumericString;
 
 public class SMSMessageDataTest {
-
-    String validData;
-    String tooMuchData;
-    String maxData;
+    private String validData;
+    private String tooMuchData;
+    private String maxData;
 
 
     @Before
@@ -29,7 +28,7 @@ public class SMSMessageDataTest {
     @Test
     public void setUp() {
         try {
-            new Message(null, new Peer(SMSPeerTest.validAddress), validData);
+            new Message(null, new Peer(SMSPeerTest.getValidAddress()), validData);
         } catch (InvalidMessageException e) {
             Assert.fail("Should not throw InvalidMessageException exception");
         }
@@ -38,7 +37,7 @@ public class SMSMessageDataTest {
     @Test
     public void maxData() {
         try {
-            new Message(null, new Peer(SMSPeerTest.validAddress), maxData);
+            new Message(null, new Peer(SMSPeerTest.getValidAddress()), maxData);
         } catch (InvalidMessageException e) {
             Assert.fail("Should not throw InvalidMessageException exception");
         }
@@ -46,17 +45,17 @@ public class SMSMessageDataTest {
 
     @Test(expected = InvalidMessageException.class)
     public void tooMuchData() throws InvalidMessageException {
-        new Message(null, new Peer(SMSPeerTest.validAddress), tooMuchData);
+        new Message(null, new Peer(SMSPeerTest.getValidAddress()), tooMuchData);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullData() {
-        new Message(null, new Peer(SMSPeerTest.validAddress), null);
+        new Message(null, new Peer(SMSPeerTest.getValidAddress()), null);
     }
 
     @Test
     public void getDataTest() {
-        Message message = new Message(null, new Peer(SMSPeerTest.validAddress), validData);
+        Message message = new Message(null, new Peer(SMSPeerTest.getValidAddress()), validData);
         Assert.assertEquals(message.getPayload(), validData);
     }
 

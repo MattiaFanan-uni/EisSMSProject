@@ -7,11 +7,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class SMSPeerTest {
-    public static final String validAddress = "12345678";
-    public static final String validCountryCodeAddress = "+3912345678";
-    public static final String tooLongAddress = "123412345678912345678905678";
-    public static final String tooShortAddress = "12";
-    public static final String charAddress = "++12345678";
+    private static final String validAddress = "12345678";
+    private static final String validCountryCodeAddress = "+3912345678";
+    private static final String tooLongAddress = "123412345678912345678905678";
+    private static final String tooShortAddress = "12";
+    private static final String charAddress = "++12345678";
+
+    public static String getValidAddress() {
+        return validAddress;
+    }
 
     @Test
     public void setUp() {
