@@ -21,8 +21,10 @@ public class ReplicatedResourceNetCommand<K extends Serializable, V extends Seri
 
 
     public ReplicatedResourceNetCommand(StringParser<K> resourceKeyParser, StringParser<V> resourceValueParser) {
-        if (resourceKeyParser == null || resourceValueParser == null)
-            throw new NullPointerException();
+        if (resourceKeyParser == null)
+            throw new IllegalArgumentException("null key parser");
+        if (resourceValueParser == null)
+            throw new IllegalArgumentException("null value parser");
 
         this.resourceKeyParser = resourceKeyParser;
         this.resourceValueParser = resourceValueParser;
@@ -69,9 +71,9 @@ public class ReplicatedResourceNetCommand<K extends Serializable, V extends Seri
                     String valueToParse = command.substring(lengthValueEnd, lengthValueEnd + valueLENGTH);
                     V value = resourceValueParser.parseData(valueToParse);
                     return dictionary.putResourceIfAbsent(key, value) == null;
+                default:
+                    return false;
             }
-
-            return false;
         } catch (Exception e) {
             return false;
         }

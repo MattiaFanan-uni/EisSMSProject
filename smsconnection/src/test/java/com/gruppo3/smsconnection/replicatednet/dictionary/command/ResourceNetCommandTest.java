@@ -23,23 +23,21 @@ public class ResourceNetCommandTest {
 
     @Before
     public void init() {
-        try {
-            netPeerA = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
-            smsPeerA = new SMSPeer(SMSPeerTest.validAddress);
-        } catch (Exception e) {
-        }
+        netPeerA = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
+        smsPeerA = new SMSPeer(SMSPeerTest.validAddress);
+
     }
 
     @Test
     public void setUp() {
         try {
             ReplicatedResourceNetCommand<String, String> command = new ReplicatedResourceNetCommand<>(stringParser, stringParser);
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't call NullPointerException");
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setUpSomeNullParser() {
         ReplicatedResourceNetCommand<String, String> command = new ReplicatedResourceNetCommand<>(null, stringParser);
         command = new ReplicatedResourceNetCommand<>(stringParser, null);

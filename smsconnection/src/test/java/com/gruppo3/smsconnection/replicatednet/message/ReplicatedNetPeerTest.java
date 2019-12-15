@@ -45,7 +45,7 @@ public class ReplicatedNetPeerTest {
     }
 
     @Test
-    public void CompareToGreater() {
+    public void compareToGreater() {
         ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
         ReplicatedNetPeer greater = new ReplicatedNetPeer(greaterThanValidAddress);
 
@@ -53,7 +53,7 @@ public class ReplicatedNetPeerTest {
     }
 
     @Test
-    public void CompareToLower() {
+    public void compareToLower() {
         ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
         ReplicatedNetPeer lower = new ReplicatedNetPeer(lowerThanValidAddress);
 
@@ -61,7 +61,7 @@ public class ReplicatedNetPeerTest {
     }
 
     @Test
-    public void CompareToEqual() {
+    public void compareToEqual() {
         ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
         ReplicatedNetPeer equal = new ReplicatedNetPeer(validAddress);
 
@@ -70,7 +70,7 @@ public class ReplicatedNetPeerTest {
     }
 
     @Test
-    public void Equals() {
+    public void equals() {
         ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
         ReplicatedNetPeer equal = new ReplicatedNetPeer(validAddress);
 
@@ -79,7 +79,7 @@ public class ReplicatedNetPeerTest {
     }
 
     @Test
-    public void EqualsNotEquals() {
+    public void equalsNotEquals() {
         ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
         ReplicatedNetPeer lower = new ReplicatedNetPeer(lowerThanValidAddress);
 

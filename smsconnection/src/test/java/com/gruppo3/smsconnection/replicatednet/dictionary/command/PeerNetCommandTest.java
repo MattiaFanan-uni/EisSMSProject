@@ -38,12 +38,12 @@ public class PeerNetCommandTest {
     public void setUp() {
         try {
             ReplicatedPeerNetCommand command = new ReplicatedPeerNetCommand(netPeerParser, smsPeerParser);
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't call NullPointerException");
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setUpSomeNullParser() {
         ReplicatedPeerNetCommand command = new ReplicatedPeerNetCommand(null, smsPeerParser);
         command = new ReplicatedPeerNetCommand(netPeerParser, null);

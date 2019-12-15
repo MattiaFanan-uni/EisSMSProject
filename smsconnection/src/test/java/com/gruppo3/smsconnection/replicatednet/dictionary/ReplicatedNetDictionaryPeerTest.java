@@ -39,7 +39,7 @@ public class ReplicatedNetDictionaryPeerTest {
 
         try {
             SMSPeer returnedSMSPeer = dict.putPeerIfAbsent(greaterNetPeer, otherSmsPeer);
-            Assert.assertNotNull(returnedSMSPeer);
+            Assert.assertNull(returnedSMSPeer);
             Assert.assertEquals(2, dict.numberOfPeers());
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
@@ -90,7 +90,7 @@ public class ReplicatedNetDictionaryPeerTest {
         dict.putPeerIfAbsent(greaterNetPeer, smsPeer);
 
         try {
-            Assert.assertNotNull(dict.removePeer(lowerNetPeer));
+            Assert.assertNull(dict.removePeer(lowerNetPeer));
         } catch (NullPointerException e) {
             Assert.fail("shouldn't throw NullPointerException");
         }
