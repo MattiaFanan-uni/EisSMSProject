@@ -1,6 +1,5 @@
 package com.gruppo3.smslibrary.util;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +32,7 @@ public class Util {
      * @param bytes Byte array to be converted
      * @return A String containing the hexadecimal value of the passed parameter
      */
-    public static String convertBytesToHex(byte[] bytes)
+    private static String convertBytesToHex(byte[] bytes)
     {
         char[] hexChars = new char[bytes.length * 2];
         for(int j = 0; j < bytes.length; j++)

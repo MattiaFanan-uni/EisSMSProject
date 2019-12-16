@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.gruppo3.smslibrary.NetworkManager;
 import com.gruppo3.smslibrary.SmsManager;
 import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
 import com.gruppo3.smslibrary.types.Message;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText_destinationPhoneNumber;
     private EditText editText_messageText;
 
+    String phoneNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mPhoneNumber += tMgr.getLine1Number();
+        phoneNumber = tMgr.getLine1Number();
 
         textView_actualPhoneNumber.setText(mPhoneNumber);
     }
@@ -80,6 +83,19 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception ex) {
             textView_messagePayload.setText(ex.toString());
         }
+
+        /*try {
+            NetworkManager nm = new NetworkManager(phoneNumber);
+            Peer destinationPeer = new Peer(editText_destinationPhoneNumber.getText().toString());
+            nm.inviteDevice(destinationPeer);
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            // TODO Manage exception
+        }
+        catch (Exception ex) {
+            textView_messagePayload.setText(ex.toString());
+        }*/
     }
 
 

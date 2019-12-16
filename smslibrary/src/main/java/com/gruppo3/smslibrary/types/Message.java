@@ -18,9 +18,11 @@ public class Message {
 
     private Peer source;
     private Peer destination;
+    private char header;
     private String payload;
 
     /**
+     * @deprecated
      * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
      * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
      *
@@ -33,18 +35,58 @@ public class Message {
         if (!isValidPayload(payload))
             throw new InvalidMessageException();
 
-        this.payload = payload;
-        this.destination = destination;
         this.source = source;
+        this.destination = destination;
+        this.payload = payload;
     }
 
     /**
+     * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
+     * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
+     *
+     * @param source      Peer representing the message sender
+     * @param destination Peer representing the message recipient
+     * @param header     String containing the header data to be sent
+     * @throws InvalidMessageException If an invalid Payload is passed
+     */
+    public Message(Peer source, Peer destination, char header) throws InvalidMessageException {
+        if (!isValidPayload(payload))
+            throw new InvalidMessageException();
+
+        this.source = source;
+        this.destination = destination;
+        this.header = header;
+    }
+
+    /**
+     * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
+     * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
+     *
+     * @param source      Peer representing the message sender
+     * @param destination Peer representing the message recipient
+     * @param header     String containing the header data to be sent
+     * @param payload     String containing the data to be sent
+     * @throws InvalidMessageException If an invalid Payload is passed
+     */
+    public Message(Peer source, Peer destination, char header, String payload) throws InvalidMessageException {
+        if (!isValidPayload(payload))
+            throw new InvalidMessageException();
+
+        this.source = source;
+        this.destination = destination;
+        this.header = header;
+        this.payload = payload;
+    }
+
+    /**
+     * @deprecated
+     * Parse a system SmsMessage to custom Message. A message is valid if the first char of the body is the <code>CONTROL_STAMP</code>.
+     *
      * @param sourceAddress String containing the source address
      * @param body          String containing the SmsMessage body text
      * @return Message parsed from system SmsMessage
      * @throws InvalidAddressException If an invalid source address is given
      * @throws InvalidMessageException If an invalid message is given
-     * @deprecated Parse a system SmsMessage to custom Message. A message is valid if the first char of the body is the <code>CONTROL_STAMP</code>.
      */
     @Deprecated
     public static Message buildFromSDU(String sourceAddress, String body) throws InvalidAddressException, InvalidMessageException {
@@ -54,9 +96,10 @@ public class Message {
         if (header.charAt(0) != CONTROL_STAMP)
             throw new InvalidMessageException();
 
+        char headerChar = header.charAt(1);
         String payload = body.substring(body.indexOf('#') + 1);
 
-        return new Message(source, null, payload);
+        return new Message(source, null, headerChar, payload);
     }
 
     /**
@@ -65,7 +108,7 @@ public class Message {
      */
     @Deprecated
     public String getSDU() {
-        return CONTROL_STAMP + "#" + getPayload();
+        return CONTROL_STAMP + getHeader() + "#" + getPayload();
     }
 
     /**
@@ -87,6 +130,15 @@ public class Message {
     }
 
     /**
+     * Gets a String containing the message header
+     *
+     * @return A String containing the message header
+     */
+    public char getHeader() {
+        return header;
+    }
+
+    /**
      * Gets a String containing the message payload
      *
      * @return A String containing the message payload
@@ -103,7 +155,8 @@ public class Message {
     @Override
     public String toString() {
         String stringRep = "Message:";
-        stringRep += payload;
+        stringRep += " ---Header:" + header;
+        stringRep += " ---Payload:" + payload;
         stringRep += " ---Destination:" + destination.getAddress();
         stringRep += " ---Source:" + source.getAddress();
 
