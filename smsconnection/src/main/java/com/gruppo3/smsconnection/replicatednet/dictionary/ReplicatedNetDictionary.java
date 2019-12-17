@@ -39,9 +39,15 @@ public class ReplicatedNetDictionary<K extends Serializable, V extends Serializa
     private ReplicatedResourceNetCommand<K, V> resourceCommand;
 
     public ReplicatedNetDictionary(@NonNull ReplicatedNetPeer netPeer, @NonNull SMSPeer smsPeer,
-                                   @NonNull StringParser<K> resourceKeyParser, @NonNull StringParser<V> resourceValueParser) {
-        if (netPeer == null || smsPeer == null || resourceKeyParser == null || resourceValueParser == null)
-            throw new NullPointerException();
+                                   @NonNull StringParser<K> resourceKeyParser, @NonNull StringParser<V> resourceValueParser) throws IllegalArgumentException{
+        if (netPeer == null)
+            throw new IllegalArgumentException("null net peer");
+        if (smsPeer == null)
+            throw new IllegalArgumentException("null sms peer");
+        if (resourceKeyParser == null)
+            throw new IllegalArgumentException("null resourceKeyParser");
+        if (resourceValueParser == null)
+            throw new IllegalArgumentException("null net resourceValueParser");
 
         ID = (new Random()).nextInt();
         peers = new TreeMap<>();
@@ -67,9 +73,9 @@ public class ReplicatedNetDictionary<K extends Serializable, V extends Serializa
      * @return the previous value associated with the specified key, or null if there was no mapping for the key.
      */
     @Override
-    public V putResourceIfAbsent(@NonNull K resourceKey, V resourceValue) {
+    public V putResourceIfAbsent(@NonNull K resourceKey, V resourceValue) throws IllegalArgumentException{
         if (resourceValue == null)
-            throw new NullPointerException();
+            throw new IllegalArgumentException("null resource value not allowed");
         if (!containsResourceKey(resourceKey))
             return resources.put(resourceKey, resourceValue);
         return getResource(resourceKey);
@@ -151,9 +157,9 @@ public class ReplicatedNetDictionary<K extends Serializable, V extends Serializa
      * @return the previous value associated with the specified key, or null if there was no mapping for the key.
      */
     @Override
-    public SMSPeer putPeerIfAbsent(@NonNull ReplicatedNetPeer peerKey, SMSPeer peerValue) {
+    public SMSPeer putPeerIfAbsent(@NonNull ReplicatedNetPeer peerKey, SMSPeer peerValue) throws IllegalArgumentException {
         if (peerValue == null)
-            throw new NullPointerException();
+            throw new IllegalArgumentException("null peer value not allowed");
         if (!containsPeerKey(peerKey))
             return peers.put(peerKey, peerValue);
         return getPeer(peerKey);

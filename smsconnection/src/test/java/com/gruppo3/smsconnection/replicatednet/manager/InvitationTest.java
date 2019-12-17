@@ -9,16 +9,15 @@ public class InvitationTest {
     public void setUp() {
         Invitation inv = new Invitation();
 
-        if (inv.isAccepted())
-            Assert.fail("shouldn't starts as accepted");
+        //invitation starts unaccepted
+        Assert.assertFalse(inv.isAccepted());
     }
 
     @Test
     public void setAccept() {
         Invitation inv = new Invitation();
         inv.accept();
-        if (!inv.isAccepted())
-            Assert.fail("should be accepted");
+        Assert.assertTrue(inv.isAccepted());
     }
 
     @Test
@@ -28,15 +27,10 @@ public class InvitationTest {
 
         Invitation retrievedInv = Invitation.getFromString(inv.getStringInvitation());
 
-        if (retrievedInv == null)
-            Assert.fail("shouldn't return null");
+        Assert.assertNotNull(retrievedInv);
 
-        if (retrievedInv.getCode() != inv.getCode())
-            Assert.fail("should be the same code");
-
-        if (retrievedInv.isAccepted() != inv.isAccepted())
-            Assert.fail("should be the same accepted value");
-
+        Assert.assertEquals(retrievedInv.getCode(),inv.getCode());
+        Assert.assertEquals(retrievedInv.isAccepted(),inv.isAccepted());
     }
 
     @Test
@@ -45,14 +39,10 @@ public class InvitationTest {
 
         Invitation retrievedInv = Invitation.getFromString(inv.getStringInvitation());
 
-        if (retrievedInv == null)
-            Assert.fail("shouldn't return null");
+        Assert.assertNotNull(retrievedInv);
 
-        if (retrievedInv.getCode() != inv.getCode())
-            Assert.fail("should be the same code");
-
-        if (retrievedInv.isAccepted() != inv.isAccepted())
-            Assert.fail("should be the same accepted value");
+        Assert.assertEquals(retrievedInv.getCode(),inv.getCode());
+        Assert.assertEquals(retrievedInv.isAccepted(),inv.isAccepted());
 
     }
 

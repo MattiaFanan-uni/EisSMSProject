@@ -5,8 +5,6 @@ import com.gruppo3.smsconnection.connection.exception.InvalidPeerException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 public class ReplicatedNetPeerTest {
     public static final byte[] validAddress = {-1, -3, 5, 7, 8, 9, 0, 3, 2, 1, 23, 45, 67, -8, 32, 11};
     public static final byte[] greaterThanValidAddress = {-1, -3, 5, 7, 8, 9, 0, 3, 2, 1, 23, 45, 67, -8, 32, -11};
@@ -18,159 +16,74 @@ public class ReplicatedNetPeerTest {
 
     @Test
     public void setUp() {
-        ReplicatedNetPeer peer;
         try {
-            peer = new ReplicatedNetPeer(validAddress);
+            new ReplicatedNetPeer(validAddress);
         } catch (InvalidPeerException e) {
             Assert.fail("Should not throw InvalidPeerException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
         }
     }
 
-    @Test
+    @Test(expected = InvalidPeerException.class)
     public void numberTooLong() {
-        ReplicatedNetPeer peer;
-        try {
-            peer = new ReplicatedNetPeer(tooLongAddress);
-            Assert.fail("should throw InvalidPeerException");
-        } catch (InvalidPeerException e) {
-        }//correct
-        catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+        new ReplicatedNetPeer(tooLongAddress);
     }
 
-    @Test
+    @Test(expected = InvalidPeerException.class)
     public void numberTooShort() {
-        ReplicatedNetPeer peer;
-        try {
-            peer = new ReplicatedNetPeer(tooShortAddress);
-            Assert.fail("should throw InvalidPeerException");
-        } catch (InvalidPeerException e) {
-        }//correct
-        catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+        new ReplicatedNetPeer(tooShortAddress);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void nullNumber() {
-        ReplicatedNetPeer peer;
-        try {
-            peer = new ReplicatedNetPeer(nullAddress);
-            Assert.fail("should throw NullPointerException");
-        } catch (NullPointerException e) {
-        }//correct
-        catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+        new ReplicatedNetPeer(nullAddress);
     }
 
     @Test
     public void getAddressTest() {
-        ReplicatedNetPeer peer;
-        try {
-            peer = new ReplicatedNetPeer(validAddress);
-            if (!Arrays.equals(peer.getAddress(), validAddress))
-                Assert.fail("should be the same number");
-        } catch (InvalidPeerException e) {
-            Assert.fail("Shouldn't throw InvalidPeerException");
-        } catch (Exception e) {
-            Assert.fail("Shouldn't throw this Exception");
-        }
+        ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
+        Assert.assertArrayEquals(peer.getAddress(), validAddress);
     }
 
     @Test
-    public void CompareToGreater() {
-        ReplicatedNetPeer peer = null;
-        ReplicatedNetPeer greater = null;
-        try {
-            peer = new ReplicatedNetPeer(validAddress);
-            greater = new ReplicatedNetPeer(greaterThanValidAddress);
-        } catch (InvalidPeerException e) {
-            Assert.fail("Should not throw InvalidPeerException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+    public void compareToGreater() {
+        ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
+        ReplicatedNetPeer greater = new ReplicatedNetPeer(greaterThanValidAddress);
 
-        if (peer.compareTo(greater) >= 0)
-            //if peer is greater or equal
-            Assert.fail("should be lower");
-
+        Assert.assertTrue(peer.compareTo(greater) <= 0);
     }
 
     @Test
-    public void CompareToLower() {
-        ReplicatedNetPeer peer = null;
-        ReplicatedNetPeer lower = null;
-        try {
-            peer = new ReplicatedNetPeer(validAddress);
-            lower = new ReplicatedNetPeer(lowerThanValidAddress);
-        } catch (InvalidPeerException e) {
-            Assert.fail("Should not throw InvalidPeerException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+    public void compareToLower() {
+        ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
+        ReplicatedNetPeer lower = new ReplicatedNetPeer(lowerThanValidAddress);
 
-        if (peer.compareTo(lower) <= 0)
-            //if peer is lower or equal
-            Assert.fail("should be greater");
+        Assert.assertTrue(peer.compareTo(lower) >= 0);
+    }
+
+    @Test
+    public void compareToEqual() {
+        ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
+        ReplicatedNetPeer equal = new ReplicatedNetPeer(validAddress);
+
+        Assert.assertTrue(peer.compareTo(equal) == 0);
 
     }
 
     @Test
-    public void CompareToEqual() {
-        ReplicatedNetPeer peer = null;
-        ReplicatedNetPeer equal = null;
-        try {
-            peer = new ReplicatedNetPeer(validAddress);
-            equal = new ReplicatedNetPeer(validAddress);
-        } catch (InvalidPeerException e) {
-            Assert.fail("Should not throw InvalidPeerException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+    public void equals() {
+        ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
+        ReplicatedNetPeer equal = new ReplicatedNetPeer(validAddress);
 
-        if (peer.compareTo(equal) != 0)
-            //if peer is lower or greater
-            Assert.fail("should be equal");
+        Assert.assertEquals(peer, equal);
 
     }
 
     @Test
-    public void Equals() {
-        ReplicatedNetPeer peer = null;
-        ReplicatedNetPeer equal = null;
-        try {
-            peer = new ReplicatedNetPeer(validAddress);
-            equal = new ReplicatedNetPeer(validAddress);
-        } catch (InvalidPeerException e) {
-            Assert.fail("Should not throw InvalidPeerException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
+    public void equalsNotEquals() {
+        ReplicatedNetPeer peer = new ReplicatedNetPeer(validAddress);
+        ReplicatedNetPeer lower = new ReplicatedNetPeer(lowerThanValidAddress);
 
-        if (!peer.equals(equal))
-            Assert.fail("should be equal");
-
-    }
-
-    @Test
-    public void EqualsNotEquals() {
-        ReplicatedNetPeer peer = null;
-        ReplicatedNetPeer lower = null;
-        try {
-            peer = new ReplicatedNetPeer(validAddress);
-            lower = new ReplicatedNetPeer(lowerThanValidAddress);
-        } catch (InvalidPeerException e) {
-            Assert.fail("Should not throw InvalidPeerException exception");
-        } catch (Exception e) {
-            Assert.fail("Should not throw this exception");
-        }
-
-        if (peer.equals(lower))
-            Assert.fail("shouldn't be equal");
+        Assert.assertNotEquals(peer, lower);
 
     }
 }

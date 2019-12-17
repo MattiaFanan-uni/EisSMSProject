@@ -5,7 +5,7 @@ package com.gruppo3.smsconnection.connection.exception;
  *
  * @author Mattia Fanan
  */
-public class InvalidMessageException extends Exception {
+public class InvalidMessageException extends RuntimeException {
     public InvalidMessageException() {
         super();
     }

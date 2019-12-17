@@ -13,8 +13,8 @@ import org.junit.Test;
 
 public class ResourceNetCommandTest {
 
-    ReplicatedNetPeer netPeerA;
-    SMSPeer smsPeerA;
+    private ReplicatedNetPeer netPeerA;
+    private SMSPeer smsPeerA;
 
     private static final String keyA = "A";
     private static final String valueA = "B";
@@ -23,26 +23,24 @@ public class ResourceNetCommandTest {
 
     @Before
     public void init() {
-        try {
-            netPeerA = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
-            smsPeerA = new SMSPeer(SMSPeerTest.validAddress);
-        } catch (Exception e) {
-        }
+        netPeerA = new ReplicatedNetPeer(ReplicatedNetPeerTest.validAddress);
+        smsPeerA = new SMSPeer(SMSPeerTest.validAddress);
+
     }
 
     @Test
     public void setUp() {
         try {
-            ReplicatedResourceNetCommand<String, String> command = new ReplicatedResourceNetCommand<>(stringParser, stringParser);
-        } catch (NullPointerException e) {
+            new ReplicatedResourceNetCommand<>(stringParser, stringParser);
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't call NullPointerException");
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setUpSomeNullParser() {
-        ReplicatedResourceNetCommand<String, String> command = new ReplicatedResourceNetCommand<>(null, stringParser);
-        command = new ReplicatedResourceNetCommand<>(stringParser, null);
+        new ReplicatedResourceNetCommand<>(null, stringParser);
+        new ReplicatedResourceNetCommand<>(stringParser, null);
     }
 
     @Test
