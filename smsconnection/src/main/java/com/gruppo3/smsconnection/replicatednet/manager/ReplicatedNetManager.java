@@ -32,20 +32,22 @@ public class ReplicatedNetManager<K extends Serializable, V extends Serializable
     private SMSPeer smsMe;
     private ReplicatedNetDictionary<K, V> replicatedNetDictionary;
     private TreeMap<Long, SMSPeer> invitedTokenList;
-    private static ReplicatedNetManager defaultInstance;
 
-    //////////////////////////////////////SINGLETON
-    private ReplicatedNetManager() {
-        SMSManager.getDefault().addReceiveListener(this);
+    /**
+     * Protected constructor uses object pool
+     */
+    protected ReplicatedNetManager() {}
+
+    protected void setup(){
         listener = null;
         invitedTokenList = new TreeMap<>();
+        SMSManager.getDefault().addReceiveListener(this);
     }
 
-    //TODO object pool
-    public static ReplicatedNetManager getDefault() {
-        if (defaultInstance == null)
-            defaultInstance = new ReplicatedNetManager();
-        return defaultInstance;
+    protected void tearDown(){
+        listener = null;
+        replicatedNetDictionary = null;
+        SMSManager.getDefault().removeReceiveListener();
     }
 
     //////////////////////////////////////////////////ADD
