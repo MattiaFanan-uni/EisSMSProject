@@ -21,8 +21,7 @@ public class Message {
     private String header;
     private String payload;
 
-    /**
-     * @deprecated
+    /*
      * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
      * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
      *
@@ -30,8 +29,7 @@ public class Message {
      * @param destination Peer representing the message recipient
      * @param payload     String containing the data to be sent
      * @throws InvalidMessageException If an invalid Payload is passed
-     */
-    /*@Deprecated
+    @Deprecated
     public Message(Peer source, Peer destination, String payload) throws InvalidMessageException {
         if (!isValidPayload(payload))
             throw new InvalidMessageException();
@@ -39,7 +37,8 @@ public class Message {
         this.source = source;
         this.destination = destination;
         this.payload = payload;
-    }*/
+    }
+    */
 
     /**
      * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
@@ -77,7 +76,6 @@ public class Message {
     }
 
     /**
-     * @deprecated
      * Parse a system SmsMessage to custom Message. A message is valid if the first char of the body is the <code>CONTROL_STAMP</code>.
      *
      * @param sourceAddress String containing the source address
@@ -86,7 +84,6 @@ public class Message {
      * @throws InvalidAddressException If an invalid source address is given
      * @throws InvalidMessageException If an invalid message is given
      */
-    @Deprecated
     public static Message buildFromSDU(String sourceAddress, String body) throws InvalidAddressException, InvalidMessageException {
         Peer source = new Peer(sourceAddress);
         String header = body.substring(0, body.indexOf('#'));
@@ -101,10 +98,9 @@ public class Message {
     }
 
     /**
+     * Gets a String containing the message header joined with the message payload.
      * @return A String with the header and the payload
-     * @deprecated Gets a String containing the message header joined with the message payload.
      */
-    @Deprecated
     public String getSDU() {
         return CONTROL_STAMP + getHeader() + "#" + getPayload();
     }

@@ -1,5 +1,7 @@
 package com.gruppo3.smslibrary.util;
 
+import android.util.Log;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,7 +29,8 @@ public class Util {
             return convertBytesToHex(bytes);
         }
         catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            Log.e("smslibrary exception", Log.getStackTraceString(e));
+            return null;
         }
     }
 
