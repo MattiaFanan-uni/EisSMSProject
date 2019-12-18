@@ -26,7 +26,7 @@ public class Util {
             digest.update(bytes, 0, bytes.length);
             bytes = digest.digest();
 
-            return convertBytesToHex(bytes);
+            return convertBytesToBinaryString(bytes);
         }
         catch (NoSuchAlgorithmException e) {
             Log.e("smslibrary exception", Log.getStackTraceString(e));
@@ -34,12 +34,22 @@ public class Util {
         }
     }
 
+    private static String convertBytesToBinaryString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte bytesElement : bytes) {
+            String byteToBitString = String.format("%8s", Integer.toBinaryString(bytesElement & 0xFF)).replace(' ', '0');
+            sb.append(byteToBitString);
+        }
+
+        return sb.toString();
+    }
+
     /**
      * Converts the given byte array to its hexadecimal value (values between A and F are upper case).
      * @param bytes Byte array to be converted
      * @return A String containing the hexadecimal value of the passed parameter
      */
-    private static String convertBytesToHex(byte[] bytes)
+    public static String convertBytesToHex(byte[] bytes)
     {
         char[] hexChars = new char[bytes.length * 2];
         for(int j = 0; j < bytes.length; j++)
