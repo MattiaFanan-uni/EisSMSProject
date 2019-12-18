@@ -1,4 +1,4 @@
-package com.gruppo3.kademlia;
+package com.gruppo3.smslibrary;
 
 import com.gruppo3.smslibrary.util.Util;
 
@@ -24,12 +24,7 @@ public class UtilTest {
      */
     @Test
     public void stringToSha1Hash() {
-        try {
-            Assert.assertEquals(validEncryptedSha1String, Util.sha1Hash(validDecryptedSha1String));
-        }
-        catch (NoSuchAlgorithmException e) {
-            Assert.fail("Should not throw NoSuchAlgorithmException exception");
-        }
+        Assert.assertEquals(validEncryptedSha1String, Util.sha1Hash(validDecryptedSha1String));
     }
 
     // ## convertBytesToHex tests ##

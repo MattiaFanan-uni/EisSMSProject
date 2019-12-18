@@ -25,10 +25,11 @@ public class Bucket {
         if (bucketSize < 1)
             throw new IllegalArgumentException();
 
-        nodes = new ArrayList<Peer>(bucketSize);
-        replacementCache = new ArrayList<>();
         this.bucketSize = bucketSize;
-        entriesCount = 0;
+        this.entriesCount = 0;
+
+        nodes = new ArrayList<>(bucketSize);
+        replacementCache = new ArrayList<>();
     }
 
     /**
@@ -51,16 +52,16 @@ public class Bucket {
     }
 
     /**
-     * Returns the size of the bucket.
-     * @return The size of the bucket
+     * Returns size of the bucket.
+     * @return size of the bucket
      */
     public int getBucketSize() {
         return bucketSize;
     }
 
     /**
-     * Returns the number of entries in the bucket
-     * @return The number of entries in the bucket
+     * Returns number of entries in the bucket
+     * @return number of entries in the bucket
      */
     public int getEntriesCount() {
         return entriesCount;

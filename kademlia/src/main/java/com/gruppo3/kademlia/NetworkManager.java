@@ -3,6 +3,7 @@ package com.gruppo3.kademlia;
 import android.util.Log;
 
 import com.gruppo3.kademlia.types.Bucket;
+import com.gruppo3.kademlia.types.RoutingTable;
 import com.gruppo3.smslibrary.types.Peer;
 import com.gruppo3.smslibrary.util.Util;
 import com.gruppo3.smslibrary.SmsManager;
@@ -37,8 +38,8 @@ public class NetworkManager {
     private final int bucketSize = 20; // k; Maximum number of entries in a bucket
     private final int concurrentRequests = 3; // α; Maximum number of asynchronous request
 
-    private String currentNodeId; // currentNodeId is a SHA-1 of the current device phone number in hexadecimal
-    private ArrayList<Bucket> routingTable = new ArrayList<>(routingTableSize); // The routing table is an ArrayList of k-buckets. Has the same size of the nodes ID cardinality
+    private String currentNodeId; // currentNodeId is a SHA-1 of the current device phone number in binary base
+    private RoutingTable routingTable; // A routing table contains k buckets
 
     /**
      * Initial operations to build or join a Kademlia Network.
@@ -52,21 +53,32 @@ public class NetworkManager {
         // Build actual device NodeId
         currentNodeId = Util.sha1Hash(currentPhoneNumber);
 
+        // Create a new routing table
+        routingTable = new RoutingTable(routingTableSize, bucketSize, currentNodeId);
+
+        // Adds a bootstrap node for testing purposes
+        String bootstrapNodePhoneNumber = "+15555215556";
+        String bootstrapNodeId = Util.sha1Hash(bootstrapNodePhoneNumber);
+        Peer bootstrapNode = new Peer(bootstrapNodePhoneNumber, bootstrapNodeId);
+        routingTable.addNode(bootstrapNode);
+        Log.d(tag, "bootstrapNodeId: " + bootstrapNodeId);
+
+        // Secondary bootstrap node (for testing purposes)
+        String secBootstrapNodePhoneNumber = "0499367669";
+        String secBootstrapNodeId = Util.sha1Hash(secBootstrapNodePhoneNumber);
+        Peer secBootstrapNode = new Peer(secBootstrapNodePhoneNumber, secBootstrapNodeId);
+        routingTable.addNode(secBootstrapNode);
+        Log.d(tag, "secBootstrapNodeId: " + secBootstrapNodeId);
+
+        // Printing initial data
         Log.d(tag, "Phone number: " + currentPhoneNumber);
         Log.d(tag, "currentNodeId: " + currentNodeId);
-
-        // Buckets building
-        for (int i = 0; i < routingTableSize; i++) {
-            routingTable.add(new Bucket(bucketSize));
-        }
-
-        // Adds the Bootstrap Node to the Routing Table (for testing purpose)
-        String testPhoneNumber4 = "+15555215554";
-        routingTable.get(0).addRecord(new Peer(testPhoneNumber4, Util.sha1Hash(testPhoneNumber4)));
-
-        Log.d(tag, "Routing table size: " + routingTable.size());
-        Log.d(tag, "Bucket [0] size: " + routingTable.get(0).getBucketSize());
-        Log.d(tag, "Bucket [0] entries count: " + routingTable.get(0).getEntriesCount());
+        Log.d(tag, "Routing table size: " + routingTable.getRoutingTableSize());
+        Log.d(tag, "Buckets size: " + routingTable.getBucketSize());
+        Log.d(tag, "Bucket [0] entries count: " + routingTable.getBucketEntriesCount(0));
+        Log.d(tag, "Bucket [1] entries count: " + routingTable.getBucketEntriesCount(1));
+        Log.d(tag, "Bucket [2] entries count: " + routingTable.getBucketEntriesCount(2));
+        Log.d(tag, "Bucket [3] entries count: " + routingTable.getBucketEntriesCount(3));
     }
 
     /**
@@ -77,13 +89,18 @@ public class NetworkManager {
         return currentNodeId;
     }
 
-    private void nodeLookup(Peer toFind) {
+    private void nodeLookup(Peer peerToFind) {
         // get the bucket closer to toFind
         // Asycn sends a FIND_NODE request to all entries in the bucket
         // These entries looks in their buckets and returns the bucket closer to toFind
         // Update the result list with received ID, keep the best k nodes
         // Reiterate to these k nodes UNTIL the received IDs are further than the result list
         // When the iteration stops we have the closest nodes to toFind
+    }
+
+    private void bootstrapProcess(Peer bootstrapNode) {
+        // Add bootstrap node in one of the k-buckets
+
     }
 
     /**

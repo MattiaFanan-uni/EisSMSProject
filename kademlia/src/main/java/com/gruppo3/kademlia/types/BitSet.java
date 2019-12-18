@@ -11,7 +11,7 @@ public class BitSet extends java.util.BitSet {
     }
 
     public BitSet(int nbits) {
-        super();
+        super(nbits);
     }
 
     /**
