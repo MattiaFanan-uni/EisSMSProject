@@ -1,11 +1,10 @@
-package com.gruppo3.smslibrary;
+package com.gruppo3.kademlia;
+
+import com.gruppo3.smslibrary.util.Util;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.gruppo3.smslibrary.util.Util;
-
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 /**

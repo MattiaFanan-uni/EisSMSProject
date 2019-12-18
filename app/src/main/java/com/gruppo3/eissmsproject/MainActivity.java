@@ -2,10 +2,10 @@ package com.gruppo3.eissmsproject;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,10 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import com.gruppo3.smslibrary.NetworkManager;
+import com.gruppo3.kademlia.NetworkManager;
 import com.gruppo3.smslibrary.SmsManager;
 import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
 import com.gruppo3.smslibrary.types.Message;
@@ -48,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         // # Initial operations #
         showActualPhoneNumber();
-        SmsManager.getInstance().addReceivedMessageListener(new ReceivedMessageListener<Message>() {
+        SmsManager.getInstance().addReceivedMessageListener(new ReceivedMessageListener() {
             @Override
             public void onMessageReceived(Message message) {
-                textView_sourcePeer.setText("Source peer: " + message.getSource().getAddress());
+                textView_sourcePeer.setText("Source peer: " + message.getSource().getPhoneNumber());
                 textView_messagePayload.setText("Message payload: " + message.getPayload());
             }
         });
@@ -76,26 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void btn_sendMessage_onClick(View v) {
         try {
-            Peer destinationPeer = new Peer(editText_destinationPhoneNumber.getText().toString());
-            Message message = new Message(null, destinationPeer, editText_messageText.getText().toString());
-            SmsManager.getInstance().sendMessage(message);
-        }
-        catch (Exception ex) {
-            textView_messagePayload.setText(ex.toString());
-        }
-
-        /*try {
             NetworkManager nm = new NetworkManager(phoneNumber);
             Peer destinationPeer = new Peer(editText_destinationPhoneNumber.getText().toString());
-            nm.inviteDevice(destinationPeer);
         }
-        catch(NoSuchAlgorithmException e)
-        {
-            // TODO Manage exception
+        catch (Exception e) {
+            Log.e("RuntimeException", Log.getStackTraceString(e));
         }
-        catch (Exception ex) {
-            textView_messagePayload.setText(ex.toString());
-        }*/
     }
 
 

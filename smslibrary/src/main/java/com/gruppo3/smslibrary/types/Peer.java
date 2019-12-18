@@ -2,46 +2,85 @@ package com.gruppo3.smslibrary.types;
 
 import androidx.annotation.NonNull;
 import com.gruppo3.smslibrary.exceptions.InvalidAddressException;
+import com.gruppo3.smslibrary.util.Util;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
- * The Peer class represents a client that owns an univocal address.
+ * The Peer class represents a client that owns a phone number and a nodeId (if assigned).
  * @author Mattia Fanan, Giovanni Barca
  */
 public class Peer {
     private static final String ADDRESS_MATCH_EXPR = "\\+?\\d{4,15}"; // To be valid must have (optional) '+' for country code and between 4 and 15 digits
-    private String address;
+    private String phoneNumber, nodeId;
 
     /**
-     * Initializes a newly created Peer object so that has the same address as the argument.
+     * Initializes a newly created Peer object so that has the same phone number as the argument.
      *
-     * @param address String to assign to the peer address
-     * @throws InvalidAddressException If an invalid address is passed
+     * @param phoneNumber String to assign to the peer phone number
+     * @throws InvalidAddressException If an invalid phone number is passed
      */
-    public Peer(@NonNull String address) throws InvalidAddressException {
-        if (!isValidAddress(address)) {
+    public Peer(@NonNull String phoneNumber) throws InvalidAddressException {
+        if (!isValidAddress(phoneNumber)) {
             throw new InvalidAddressException();
         }
 
-        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.nodeId = null;
     }
 
     /**
-     * Gets peer address.
+     * Initializes a newly created Peer object so that has the same phone number and node ID as the argument.
      *
-     * @return A String representing the peer address
+     * @param phoneNumber String to assign to the peer phone number
+     * @param nodeId String to assign to the peer node ID
+     * @throws InvalidAddressException If an invalid phoneNumber or incompatible node ID is passed
      */
-    public String getAddress() {
-        return address;
+    public Peer(@NonNull String phoneNumber, String nodeId) throws InvalidAddressException {
+        if (!isValidAddress(phoneNumber) || !isValidNodeId(phoneNumber, nodeId)) {
+            throw new InvalidAddressException();
+        }
+
+        this.phoneNumber = phoneNumber;
+        this.nodeId = nodeId;
     }
 
     /**
-     * Check if the passed address is valid.
+     * Gets peer phone number.
      *
-     * @param address Address to be checked
-     * @return <code>True</code> if address is valid, <code>false</code> otherwise
+     * @return A String representing the peer phone number
      */
-    private boolean isValidAddress(String address) {
-        return address.matches(ADDRESS_MATCH_EXPR);
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Gets peer node ID.
+     *
+     * @return A String representing the peer node ID
+     */
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    /**
+     * Check if the passed phone number is valid.
+     *
+     * @param phoneNumber String representing the phone number to be checked
+     * @return <code>True</code> if phone number is valid, <code>false</code> otherwise
+     */
+    private boolean isValidAddress(String phoneNumber) {
+        return phoneNumber.matches(ADDRESS_MATCH_EXPR);
+    }
+
+    /**
+     * Check if given nodeId is compatible to the phone number.
+     * @param phoneNumber String representing the phone number to be checked
+     * @param nodeId String representing the node ID to compare (sha1 encrypted)
+     * @return <code>True</code> if node id is valid, <code>false</code> otherwise
+     */
+    private boolean isValidNodeId(String phoneNumber, String nodeId) {
+        return Util.sha1Hash(phoneNumber).equals(nodeId);
     }
 
     /**
@@ -60,16 +99,6 @@ public class Peer {
 
         Peer peer = (Peer)obj;
 
-        return address.equals(peer.getAddress());
-    }
-
-    /**
-     * Returns an hash code for this peer. The hash code for a Peer object is computed as <pre>31 * 7 * address.hashCode()</pre>
-     *
-     * @return An hash code value for this peer
-     */
-    @Override
-    public int hashCode() {
-        return 31 * 7 * address.hashCode();
+        return phoneNumber.equals(peer.getPhoneNumber()) && phoneNumber.equals(peer.getNodeId());
     }
 }

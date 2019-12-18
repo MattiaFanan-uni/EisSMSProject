@@ -1,4 +1,4 @@
-package com.gruppo3.smslibrary.types;
+package com.gruppo3.kademlia.types;
 
 /**
  * Class extending the <code>java.util.BitSet</code>.
@@ -6,6 +6,14 @@ package com.gruppo3.smslibrary.types;
  * @author Giovanni Barca
  */
 public class BitSet extends java.util.BitSet {
+    public BitSet() {
+        super();
+    }
+
+    public BitSet(int nbits) {
+        super();
+    }
+
     /**
      * This method reinitialize this BitSet and fills it with the bitSetString argument chars.
      * @param bitSetString The string to be parsed to this BitSet

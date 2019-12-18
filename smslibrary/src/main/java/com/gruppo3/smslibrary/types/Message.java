@@ -18,7 +18,7 @@ public class Message {
 
     private Peer source;
     private Peer destination;
-    private char header;
+    private String header;
     private String payload;
 
     /**
@@ -31,6 +31,7 @@ public class Message {
      * @param payload     String containing the data to be sent
      * @throws InvalidMessageException If an invalid Payload is passed
      */
+    /*@Deprecated
     public Message(Peer source, Peer destination, String payload) throws InvalidMessageException {
         if (!isValidPayload(payload))
             throw new InvalidMessageException();
@@ -38,7 +39,7 @@ public class Message {
         this.source = source;
         this.destination = destination;
         this.payload = payload;
-    }
+    }*/
 
     /**
      * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
@@ -47,15 +48,12 @@ public class Message {
      * @param source      Peer representing the message sender
      * @param destination Peer representing the message recipient
      * @param header     String containing the header data to be sent
-     * @throws InvalidMessageException If an invalid Payload is passed
      */
-    public Message(Peer source, Peer destination, char header) throws InvalidMessageException {
-        if (!isValidPayload(payload))
-            throw new InvalidMessageException();
-
+    public Message(Peer source, Peer destination, String header) throws InvalidMessageException {
         this.source = source;
         this.destination = destination;
         this.header = header;
+        this.payload = ""; // Set to empty string to avoid "null" strings in messages
     }
 
     /**
@@ -68,7 +66,7 @@ public class Message {
      * @param payload     String containing the data to be sent
      * @throws InvalidMessageException If an invalid Payload is passed
      */
-    public Message(Peer source, Peer destination, char header, String payload) throws InvalidMessageException {
+    public Message(Peer source, Peer destination, String header, String payload) throws InvalidMessageException {
         if (!isValidPayload(payload))
             throw new InvalidMessageException();
 
@@ -96,10 +94,10 @@ public class Message {
         if (header.charAt(0) != CONTROL_STAMP)
             throw new InvalidMessageException();
 
-        char headerChar = header.charAt(1);
+        header = header.substring(1);
         String payload = body.substring(body.indexOf('#') + 1);
 
-        return new Message(source, null, headerChar, payload);
+        return new Message(source, null, header, payload);
     }
 
     /**
@@ -134,7 +132,7 @@ public class Message {
      *
      * @return A String containing the message header
      */
-    public char getHeader() {
+    public String getHeader() {
         return header;
     }
 
@@ -157,8 +155,10 @@ public class Message {
         String stringRep = "Message:";
         stringRep += " ---Header:" + header;
         stringRep += " ---Payload:" + payload;
-        stringRep += " ---Destination:" + destination.getAddress();
-        stringRep += " ---Source:" + source.getAddress();
+        stringRep += " ---Destination:" + destination.getPhoneNumber();
+        stringRep += " ---Destination ID:" + destination.getNodeId();
+        stringRep += " ---Source:" + source.getPhoneNumber();
+        stringRep += " ---Source ID:" + destination.getNodeId();
 
         return stringRep;
     }

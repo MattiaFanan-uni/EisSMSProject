@@ -1,10 +1,10 @@
-package com.gruppo3.smslibrary;
+package com.gruppo3.kademlia;
+
+import com.gruppo3.kademlia.types.BitSet;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.gruppo3.smslibrary.types.BitSet;
 
 /**
  * BitSet class junit testing

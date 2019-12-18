@@ -16,15 +16,19 @@ public class Util {
      * Converts the given String to a 160bit length hash using SHA-1 algorithm.
      * @param toEncrypt String to get the hash from
      * @return The hash of the passed parameter
-     * @throws NoSuchAlgorithmException If no Provider supports a MessageDigestSpi implementation for the specified algorithm
      */
-    public static String sha1Hash(String toEncrypt) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-1");
-        byte[] bytes = toEncrypt.getBytes(StandardCharsets.UTF_8);
-        digest.update(bytes, 0, bytes.length);
-        bytes = digest.digest();
+    public static String sha1Hash(String toEncrypt) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            byte[] bytes = toEncrypt.getBytes(StandardCharsets.UTF_8);
+            digest.update(bytes, 0, bytes.length);
+            bytes = digest.digest();
 
-        return convertBytesToHex(bytes);
+            return convertBytesToHex(bytes);
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
