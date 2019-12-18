@@ -12,7 +12,7 @@ import com.gruppo3.smslibrary.types.Message;
  * @author Mattia Fanan, Giovanni Barca
  */
 public class SmsManager {
-    private static ReceivedMessageListener<Message> receivedMessageListener;
+    private static ReceivedMessageListener receivedMessageListener;
     private static SmsManager instance;
 
     /**
@@ -49,7 +49,7 @@ public class SmsManager {
      *
      * @param receivedMessageListener The listener to wake up when a message is received
      */
-    public void addReceivedMessageListener(ReceivedMessageListener<Message> receivedMessageListener) {
+    public void addReceivedMessageListener(ReceivedMessageListener receivedMessageListener) {
         this.receivedMessageListener = receivedMessageListener;
     }
 
@@ -74,7 +74,7 @@ public class SmsManager {
         if (message.getDestination() == null)
             throw new InvalidPeerException();
 
-        android.telephony.SmsManager.getDefault().sendTextMessage(message.getDestination().getAddress(), null, message.getSDU(), null, null);
+        android.telephony.SmsManager.getDefault().sendTextMessage(message.getDestination().getPhoneNumber(), null, message.getSDU(), null, null);
     }
 
     /**
