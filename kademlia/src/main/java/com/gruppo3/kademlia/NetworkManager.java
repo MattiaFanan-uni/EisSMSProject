@@ -2,7 +2,6 @@ package com.gruppo3.kademlia;
 
 import android.util.Log;
 
-import com.gruppo3.kademlia.types.Bucket;
 import com.gruppo3.kademlia.types.RoutingTable;
 import com.gruppo3.smslibrary.types.Peer;
 import com.gruppo3.smslibrary.util.Util;
@@ -11,7 +10,6 @@ import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
 import com.gruppo3.smslibrary.types.Message;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 public class NetworkManager {
     enum KademliaCommands {
@@ -100,7 +98,6 @@ public class NetworkManager {
 
     private void bootstrapProcess(Peer bootstrapNode) {
         // Add bootstrap node in one of the k-buckets
-
     }
 
     /**

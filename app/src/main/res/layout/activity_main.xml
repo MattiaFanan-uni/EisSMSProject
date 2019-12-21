@@ -6,38 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView_actualPhoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="200dp"
-        android:text="Actual phone number: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView_sourcePeer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="160dp"
-        android:text="Source peer: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView_messagePayload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="120dp"
-        android:text="Message payload: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <EditText
-        android:id="@+id/editText_destinationPhoneNumber"
+        android:id="@+id/editTextDestinationPhoneNumber"
         android:layout_width="360dp"
         android:layout_height="44dp"
         android:layout_marginStart="28dp"
@@ -45,14 +15,14 @@
         android:layout_marginEnd="28dp"
         android:ems="10"
         android:hint="Recipient"
-        android:inputType="textPersonName"
+        android:inputType="phone"
         android:text="5556"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText_messageText"
+        android:id="@+id/editTextMessageText"
         android:layout_width="356dp"
         android:layout_height="41dp"
         android:layout_marginStart="28dp"
@@ -64,10 +34,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_destinationPhoneNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDestinationPhoneNumber" />
 
     <Button
-        android:id="@+id/btn_sendMessage"
+        android:id="@+id/btnSendMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
@@ -76,7 +46,37 @@
         android:text="SEND MESSAGE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_messageText"
-        android:onClick="btn_sendMessage_onClick" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextMessageText"
+        android:onClick="btnSendMessageOnClick" />
+
+    <TextView
+        android:id="@+id/textViewActualPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="200dp"
+        android:text="Actual phone number: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewSourcePeer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="160dp"
+        android:text="Source peer: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewMessagePayload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="120dp"
+        android:text="Message payload: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

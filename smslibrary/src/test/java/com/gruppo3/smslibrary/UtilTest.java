@@ -26,17 +26,4 @@ public class UtilTest {
     public void stringToSha1Hash() {
         Assert.assertEquals(validEncryptedSha1String, Util.sha1Hash(validDecryptedSha1String));
     }
-
-    // ## convertBytesToHex tests ##
-    private static final byte[] validByteArray = new byte[] {1, 2, 10, 11};
-    private static final String validHex = "01020A0B";
-
-    /**
-     * Util.convertBytesToHex(byte[]) method testing
-     * Bytes to Hex conversion
-     */
-    /*@Test
-    public void validBytesToHex() {
-        Assert.assertEquals(validHex, Util.convertBytesToHex(validByteArray));
-    }*/
 }

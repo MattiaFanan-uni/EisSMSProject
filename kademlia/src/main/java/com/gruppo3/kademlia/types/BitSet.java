@@ -43,12 +43,12 @@ public class BitSet extends java.util.BitSet {
      */
     public static java.util.BitSet hexToBitSet(String hexValue) throws IllegalArgumentException {
         // Upper casing hex string to avoid parsing errors
-        hexValue = hexValue.toUpperCase();
+        String hexValueUpperCase = hexValue.toUpperCase();
 
         // Values are false by default. Setting instead only true values (where the bit is equal to 1)
-        boolean[] tempBooleanArray = new boolean[hexValue.length() * 4];
+        boolean[] tempBooleanArray = new boolean[hexValueUpperCase.length() * 4];
 
-        for (int i = 0; i < hexValue.length(); i++) {
+        for (int i = 0; i < hexValueUpperCase.length(); i++) {
             switch (hexValue.charAt(i)) {
                 case '1':
                     tempBooleanArray[(i * 4) + 3] = true;
