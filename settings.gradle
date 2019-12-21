@@ -1,2 +1,2 @@
-include ':app', ':smslibrary'
+include ':app', ':smslibrary', ':kademlia'
 rootProject.name='EisSMSProject'

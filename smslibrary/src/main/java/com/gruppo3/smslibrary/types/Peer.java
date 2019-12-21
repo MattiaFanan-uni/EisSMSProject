@@ -11,7 +11,7 @@ import com.gruppo3.smslibrary.util.Util;
 public class Peer {
     private static final String ADDRESS_MATCH_EXPR = "\\+?\\d{4,15}"; // To be valid must have (optional) '+' for country code and between 4 and 15 digits
     private String phoneNumber;
-    private String nodeId; // Sha1 encrypted in hexadecimal
+    private String nodeId; // Sha1 encrypted
 
     /**
      * Initializes a newly created Peer object so that has the same phone number as the argument.
