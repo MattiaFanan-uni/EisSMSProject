@@ -1,8 +1,10 @@
 package com.gruppo3.smslibrary.exceptions;
 
 /**
- * InvalidAddressException class
  * @author Mattia Fanan
+ * @version 1
+ *
+ * InvalidAddressException class.
  */
 public class InvalidAddressException extends RuntimeException {
     public InvalidAddressException() {

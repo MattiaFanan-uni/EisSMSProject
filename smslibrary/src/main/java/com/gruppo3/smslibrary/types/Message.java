@@ -1,54 +1,44 @@
 package com.gruppo3.smslibrary.types;
 
-import com.gruppo3.smslibrary.exceptions.InvalidAddressException;
-import com.gruppo3.smslibrary.exceptions.InvalidMessageException;
+import androidx.annotation.NonNull;
 
 /**
- * The Message class represents a data-set exchanged between a Peer network.
+ * @author Mattia Fanan. Reviewed by Giovanni Barca. Corrected by Giovanni Barca.
+ * @version 1
  *
- * @author Mattia Fanan, Giovanni Barca
+ * The Message class represents a data-set exchanged between a Peer network.
  */
 public class Message {
     /**
      * Maximum length of the payload. Default is 158.
      */
-    public static final int MAX_PAYLOAD_LENGTH = 160 - 2; // Control stamp + '#' header - payload separator
+    // One sms can be no longer than 160 chars. We use two service chars (CONTROL_STAMP and PAYLOAD_SEPARATOR) so the maximum length can be 160-2 = 158.
+    public static final int MAX_PAYLOAD_LENGTH = 160 - 2;
 
-    private static final char CONTROL_STAMP = '&';
+    /**
+     * Starting char that every message sent by/to this library has.
+     */
+    public static final char CONTROL_STAMP = '&';
+
+    /**
+     * Char that separates header from payload.
+     */
+    public static final char PAYLOAD_SEPARATOR = '#';
 
     private Peer source;
     private Peer destination;
     private String header;
     private String payload;
 
-    /*
-     * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
-     * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
-     *
-     * @param source      Peer representing the message sender
-     * @param destination Peer representing the message recipient
-     * @param payload     String containing the data to be sent
-     * @throws InvalidMessageException If an invalid Payload is passed
-    @Deprecated
-    public Message(Peer source, Peer destination, String payload) throws InvalidMessageException {
-        if (!isValidPayload(payload))
-            throw new InvalidMessageException();
-
-        this.source = source;
-        this.destination = destination;
-        this.payload = payload;
-    }
-    */
-
     /**
      * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
      * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
      *
-     * @param source      Peer representing the message sender
+     * @param source Peer representing the message sender
      * @param destination Peer representing the message recipient
-     * @param header     String containing the header data to be sent
+     * @param header String containing the header data to be sent
      */
-    public Message(Peer source, Peer destination, String header) throws InvalidMessageException {
+    public Message(Peer source, Peer destination, @NonNull String header) {
         this.source = source;
         this.destination = destination;
         this.header = header;
@@ -59,15 +49,15 @@ public class Message {
      * Initializes a newly created Message object so that has the same parameters as the arguments.<br>
      * Payload is valid if its length is less or equal to <code>MAX_PAYLOAD_LENGTH</code>.
      *
-     * @param source      Peer representing the message sender
+     * @param source Peer representing the message sender
      * @param destination Peer representing the message recipient
-     * @param header     String containing the header data to be sent
-     * @param payload     String containing the data to be sent
-     * @throws InvalidMessageException If an invalid Payload is passed
+     * @param header String containing the header data to be sent
+     * @param payload String containing the data to be sent
+     * @throws IllegalArgumentException If an invalid Payload is passed
      */
-    public Message(Peer source, Peer destination, String header, String payload) throws InvalidMessageException {
+    public Message(Peer source, Peer destination, @NonNull String header, @NonNull String payload) throws IllegalArgumentException {
         if (!isValidPayload(payload))
-            throw new InvalidMessageException();
+            throw new IllegalArgumentException("Payload can't be longer than MAX_PAYLOAD_LENGTH.");
 
         this.source = source;
         this.destination = destination;
@@ -76,22 +66,20 @@ public class Message {
     }
 
     /**
-     * Parse a system SmsMessage to custom Message. A message is valid if the first char of the body is the <code>CONTROL_STAMP</code>.
+     * Parse a system SmsMessage to custom Message.<br>
+     * A message is valid if the first char of the body is the <code>CONTROL_STAMP</code>.
      *
-     * @param sourceAddress String containing the source address
-     * @param body          String containing the SmsMessage body text
+     * @param sourcePhoneNumber String containing the source phone number
+     * @param body String containing the SmsMessage body text
      * @return Message parsed from system SmsMessage
-     * @throws InvalidAddressException If an invalid source address is given
-     * @throws InvalidMessageException If an invalid message is given
+     * @throws IllegalArgumentException If an invalid message is given
      */
-    public static Message buildFromSDU(String sourceAddress, String body) throws InvalidAddressException, InvalidMessageException {
-        Peer source = new Peer(sourceAddress);
-        String header = body.substring(0, body.indexOf('#'));
+    public static Message buildFromSDU(@NonNull String sourcePhoneNumber, @NonNull String body) throws IllegalArgumentException {
+        if (body.charAt(0) != CONTROL_STAMP)
+            throw new IllegalArgumentException("First char of the message body isn't equal to the CONTROL_STAMP ('" + CONTROL_STAMP + "')");
 
-        if (header.charAt(0) != CONTROL_STAMP)
-            throw new InvalidMessageException();
-
-        header = header.substring(1);
+        Peer source = new Peer(sourcePhoneNumber);
+        String header = body.substring(1, body.indexOf('#'));
         String payload = body.substring(body.indexOf('#') + 1);
 
         return new Message(source, null, header, payload);
@@ -99,10 +87,11 @@ public class Message {
 
     /**
      * Gets a String containing the message header joined with the message payload.
+     *
      * @return A String with the header and the payload
      */
     public String getSDU() {
-        return CONTROL_STAMP + getHeader() + "#" + getPayload();
+        return CONTROL_STAMP + getHeader() + PAYLOAD_SEPARATOR + getPayload();
     }
 
     /**
@@ -124,7 +113,7 @@ public class Message {
     }
 
     /**
-     * Gets a String containing the message header
+     * Gets a String containing the message header.
      *
      * @return A String containing the message header
      */
@@ -133,7 +122,7 @@ public class Message {
     }
 
     /**
-     * Gets a String containing the message payload
+     * Gets a String containing the message payload.
      *
      * @return A String containing the message payload
      */
@@ -165,7 +154,7 @@ public class Message {
      * @param payload Payload to be checked
      * @return <code>True</code> if payload is valid, <code>false</code> otherwise
      */
-    private boolean isValidPayload(String payload) {
+    private boolean isValidPayload(@NonNull String payload) {
         return payload.length() <= MAX_PAYLOAD_LENGTH;
     }
 }

@@ -2,14 +2,16 @@ package com.gruppo3.smslibrary;
 
 import android.util.Log;
 
-import com.gruppo3.smslibrary.exceptions.InvalidMessageException;
-import com.gruppo3.smslibrary.exceptions.InvalidPeerException;
+import androidx.annotation.NonNull;
+
 import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
 import com.gruppo3.smslibrary.types.Message;
 
 /**
+ * @author Mattia Fanan. Reviewed by Giovanni Barca. Corrected by Giovanni Barca.
+ * @version 1
+ *
  * Singleton class that manages SMS operations via smslibrary data-types, interfacing with system SmsManager library.
- * @author Mattia Fanan, Giovanni Barca
  */
 public class SmsManager {
     private static ReceivedMessageListener receivedMessageListener;
@@ -64,15 +66,11 @@ public class SmsManager {
      * Sends the message passed in the argument to the Peer specified in the Message properties.<br>
      * Note: Using this method requires that your app has the <code>Manifest.permission.SEND_SMS</code> permission.
      * @param message Message to be sent
-     * @throws InvalidMessageException If the message is null
-     * @throws InvalidPeerException If the destination peer is null
+     * @throws IllegalArgumentException If the destination peer is null
      */
-    public void sendMessage(Message message) throws InvalidMessageException, InvalidPeerException {
-        if (message == null)
-            throw new InvalidMessageException();
-
+    public void sendMessage(@NonNull Message message) throws IllegalArgumentException {
         if (message.getDestination() == null)
-            throw new InvalidPeerException();
+            throw new IllegalArgumentException();
 
         android.telephony.SmsManager.getDefault().sendTextMessage(message.getDestination().getPhoneNumber(), null, message.getSDU(), null, null);
     }
@@ -81,12 +79,12 @@ public class SmsManager {
      * Handles the received (and parsed) message and sends it to the <code>receivedMessageListener</code>
      * @param message Message to be handled and delegated to the registered listener
      */
-    public void handleMessage(Message message) {
+    public void handleMessage(@NonNull Message message) {
         try {
             receivedMessageListener.onMessageReceived(message);
         }
         catch (Exception ex) {
-            Log.e("ERROR", ex.toString()); // TODO: Handle exception
+            Log.e("EIS", ex.toString()); // TODO: Handle exception
         }
     }
 }

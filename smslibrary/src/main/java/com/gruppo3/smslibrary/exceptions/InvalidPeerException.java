@@ -1,8 +1,10 @@
 package com.gruppo3.smslibrary.exceptions;
 
 /**
- * InvalidPeerException class
  * @author Mattia Fanan
+ * @version 1
+ *
+ * InvalidPeerException class.
  */
 public class InvalidPeerException extends RuntimeException {
     public InvalidPeerException() {

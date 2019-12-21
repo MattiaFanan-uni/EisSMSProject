@@ -59,7 +59,7 @@ public class SMSPeerTest {
     @Test
     public void getAddressTest() throws Exception {
         Peer peer = new Peer(validAddress);
-        Assert.assertEquals(peer.getAddress(), validAddress);
+        Assert.assertEquals(peer.getPhoneNumber(), validAddress);
     }
 
 }

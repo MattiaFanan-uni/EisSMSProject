@@ -4,20 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.telephony.SmsMessage;
 import android.util.Log;
+import android.telephony.SmsMessage;
 
 import com.gruppo3.smslibrary.SmsManager;
 import com.gruppo3.smslibrary.types.Message;
 
 /**
+ * @author Mattia Fanan
+ * @version 0.1
+ *
  * This class implements the method that is called when a message is received.
- * @author Mattia Fanan, Giovanni Barca
  */
 public class SmsReceiver extends BroadcastReceiver {
 
     /**
-     * Gets an incoming {@link SmsMessage SmsMessage} and parses it to an {@link com.gruppo3.smslibrary.types.Message Message}.<br>
+     * Gets an incoming {@link SmsMessage SmsMessage} and parses it to a {@link com.gruppo3.smslibrary.types.Message Message}.<br>
      * The parsed message is sent to {@link SmsManager#handleMessage(Message)}.
      *
      * @param context Received message context
@@ -36,12 +38,11 @@ public class SmsReceiver extends BroadcastReceiver {
                 defaultMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
 
             if (defaultMessage != null) {
-                // Try to parse defaultMessage to smslibrary.Message
                 try {
-                    Message message = Message.buildFromSDU(defaultMessage.getDisplayOriginatingAddress(), defaultMessage.getDisplayMessageBody());
-                    SmsManager.getInstance().handleMessage(message);
+                    Message message = Message.buildFromSDU(defaultMessage.getDisplayOriginatingAddress(), defaultMessage.getDisplayMessageBody()); // Parses SmsMessage to Message
+                    SmsManager.getInstance().handleMessage(message); // Passes Message to handleMessage that calls the listener registered by the user
                 } catch (Exception e) {
-                    Log.d("PDU","pdu error"); // TODO: Handle exception
+                    Log.e("EIS", Log.getStackTraceString(e)); // TODO: Handle exception
                 }
             }
         }

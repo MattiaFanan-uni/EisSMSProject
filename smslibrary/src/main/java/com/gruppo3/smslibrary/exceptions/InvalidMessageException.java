@@ -1,8 +1,10 @@
 package com.gruppo3.smslibrary.exceptions;
 
 /**
- * InvalidMessageException class
  * @author Mattia Fanan
+ * @version 1
+ *
+ * InvalidMessageException class.
  */
 public class InvalidMessageException extends RuntimeException {
     public InvalidMessageException() {

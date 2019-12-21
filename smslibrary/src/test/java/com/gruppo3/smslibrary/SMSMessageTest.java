@@ -75,7 +75,7 @@ public class SMSMessageTest {
         String SDU = message.getSDU();
 
         try {
-            Message rebuildMessage = Message.buildFromSDU(validPeer.getAddress(), SDU);
+            Message rebuildMessage = Message.buildFromSDU(validPeer.getPhoneNumber(), SDU);
 
             //test equivalence of all fields
             Assert.assertEquals(rebuildMessage.getPayload(), message.getPayload());
@@ -97,8 +97,8 @@ public class SMSMessageTest {
         Message message = new Message(validPeer, validPeer, validPayload);
         String expected = "Message:";
         expected = expected + message.getPayload();
-        expected = expected + " ---Destination:" + message.getDestination().getAddress();
-        expected = expected + " ---Source:" + message.getSource().getAddress();
+        expected = expected + " ---Destination:" + message.getDestination().getPhoneNumber();
+        expected = expected + " ---Source:" + message.getSource().getPhoneNumber();
         Assert.assertEquals(expected, message.toString());
     }
 

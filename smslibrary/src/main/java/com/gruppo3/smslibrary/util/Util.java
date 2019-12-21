@@ -2,14 +2,17 @@ package com.gruppo3.smslibrary.util;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Class containing all methods needed to accomplish general operations.
- *
  * @author Giovanni Barca
+ * @version 1
+ *
+ * Class containing all methods needed to accomplish general operations.
  */
 public class Util {
     final private static char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -19,22 +22,27 @@ public class Util {
      * @param toEncrypt String to get the hash from
      * @return The hash of the passed parameter
      */
-    public static String sha1Hash(String toEncrypt) {
+    public static String sha1Hash(@NonNull String toEncrypt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             byte[] bytes = toEncrypt.getBytes(StandardCharsets.UTF_8);
             digest.update(bytes, 0, bytes.length);
             bytes = digest.digest();
 
-            return convertBytesToBinaryString(bytes);
+            return parseBytesToBinaryString(bytes);
         }
         catch (NoSuchAlgorithmException e) {
-            Log.e("smslibrary exception", Log.getStackTraceString(e));
+            Log.e("EIS", Log.getStackTraceString(e));
             return null;
         }
     }
 
-    private static String convertBytesToBinaryString(byte[] bytes) {
+    /**
+     * Parsed the given array of bytes to a String containing the corresponding binary value.
+     * @param bytes Bytes array to be parsed
+     * @return A String containing the binary value of the bytes array argument
+     */
+    private static String parseBytesToBinaryString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte bytesElement : bytes) {
             String byteToBitString = String.format("%8s", Integer.toBinaryString(bytesElement & 0xFF)).replace(' ', '0');
