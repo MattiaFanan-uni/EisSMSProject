@@ -9,10 +9,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * Class containing all methods needed to accomplish general operations.
+ *
  * @author Giovanni Barca
  * @version 1
- *
- * Class containing all methods needed to accomplish general operations.
  */
 public class Util {
     final private static char[] hexArray = "0123456789ABCDEF".toCharArray();

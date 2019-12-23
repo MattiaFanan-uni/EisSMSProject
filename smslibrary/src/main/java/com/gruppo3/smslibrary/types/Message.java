@@ -3,10 +3,10 @@ package com.gruppo3.smslibrary.types;
 import androidx.annotation.NonNull;
 
 /**
+ * The Message class represents a data-set exchanged between a Peer network.
+ *
  * @author Mattia Fanan. Reviewed by Giovanni Barca. Corrected by Giovanni Barca.
  * @version 1
- *
- * The Message class represents a data-set exchanged between a Peer network.
  */
 public class Message {
     /**
@@ -76,7 +76,7 @@ public class Message {
      */
     public static Message buildFromSDU(@NonNull String sourcePhoneNumber, @NonNull String body) throws IllegalArgumentException {
         if (body.charAt(0) != CONTROL_STAMP)
-            throw new IllegalArgumentException("First char of the message body isn't equal to the CONTROL_STAMP ('" + CONTROL_STAMP + "')");
+            throw new IllegalArgumentException("First char of the message body isn't equal to the CONTROL_STAMP ('" + CONTROL_STAMP + "').");
 
         Peer source = new Peer(sourcePhoneNumber);
         String header = body.substring(1, body.indexOf('#'));

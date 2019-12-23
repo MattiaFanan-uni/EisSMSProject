@@ -11,10 +11,10 @@ import com.gruppo3.smslibrary.SmsManager;
 import com.gruppo3.smslibrary.types.Message;
 
 /**
- * @author Mattia Fanan
- * @version 0.1
- *
  * This class implements the method that is called when a message is received.
+ *
+ * @author Mattia Fanan
+ * @version 1
  */
 public class SmsReceiver extends BroadcastReceiver {
 

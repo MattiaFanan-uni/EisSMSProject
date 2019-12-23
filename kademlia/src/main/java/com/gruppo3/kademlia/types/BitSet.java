@@ -1,9 +1,10 @@
 package com.gruppo3.kademlia.types;
 
 /**
- * Class extending the <code>java.util.BitSet</code>.
+ * Class extending the {@link java.util.BitSet BitSet} class.
  *
  * @author Giovanni Barca
+ * @version 0.1
  */
 public class BitSet extends java.util.BitSet {
     public BitSet() {
@@ -19,29 +20,26 @@ public class BitSet extends java.util.BitSet {
      * @param bitSetString The string to be parsed to this BitSet
      * @throws IllegalArgumentException If the bitSetString argument contains other chars besides 0 and 1
      */
-    public static java.util.BitSet set(String bitSetString) throws IllegalArgumentException {
-        BitSet bitSet = new BitSet();
-
+    public void set(String bitSetString) throws IllegalArgumentException {
         for (int i = 0; i < bitSetString.length(); i++) {
             if (bitSetString.charAt(i) == '0')
-                bitSet.set(i, false);
+                this.set(i, false);
             else if (bitSetString.charAt(i) == '1')
-                bitSet.set(i, true);
+                this.set(i, true);
             else
                 throw new IllegalArgumentException();
         }
-
-        return bitSet;
     }
 
     /**
-     * Converts an hexadecimal value passed via a String to its corresponding BitSet values.<br>
-     * The hexadecimal value doesn't need the leading <code>0x</code> and it works with both lower and upper case letters.
-     * @param hexValue String representing the hexadecimal value to be converted
-     * @return A BitSet of the converted hexadecimal String argument
+     * Parses an hexadecimal value passed via a String to its corresponding BitSet values.<br>
+     * The hexadecimal value doesn't need the leading '<code>0x</code>' and it works with both lower and upper case letters.
+     * @param hexValue String representing the hexadecimal value to be parsed
+     * @return A BitSet of the parsed hexadecimal String argument
      * @throws IllegalArgumentException if the hexValue argument is not in the range of hexadecimal values (0-F)
      */
-    public static java.util.BitSet hexToBitSet(String hexValue) throws IllegalArgumentException {
+    // TODO: Search for a more-readable code solution
+    public static java.util.BitSet hexStringToBitSet(String hexValue) throws IllegalArgumentException {
         // Upper casing hex string to avoid parsing errors
         String hexValueUpperCase = hexValue.toUpperCase();
 
@@ -140,7 +138,7 @@ public class BitSet extends java.util.BitSet {
      * @param booleanArray Boolean array to be converted
      * @return The converted boolean array
      */
-    protected static java.util.BitSet booleanArrayToBitSet(boolean[] booleanArray) {
+    public static java.util.BitSet booleanArrayToBitSet(boolean[] booleanArray) {
         java.util.BitSet tempBitSet = new java.util.BitSet(booleanArray.length);
 
         for (int i = 0; i < booleanArray.length; i++)

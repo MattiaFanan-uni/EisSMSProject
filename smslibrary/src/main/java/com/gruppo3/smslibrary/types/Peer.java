@@ -5,10 +5,10 @@ import androidx.annotation.NonNull;
 import com.gruppo3.smslibrary.util.Util;
 
 /**
+ * The Peer class represents a client that owns a phone number and a nodeId (optional).
+ *
  * @author Mattia Fanan. Reviewed by Giovanni Barca. Corrected by Giovanni Barca.
  * @version 1
- *
- * The Peer class represents a client that owns a phone number and a nodeId (optional).
  */
 public class Peer {
     private static final String ADDRESS_MATCH_EXPR = "\\+?\\d{4,15}"; // To be valid must have (optional) '+' for country code and between 4 and 15 digits

@@ -8,10 +8,10 @@ import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
 import com.gruppo3.smslibrary.types.Message;
 
 /**
+ * Singleton class that manages SMS operations via smslibrary data-types, interfacing with system SmsManager library.
+ *
  * @author Mattia Fanan. Reviewed by Giovanni Barca. Corrected by Giovanni Barca.
  * @version 1
- *
- * Singleton class that manages SMS operations via smslibrary data-types, interfacing with system SmsManager library.
  */
 public class SmsManager {
     private static ReceivedMessageListener receivedMessageListener;

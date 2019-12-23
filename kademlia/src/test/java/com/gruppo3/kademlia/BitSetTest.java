@@ -52,7 +52,7 @@ public class BitSetTest {
      */
     @Test
     public void testHexToBitSet() {
-        Assert.assertEquals(validBitSet, BitSet.hexToBitSet(validHexString));
+        Assert.assertEquals(validBitSet, BitSet.hexStringToBitSet(validHexString));
     }
 
     /**
