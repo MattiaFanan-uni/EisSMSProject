@@ -64,9 +64,6 @@ public class RoutingTable {
         int bucketIndex = compareNodeIds(node);
         if (bucketIndex != -1) // If the given node has not the currentNodeId
             routingTable[bucketIndex].addRecord(node);
-        else {
-            // Do something
-        }
 
         return bucketIndex;
     }
