@@ -1,7 +1,5 @@
 package com.gruppo3.smslibrary;
 
-import com.gruppo3.smslibrary.exceptions.InvalidMessageException;
-import com.gruppo3.smslibrary.exceptions.InvalidPeerException;
 import com.gruppo3.smslibrary.types.Message;
 import com.gruppo3.smslibrary.types.Peer;
 
@@ -27,7 +25,7 @@ public class SMSMessageTest {
         Message message = null;
         try {
             message = new Message(validPeer, validPeer, validPayload);
-        } catch (InvalidMessageException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't throw InvalidMessageException");
         }
 
@@ -42,7 +40,7 @@ public class SMSMessageTest {
         Message message = null;
         try {
             message = new Message(null, validPeer, validPayload);
-        } catch (InvalidMessageException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't throw InvalidMessageException");
         }
 
@@ -57,7 +55,7 @@ public class SMSMessageTest {
         Message message = null;
         try {
             message = new Message(validPeer, null, validPayload);
-        } catch (InvalidMessageException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't throw InvalidMessageException");
         }
 
@@ -84,10 +82,8 @@ public class SMSMessageTest {
             //when a message is received destination is implicitly me then null
             Assert.assertNull(rebuildMessage.getDestination());
 
-        } catch (InvalidMessageException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("shouldn't throw InvalidMessageException");
-        } catch (InvalidPeerException e) {
-            Assert.fail("shouldn't throw InvalidPeerException");
         }
     }
 

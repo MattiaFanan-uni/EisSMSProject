@@ -1,6 +1,5 @@
 package com.gruppo3.smslibrary;
 
-import com.gruppo3.smslibrary.exceptions.InvalidMessageException;
 import com.gruppo3.smslibrary.types.Message;
 import com.gruppo3.smslibrary.types.Peer;
 
@@ -29,7 +28,7 @@ public class SMSMessageDataTest {
     public void setUp() {
         try {
             new Message(null, new Peer(SMSPeerTest.getValidAddress()), validData);
-        } catch (InvalidMessageException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("Should not throw InvalidMessageException exception");
         }
     }
@@ -38,13 +37,13 @@ public class SMSMessageDataTest {
     public void maxData() {
         try {
             new Message(null, new Peer(SMSPeerTest.getValidAddress()), maxData);
-        } catch (InvalidMessageException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("Should not throw InvalidMessageException exception");
         }
     }
 
-    @Test(expected = InvalidMessageException.class)
-    public void tooMuchData() throws InvalidMessageException {
+    @Test(expected = IllegalArgumentException.class)
+    public void tooMuchData() throws IllegalArgumentException {
         new Message(null, new Peer(SMSPeerTest.getValidAddress()), tooMuchData);
     }
 

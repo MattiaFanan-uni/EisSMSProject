@@ -16,6 +16,7 @@ public class Bucket {
     private ArrayList<Peer> nodes; // Bucket entries
     private ArrayList<Peer> replacementCache = new ArrayList<Peer>(); // Replacement cache if bucket is full
 
+    private static boolean firstRun = true;
     private static int bucketSize; // Size of the bucket
     private int entriesCount; // Number of "recorded" entries
 
@@ -28,7 +29,7 @@ public class Bucket {
         if (bucketSize < 1)
             throw new IllegalArgumentException("Bucket size must be greater than 0.");
 
-        if (bucketSize != Bucket.bucketSize)
+        if (!firstRun && bucketSize != Bucket.bucketSize)
             throw new IllegalArgumentException("Buckets must be all of the same size.");
 
         Bucket.bucketSize = bucketSize;

@@ -50,6 +50,13 @@ public class Peer {
         this.nodeId = nodeId;
     }
 
+    public void setNodeId(String nodeId) {
+        if (!isValidNodeId(phoneNumber, nodeId))
+            throw new IllegalArgumentException("An invalid node ID was passed.");
+
+        this.nodeId = nodeId;
+    }
+
     /**
      * Gets peer phone number.
      *
@@ -98,7 +105,8 @@ public class Peer {
     }
 
     /**
-     * Check if given nodeId is compatible to the phone number.
+     * Check if given nodeId is compatible to the phone number.<br>
+     * This method can be overridden to customize nodeId validity check.
      * @param phoneNumber String representing the phone number to be checked
      * @param nodeId String representing the node ID to compare (sha1 encrypted)
      * @return <code>True</code> if node id is valid, <code>false</code> otherwise

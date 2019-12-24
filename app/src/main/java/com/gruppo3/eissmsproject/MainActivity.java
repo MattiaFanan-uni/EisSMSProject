@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
     public void btnSendMessageOnClick(View v) {
         try {
             NetworkManager nm = new NetworkManager(phoneNumber); // Initializes a new NetworkManager instance passing current device phone number (NetworkManager manages a kademlia network)
-            Peer destinationPeer = new Peer(editText_destinationPhoneNumber.getText().toString()); // destinationPeer will be the bootstrap node for current device
+            Peer bootstrapNode = new Peer(editText_destinationPhoneNumber.getText().toString());
+            nm.joinNetwork(bootstrapNode);
         }
         catch (Exception e) { // For testing our "demo" we catch all exceptions
             Log.e(tag, Log.getStackTraceString(e)); // Printing every given exception in the Logcat

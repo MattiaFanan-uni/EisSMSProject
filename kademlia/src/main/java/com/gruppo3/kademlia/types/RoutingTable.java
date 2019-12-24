@@ -3,6 +3,7 @@ package com.gruppo3.kademlia.types;
 import androidx.annotation.NonNull;
 
 import com.gruppo3.smslibrary.types.Peer;
+import com.gruppo3.smslibrary.util.Util;
 
 import java.util.ArrayList;
 
@@ -51,12 +52,16 @@ public class RoutingTable {
      * @return Index of the bucket where the node was put, -1 if the argument node ID is equal to current node ID
      * @throws IllegalArgumentException If argument node ID bits count is not equal to routing table size.
      */
-    public int addNode(Peer node) throws IllegalArgumentException {
+    public int addNode(@NonNull Peer node) throws IllegalArgumentException {
+        // Setting node id if it has a valid phone number
+        if (node.getNodeId() == null && node.getPhoneNumber() != null)
+            node.setNodeId(Util.sha1Hash(node.getPhoneNumber()));
+
         if (node.getNodeId().length() != routingTableSize)
             throw new IllegalArgumentException("nodeId must be equal to this routing table size.");
 
         // Searches for the bucket containing nodes with the same first different bit occurrence position of the argument node from the current node
-        // e.g. If argument first different bit position (compared to current node) is 5, returns the 5th bucket (containing all nodes with same first 4 bits)
+        // e.g. If argument first different bit position (compared to current node) is 5, returns the bucket at position 5 (containing all nodes with same first 4 bits)
 
         int bucketIndex = compareNodeIds(node);
         if (bucketIndex != -1) // If the given node has not the currentNodeId
@@ -74,7 +79,7 @@ public class RoutingTable {
      * @param toCompare Peer object to compare current node ID to
      * @return Position of the first different bit between current node ID and argument node ID, -1 if IDs are equal.
      */
-    protected int compareNodeIds(Peer toCompare) {
+    protected int compareNodeIds(@NonNull Peer toCompare) {
         for (int i = 0; i < currentNodeId.length(); i++) {
             if (currentNodeId.charAt(i) != toCompare.getNodeId().charAt(i))
                 return i;

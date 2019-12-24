@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 /**
  * Class containing all methods needed to accomplish general operations.
@@ -22,6 +23,7 @@ public class Util {
      * @param toEncrypt String to get the hash from
      * @return The hash of the passed parameter
      */
+    @NonNull
     public static String sha1Hash(@NonNull String toEncrypt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
@@ -32,8 +34,9 @@ public class Util {
             return parseBytesToBinaryString(bytes);
         }
         catch (NoSuchAlgorithmException e) {
-            Log.e("EIS", Log.getStackTraceString(e));
-            return null;
+            // Converting NoSuchAlgorithmException to RuntimeException
+            // NoSuchAlgorithmException shouldn't never occur
+            throw new RuntimeException("An error has occurred while hashing in sha1Hash method");
         }
     }
 
@@ -68,5 +71,27 @@ public class Util {
         }
 
         return new String(hexChars);
+    }
+
+    /**
+     * Generates a random node ID of the given length.
+     * @param length Number of bits the random generated node ID will have
+     * @return A String containing a random generated node ID
+     * @throws IllegalArgumentException If length is equal or less than 0
+     */
+    public static String generateRandomNodeID(int length) throws IllegalArgumentException {
+        if (length <= 0)
+            throw new IllegalArgumentException("Length must be greater than 0.");
+
+        String randomNodeId = "";
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            if (random.nextBoolean())
+                randomNodeId += '1';
+            else
+                randomNodeId += '0';
+        }
+
+        return randomNodeId;
     }
 }

@@ -1,6 +1,5 @@
 package com.gruppo3.smslibrary;
 
-import com.gruppo3.smslibrary.exceptions.InvalidAddressException;
 import com.gruppo3.smslibrary.types.Peer;
 
 import org.junit.Assert;
@@ -21,7 +20,7 @@ public class SMSPeerTest {
     public void setUp() {
         try {
             new Peer(validAddress);
-        } catch (InvalidAddressException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("Should not throw InvalidAddressException exception");
         }
     }
@@ -30,29 +29,29 @@ public class SMSPeerTest {
     public void setUPCountryCode() {
         try {
             new Peer(validCountryCodeAddress);
-        } catch (InvalidAddressException e) {
+        } catch (IllegalArgumentException e) {
             Assert.fail("Should not throw InvalidAddressException exception");
         }
     }
 
-    @Test(expected = InvalidAddressException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void setUPWithChars() {
         new Peer(charAddress);
     }
 
-    @Test(expected = InvalidAddressException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void numberTooLong() {
         new Peer(tooLongAddress);
     }
 
-    @Test(expected = InvalidAddressException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void numberTooShort() {
         new Peer(tooShortAddress);
     }
 
 
     @Test(expected = NullPointerException.class)
-    public void nullNumber() throws InvalidAddressException {
+    public void nullNumber() throws IllegalArgumentException {
         new Peer(null);
     }
 
