@@ -29,7 +29,7 @@ public class RoutingTable {
      * @throws IllegalArgumentException If currentNodeId length is 0
      */
     public RoutingTable(int bucketSize, @NonNull String currentNodeId) throws IllegalArgumentException {
-        if (currentNodeId == "")
+        if (currentNodeId.equals(""))
             throw new IllegalArgumentException("Node ID can't be an empty String");
 
         this.routingTableSize = currentNodeId.length();
