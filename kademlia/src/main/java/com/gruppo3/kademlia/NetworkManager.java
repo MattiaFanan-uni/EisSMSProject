@@ -85,10 +85,17 @@ public class NetworkManager {
         currentPeer = new Peer(currentPhoneNumber, currentNodeId);
 
         // Create a new routing table
-        routingTable = new RoutingTable(routingTableSize, bucketSize, currentNodeId);
+        routingTable = new RoutingTable(bucketSize, currentNodeId);
 
         /* Production stage related operations */
+        printDebuggingInfo(currentPeer);
+    }
 
+    /**
+     * This method, that prints debugging info to the Logcat, can be deleted when production stage of this class is concluded.
+     * @param currentPeer Peer object of this device
+     */
+    private void printDebuggingInfo(Peer currentPeer) {
         // Adds a bootstrap node
         String bootstrapNodePhoneNumber = "+15555215556";
         String bootstrapNodeId = Util.sha1Hash(bootstrapNodePhoneNumber);
@@ -104,8 +111,8 @@ public class NetworkManager {
         Log.d(tag, "secondaryNodeId: " + secondaryNodeId);
 
         // Printing initial data
-        Log.d(tag, "Phone number: " + currentPhoneNumber);
-        Log.d(tag, "currentNodeId: " + currentNodeId);
+        Log.d(tag, "Phone number: " + currentPeer.getPhoneNumber());
+        Log.d(tag, "currentNodeId: " + currentPeer.getNodeId());
         Log.d(tag, "Routing table size: " + routingTableSize);
         Log.d(tag, "Buckets size: " + bucketSize);
         Log.d(tag, "Concurrent requests: " + concurrentRequests);

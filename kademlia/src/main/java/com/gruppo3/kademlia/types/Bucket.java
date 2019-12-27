@@ -12,11 +12,11 @@ import java.util.ArrayList;
  * @author Giovanni Barca
  * @version 0.1
  */
-public class Bucket {
+class Bucket {
     private ArrayList<Peer> nodes; // Bucket entries
     private ArrayList<Peer> replacementCache = new ArrayList<Peer>(); // Replacement cache if bucket is full
 
-    private static boolean firstRun = true;
+    private static boolean firstRun = true; // This variable is needed to set buckets size at first instance of this class
     private static int bucketSize; // Size of the bucket
     private int entriesCount; // Number of "recorded" entries
 
@@ -31,6 +31,8 @@ public class Bucket {
 
         if (!firstRun && bucketSize != Bucket.bucketSize)
             throw new IllegalArgumentException("Buckets must be all of the same size.");
+
+        firstRun = false; // Setting this variable to false so the static bucketSize will be no more modified
 
         Bucket.bucketSize = bucketSize;
         this.entriesCount = 0;

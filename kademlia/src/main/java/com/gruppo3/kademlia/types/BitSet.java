@@ -1,5 +1,7 @@
 package com.gruppo3.kademlia.types;
 
+import com.gruppo3.smslibrary.util.Util;
+
 /**
  * Class extending the {@link java.util.BitSet BitSet} class.
  *
@@ -32,118 +34,31 @@ public class BitSet extends java.util.BitSet {
     }
 
     /**
-     * Parses an hexadecimal value passed via a String to its corresponding BitSet values.<br>
+     * This method reinitialize this BitSet and fills it with the binary representation of hexValue argument String<br>
      * The hexadecimal value doesn't need the leading '<code>0x</code>' and it works with both lower and upper case letters.
      * @param hexValue String representing the hexadecimal value to be parsed
-     * @return A BitSet of the parsed hexadecimal String argument
      * @throws IllegalArgumentException if the hexValue argument is not in the range of hexadecimal values (0-F)
      */
-    // TODO: Search for a more-readable code solution
-    public static java.util.BitSet hexStringToBitSet(String hexValue) throws IllegalArgumentException {
-        // Upper casing hex string to avoid parsing errors
-        String hexValueUpperCase = hexValue.toUpperCase();
+    public void setFromHexValue(String hexValue) throws IllegalArgumentException {
+        if (!hexValue.matches("[0-9a-fA-F]+"))
+            throw new IllegalArgumentException("Passed String is not an hexadecimal representation.");
 
-        // Values are false by default. Setting instead only true values (where the bit is equal to 1)
-        boolean[] tempBooleanArray = new boolean[hexValueUpperCase.length() * 4];
-
-        for (int i = 0; i < hexValueUpperCase.length(); i++) {
-            switch (hexValue.charAt(i)) {
-                case '1':
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case '2':
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    break;
-
-                case '3':
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case '4':
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    break;
-
-                case '5':
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case '6':
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    break;
-
-                case '7':
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case '8':
-                    tempBooleanArray[(i * 4)] = true;
-                    break;
-
-                case '9':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case 'A':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    break;
-
-                case 'B':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case 'C':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    break;
-
-                case 'D':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                case 'E':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    break;
-
-                case 'F':
-                    tempBooleanArray[(i * 4)] = true;
-                    tempBooleanArray[(i * 4) + 1] = true;
-                    tempBooleanArray[(i * 4) + 2] = true;
-                    tempBooleanArray[(i * 4) + 3] = true;
-                    break;
-
-                default:
-                    throw new IllegalArgumentException();
-            }
+        byte[] temp = new byte[hexValue.length() / 2];
+        for (int i = 0; i < temp.length; i++) {
+            int index = i * 2;
+            int j = Integer.parseInt(hexValue.substring(index, index + 2), 16);
+            temp[i] = (byte) j;
         }
 
-        return booleanArrayToBitSet(tempBooleanArray);
+        set(Util.parseBytesToBinaryString(temp));
     }
 
     /**
-     * Converts an array of boolean values to a BitSet.
+     * This method reinitialize this BitSet and fills it with the binary representation of boolean array argument, where false equals to 0 and true equals to 1.
      * @param booleanArray Boolean array to be converted
-     * @return The converted boolean array
      */
-    public static java.util.BitSet booleanArrayToBitSet(boolean[] booleanArray) {
-        java.util.BitSet tempBitSet = new java.util.BitSet(booleanArray.length);
-
+    public void setFromBooleanArray(boolean[] booleanArray) {
         for (int i = 0; i < booleanArray.length; i++)
-            tempBitSet.set(i, booleanArray[i]);
-
-        return tempBitSet;
+            set(i, booleanArray[i]);
     }
 }
