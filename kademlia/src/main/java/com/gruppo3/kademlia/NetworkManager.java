@@ -8,8 +8,6 @@ import com.gruppo3.kademlia.types.RoutingTable;
 import com.gruppo3.smslibrary.types.Peer;
 import com.gruppo3.smslibrary.util.Util;
 import com.gruppo3.smslibrary.SmsManager;
-import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
-import com.gruppo3.smslibrary.types.Message;
 
 /**
  * This class contains all method that accomplish operations for managing a kademlia-type network (joining, searching nodes and resources, etc..).
@@ -108,8 +106,9 @@ public class NetworkManager {
         // Printing initial data
         Log.d(tag, "Phone number: " + currentPhoneNumber);
         Log.d(tag, "currentNodeId: " + currentNodeId);
-        Log.d(tag, "Routing table size: " + routingTable.getRoutingTableSize());
-        Log.d(tag, "Buckets size: " + routingTable.getBucketSize());
+        Log.d(tag, "Routing table size: " + routingTableSize);
+        Log.d(tag, "Buckets size: " + bucketSize);
+        Log.d(tag, "Concurrent requests: " + concurrentRequests);
         Log.d(tag, "Bucket [0] entries count: " + routingTable.getBucketEntriesCount(0));
         Log.d(tag, "Bucket [1] entries count: " + routingTable.getBucketEntriesCount(1));
         Log.d(tag, "Bucket [2] entries count: " + routingTable.getBucketEntriesCount(2));

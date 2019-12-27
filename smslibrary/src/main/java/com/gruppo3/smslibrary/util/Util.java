@@ -1,5 +1,7 @@
 package com.gruppo3.smslibrary.util;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.nio.charset.StandardCharsets;
@@ -19,7 +21,7 @@ public class Util {
     /**
      * Converts the given String to a 160bit length hash using SHA-1 algorithm.
      * @param toEncrypt String to get the hash from
-     * @return The hash of the passed parameter
+     * @return The hash of the passed parameter or an empty string if an error has occured (prints the Stack Trace to the Logcat)
      */
     @NonNull
     public static String sha1Hash(@NonNull String toEncrypt) {
@@ -34,7 +36,8 @@ public class Util {
         catch (NoSuchAlgorithmException e) {
             // Converting NoSuchAlgorithmException to RuntimeException
             // NoSuchAlgorithmException shouldn't never occur
-            throw new RuntimeException("An error has occurred while hashing in sha1Hash method");
+            Log.d("Hashing error", Log.getStackTraceString(e));
+            return "";
         }
     }
 
