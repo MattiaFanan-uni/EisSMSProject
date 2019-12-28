@@ -23,13 +23,14 @@ public class BitSet extends java.util.BitSet {
      * @throws IllegalArgumentException If the bitSetString argument contains other chars besides 0 and 1
      */
     public void set(String bitSetString) throws IllegalArgumentException {
+        if (!bitSetString.matches("[01]+"))
+            throw new IllegalArgumentException("Argument is not a valid binary String.");
+
         for (int i = 0; i < bitSetString.length(); i++) {
             if (bitSetString.charAt(i) == '0')
                 this.set(i, false);
             else if (bitSetString.charAt(i) == '1')
                 this.set(i, true);
-            else
-                throw new IllegalArgumentException();
         }
     }
 
@@ -41,7 +42,7 @@ public class BitSet extends java.util.BitSet {
      */
     public void setFromHexValue(String hexValue) throws IllegalArgumentException {
         if (!hexValue.matches("[0-9a-fA-F]+"))
-            throw new IllegalArgumentException("Passed String is not an hexadecimal representation.");
+            throw new IllegalArgumentException("Argument is not a valid hexadecimal String.");
 
         byte[] temp = new byte[hexValue.length() / 2];
         for (int i = 0; i < temp.length; i++) {

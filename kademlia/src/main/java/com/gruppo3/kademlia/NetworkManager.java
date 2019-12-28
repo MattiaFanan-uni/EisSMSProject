@@ -34,7 +34,7 @@ public class NetworkManager {
         }
     }
 
-    private final String tag = "kademlia";
+    private final String TAG = "kademlia";
 
     private int routingTableSize; // Corresponding to the number of bit of a node ID
     private int bucketSize; // k; Maximum number of entries in a bucket
@@ -101,25 +101,25 @@ public class NetworkManager {
         String bootstrapNodeId = Util.sha1Hash(bootstrapNodePhoneNumber);
         Peer bootstrapNode = new Peer(bootstrapNodePhoneNumber, bootstrapNodeId);
         routingTable.addNode(bootstrapNode);
-        Log.d(tag, "bootstrapNodeId: " + bootstrapNodeId);
+        Log.d(TAG, "bootstrapNodeId: " + bootstrapNodeId);
 
         // Adding another node to the routing table
         String secondaryNodePhoneNumber = "0499367669";
         String secondaryNodeId = Util.sha1Hash(secondaryNodePhoneNumber);
         Peer secondaryNode = new Peer(secondaryNodePhoneNumber, secondaryNodeId);
         routingTable.addNode(secondaryNode);
-        Log.d(tag, "secondaryNodeId: " + secondaryNodeId);
+        Log.d(TAG, "secondaryNodeId: " + secondaryNodeId);
 
         // Printing initial data
-        Log.d(tag, "Phone number: " + currentPeer.getPhoneNumber());
-        Log.d(tag, "currentNodeId: " + currentPeer.getNodeId());
-        Log.d(tag, "Routing table size: " + routingTableSize);
-        Log.d(tag, "Buckets size: " + bucketSize);
-        Log.d(tag, "Concurrent requests: " + concurrentRequests);
-        Log.d(tag, "Bucket [0] entries count: " + routingTable.getBucketEntriesCount(0));
-        Log.d(tag, "Bucket [1] entries count: " + routingTable.getBucketEntriesCount(1));
-        Log.d(tag, "Bucket [2] entries count: " + routingTable.getBucketEntriesCount(2));
-        Log.d(tag, "Bucket [3] entries count: " + routingTable.getBucketEntriesCount(3));
+        Log.d(TAG, "Phone number: " + currentPeer.getPhoneNumber());
+        Log.d(TAG, "currentNodeId: " + currentPeer.getNodeId());
+        Log.d(TAG, "Routing table size: " + routingTableSize);
+        Log.d(TAG, "Buckets size: " + bucketSize);
+        Log.d(TAG, "Concurrent requests: " + concurrentRequests);
+        Log.d(TAG, "Bucket [0] entries count: " + routingTable.getBucketEntriesCount(0));
+        Log.d(TAG, "Bucket [1] entries count: " + routingTable.getBucketEntriesCount(1));
+        Log.d(TAG, "Bucket [2] entries count: " + routingTable.getBucketEntriesCount(2));
+        Log.d(TAG, "Bucket [3] entries count: " + routingTable.getBucketEntriesCount(3));
     }
 
     /**
