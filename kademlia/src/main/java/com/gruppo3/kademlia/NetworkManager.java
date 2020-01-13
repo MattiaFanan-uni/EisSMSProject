@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.gruppo3.kademlia.types.RoutingTable;
+import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
+import com.gruppo3.smslibrary.types.Message;
 import com.gruppo3.smslibrary.types.Peer;
 import com.gruppo3.smslibrary.util.Util;
 import com.gruppo3.smslibrary.SmsManager;
@@ -144,5 +146,47 @@ public class NetworkManager {
         // Refreshing k-buckets after bootstrapNode bucket with a random lookup request
         String randomNodeId = bootstrapNode.getNodeId().substring(0, bootstrapNodeBucket) + Util.generateRandomNodeID(bootstrapNode.getNodeId().length() - bootstrapNodeBucket); // Getting bootstrap node's base address + Generating random key to attach to baseBootstrapNodeId
         nodeLookup(randomNodeId);
+    }
+
+    /*
+        Kademlia explanation: https://distrosys.fandom.com/wiki/DHT_-_Kademlia
+     */
+
+    private void nodeLookup(String peerToFind) {
+        // get the bucket closer to toFind
+        // Async sends a FIND_NODE request to all entries in the bucket
+        // These entries looks in their buckets and returns the bucket closer to toFind
+        // Update the result list with received ID, keep the best k nodes
+        // Reiterate to these k nodes UNTIL the received IDs are further than the result list
+        // When the iteration stops we have the closest nodes to toFind
+    }
+
+    /**
+     * Create a ReceivedMessageListener that contains actions to accomplish when receiving a Kademlia command.
+     * @return the Kademlia-scope ReceivedMessageListener
+     */
+    private ReceivedMessageListener setUpReceivedMessageListener() {
+        return new ReceivedMessageListener() {
+            @Override
+            public void onMessageReceived(Message message) {
+                String header = message.getHeader();
+
+                if (header == KademliaCommands.INVITE.getCommand()) { // INVITE
+
+                }
+                else if (header == KademliaCommands.PING.getCommand()) { // PING
+
+                }
+                else if (header == KademliaCommands.FIND_NODE.getCommand()) { // FIND NODE
+
+                }
+                else if (header == KademliaCommands.FIND_VALUE.getCommand()) { // FIND VALUE
+
+                }
+                else if (header == KademliaCommands.STORE.getCommand()) { // STORE
+
+                }
+            }
+        };
     }
 }
