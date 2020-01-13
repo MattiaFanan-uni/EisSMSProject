@@ -16,12 +16,12 @@ import java.util.Random;
  * @version 1
  */
 public class Util {
-    final private static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     /**
      * Converts the given String to a 160bit length hash using SHA-1 algorithm.
      * @param toEncrypt String to get the hash from
-     * @return The hash of the passed parameter
+     * @return The hash of the passed parameter or an empty string if an error has occured (prints the Stack Trace to the Logcat)
      */
     @NonNull
     public static String sha1Hash(@NonNull String toEncrypt) {
@@ -36,16 +36,18 @@ public class Util {
         catch (NoSuchAlgorithmException e) {
             // Converting NoSuchAlgorithmException to RuntimeException
             // NoSuchAlgorithmException shouldn't never occur
-            throw new RuntimeException("An error has occurred while hashing in sha1Hash method");
+            Log.d("Hashing error", Log.getStackTraceString(e));
+            return "";
         }
     }
 
     /**
+     * @see <a href="https://stackoverflow.com/questions/12310017/how-to-convert-a-byte-to-its-binary-string-representation">How to convert a byte to its binary string representation?</a>
      * Parsed the given array of bytes to a String containing the corresponding binary value.
      * @param bytes Bytes array to be parsed
      * @return A String containing the binary value of the bytes array argument
      */
-    private static String parseBytesToBinaryString(byte[] bytes) {
+    public static String parseBytesToBinaryString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte bytesElement : bytes) {
             String byteToBitString = String.format("%8s", Integer.toBinaryString(bytesElement & 0xFF)).replace(' ', '0');
@@ -56,6 +58,7 @@ public class Util {
     }
 
     /**
+     * @see <a href="https://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java">How to convert a byte array to a hex string in Java?</a>
      * Converts the given byte array to its hexadecimal value (values between A and F are upper case).
      * @param bytes Byte array to be converted
      * @return A String containing the hexadecimal value of the passed parameter
@@ -66,8 +69,8 @@ public class Util {
         for(int j = 0; j < bytes.length; j++)
         {
             int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
 
         return new String(hexChars);

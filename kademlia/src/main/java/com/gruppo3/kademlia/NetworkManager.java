@@ -8,10 +8,6 @@ import com.gruppo3.kademlia.types.RoutingTable;
 import com.gruppo3.smslibrary.types.Peer;
 import com.gruppo3.smslibrary.util.Util;
 import com.gruppo3.smslibrary.SmsManager;
-import com.gruppo3.smslibrary.listeners.ReceivedMessageListener;
-import com.gruppo3.smslibrary.types.Message;
-
-import java.security.NoSuchAlgorithmException;
 
 /**
  * This class contains all method that accomplish operations for managing a kademlia-type network (joining, searching nodes and resources, etc..).
@@ -38,7 +34,7 @@ public class NetworkManager {
         }
     }
 
-    private final String tag = "kademlia";
+    private final String TAG = "kademlia";
 
     private int routingTableSize; // Corresponding to the number of bit of a node ID
     private int bucketSize; // k; Maximum number of entries in a bucket
@@ -89,33 +85,41 @@ public class NetworkManager {
         currentPeer = new Peer(currentPhoneNumber, currentNodeId);
 
         // Create a new routing table
-        routingTable = new RoutingTable(routingTableSize, bucketSize, currentNodeId);
+        routingTable = new RoutingTable(bucketSize, currentNodeId);
 
         /* Production stage related operations */
+        printDebuggingInfo(currentPeer);
+    }
 
+    /**
+     * This method, that prints debugging info to the Logcat, can be deleted when production stage of this class is concluded.
+     * @param currentPeer Peer object of this device
+     */
+    private void printDebuggingInfo(Peer currentPeer) {
         // Adds a bootstrap node
         String bootstrapNodePhoneNumber = "+15555215556";
         String bootstrapNodeId = Util.sha1Hash(bootstrapNodePhoneNumber);
         Peer bootstrapNode = new Peer(bootstrapNodePhoneNumber, bootstrapNodeId);
         routingTable.addNode(bootstrapNode);
-        Log.d(tag, "bootstrapNodeId: " + bootstrapNodeId);
+        Log.d(TAG, "bootstrapNodeId: " + bootstrapNodeId);
 
         // Adding another node to the routing table
         String secondaryNodePhoneNumber = "0499367669";
         String secondaryNodeId = Util.sha1Hash(secondaryNodePhoneNumber);
         Peer secondaryNode = new Peer(secondaryNodePhoneNumber, secondaryNodeId);
         routingTable.addNode(secondaryNode);
-        Log.d(tag, "secondaryNodeId: " + secondaryNodeId);
+        Log.d(TAG, "secondaryNodeId: " + secondaryNodeId);
 
         // Printing initial data
-        Log.d(tag, "Phone number: " + currentPhoneNumber);
-        Log.d(tag, "currentNodeId: " + currentNodeId);
-        Log.d(tag, "Routing table size: " + routingTable.getRoutingTableSize());
-        Log.d(tag, "Buckets size: " + routingTable.getBucketSize());
-        Log.d(tag, "Bucket [0] entries count: " + routingTable.getBucketEntriesCount(0));
-        Log.d(tag, "Bucket [1] entries count: " + routingTable.getBucketEntriesCount(1));
-        Log.d(tag, "Bucket [2] entries count: " + routingTable.getBucketEntriesCount(2));
-        Log.d(tag, "Bucket [3] entries count: " + routingTable.getBucketEntriesCount(3));
+        Log.d(TAG, "Phone number: " + currentPeer.getPhoneNumber());
+        Log.d(TAG, "currentNodeId: " + currentPeer.getNodeId());
+        Log.d(TAG, "Routing table size: " + routingTableSize);
+        Log.d(TAG, "Buckets size: " + bucketSize);
+        Log.d(TAG, "Concurrent requests: " + concurrentRequests);
+        Log.d(TAG, "Bucket [0] entries count: " + routingTable.getBucketEntriesCount(0));
+        Log.d(TAG, "Bucket [1] entries count: " + routingTable.getBucketEntriesCount(1));
+        Log.d(TAG, "Bucket [2] entries count: " + routingTable.getBucketEntriesCount(2));
+        Log.d(TAG, "Bucket [3] entries count: " + routingTable.getBucketEntriesCount(3));
     }
 
     /**
@@ -140,43 +144,5 @@ public class NetworkManager {
         // Refreshing k-buckets after bootstrapNode bucket with a random lookup request
         String randomNodeId = bootstrapNode.getNodeId().substring(0, bootstrapNodeBucket) + Util.generateRandomNodeID(bootstrapNode.getNodeId().length() - bootstrapNodeBucket); // Getting bootstrap node's base address + Generating random key to attach to baseBootstrapNodeId
         nodeLookup(randomNodeId);
-    }
-
-    private void nodeLookup(String peerToFind) {
-        // get the bucket closer to toFind
-        // Asycn sends a FIND_NODE request to all entries in the bucket
-        // These entries looks in their buckets and returns the bucket closer to toFind
-        // Update the result list with received ID, keep the best k nodes
-        // Reiterate to these k nodes UNTIL the received IDs are further than the result list
-        // When the iteration stops we have the closest nodes to toFind
-    }
-
-    /**
-     * Create a ReceivedMessageListener that contains actions to accomplish when receiving a Kademlia command.
-     * @return the Kademlia-scope ReceivedMessageListener
-     */
-    private ReceivedMessageListener setUpReceivedMessageListener() {
-        return new ReceivedMessageListener() {
-            @Override
-            public void onMessageReceived(Message message) {
-                String header = message.getHeader();
-
-                if (header == KademliaCommands.INVITE.getCommand()) { // INVITE
-
-                }
-                else if (header == KademliaCommands.PING.getCommand()) { // PING
-
-                }
-                else if (header == KademliaCommands.FIND_NODE.getCommand()) { // FIND NODE
-
-                }
-                else if (header == KademliaCommands.FIND_VALUE.getCommand()) { // FIND VALUE
-
-                }
-                else if (header == KademliaCommands.STORE.getCommand()) { // STORE
-
-                }
-            }
-        };
     }
 }

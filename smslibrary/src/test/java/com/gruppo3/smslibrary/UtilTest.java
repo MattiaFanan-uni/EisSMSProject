@@ -5,8 +5,6 @@ import com.gruppo3.smslibrary.util.Util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.security.NoSuchAlgorithmException;
-
 /**
  * Util class testing
  *
