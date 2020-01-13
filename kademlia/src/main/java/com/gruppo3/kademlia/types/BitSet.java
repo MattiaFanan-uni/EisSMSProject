@@ -8,7 +8,7 @@ import com.gruppo3.smslibrary.util.Util;
  * @author Giovanni Barca
  * @version 0.1
  */
-public class BitSet extends java.util.BitSet {
+public class BitSet extends java.util.BitSet implements Comparable<BitSet>{
     public BitSet() {
         super();
     }
@@ -61,5 +61,25 @@ public class BitSet extends java.util.BitSet {
     public void setFromBooleanArray(boolean[] booleanArray) {
         for (int i = 0; i < booleanArray.length; i++)
             set(i, booleanArray[i]);
+    }
+
+
+    /**
+     * Compares two BitSets
+     *
+     * @param bitSet
+     * @return
+     */
+    @Override
+    public int compareTo(BitSet bitSet) {
+        if(this.equals(bitSet))
+            return 0;
+
+        int thisLength=size();
+        int otherLength=bitSet.size();
+
+        while(thisLength>otherLength)
+            if(this.)
+                //TODO bisogna capire l'ordine dei bit per decidere chi è maggiore e chi minore
     }
 }
